@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM.Server", "CRM\Server\CRM.Server.csproj", "{78F9A18D-D912-4E15-BCDD-84CE046FE757}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRM.Server", "CRM\Server\CRM.Server.csproj", "{78F9A18D-D912-4E15-BCDD-84CE046FE757}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM.Client", "CRM\Client\CRM.Client.csproj", "{8A700B97-2A62-4CAA-9371-FF16B225F6FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRM.Client", "CRM\Client\CRM.Client.csproj", "{8A700B97-2A62-4CAA-9371-FF16B225F6FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM.Shared", "CRM\Shared\CRM.Shared.csproj", "{F9A9CE6E-CF7B-473F-BE01-A13AF54A3E4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRM.Shared", "CRM\Shared\CRM.Shared.csproj", "{F9A9CE6E-CF7B-473F-BE01-A13AF54A3E4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
