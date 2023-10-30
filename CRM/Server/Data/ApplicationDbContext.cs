@@ -1,4 +1,5 @@
 ﻿using CRM.Server.Models;
+using CRM.Shared.Model;
 using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -13,5 +14,8 @@ namespace CRM.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+        public DbSet<Customer> Customers => Set<Customer>(); // TODO find out what the difference is between this and : public DbSet<Customer> Customers { get; set; }
+
+        public DbSet<Contact> Contacts => Set<Contact>();
     }
 }
