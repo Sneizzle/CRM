@@ -20,5 +20,6 @@ namespace CRM.Shared.Model
         public bool IsHidden { get; set; }
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
+        public Customer Customer { get; set; } // Reference navigation
     }
 }
