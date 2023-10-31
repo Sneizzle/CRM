@@ -1,18 +1,48 @@
 ﻿@page "/customer"
+@using CRM.Shared
+@inject HttpClient http
 
-<PageTitle>Counter</PageTitle>
+<PageTitle>Customer</PageTitle>
 
-<h1>Counter</h1>
+@if (customers == null)
+{
+    <p><em>Loading..</em></p>
+}
+else
+{
+ <table class="table">
+  <thead>
+    <tr>
+        <th>Name</th>
+        <th>Phonenumber</th>
+        <th>Servicehours</th>
+        <th>Date Modified</th>
+    </tr>
+</thead>
+<tbody>
 
-<p role="status">Current count: @currentCount</p>
+            @foreach(var customer in customers)
+            {
+              <tr>
+                    <td>@customer.Name</td>
+                    <td>@customer.PhoneNumber</td>
+                    <td>@customer.ServiceHours</td>
+                    <td>@customer.DateModified</td>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+              </tr>
+            }
+        </tbody>
+ </table>
+   
+}
+
 
 @code {
-    private int currentCount = 0;
+    private List<CRM.Shared.Model.Customer> customers;
 
-    private void IncrementCount()
+
+    protected override async Task OnInitializedAsync()
     {
-        currentCount++;
+        customers = await http.GetFromJsonAsync<List<CRM.Shared.Model.Customer>>("api/Customers");
     }
 }

@@ -14,7 +14,7 @@ namespace CRM.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
-        public DbSet<Customer> Customer { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Contact> Contact { get; set; }
     }
