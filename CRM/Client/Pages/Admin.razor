@@ -1,0 +1,33 @@
+﻿@page "/admin"
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+@*Requires login for this page Code*@
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using CRM.Shared
+@attribute [Authorize]
+@inject HttpClient Http
+@*///////////////////////////////////////////*@
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Vicath EQ</h1>
+        <h3>Customer Relations Management</h3>
+        <h5>Welcome @context.User.Identity?.Name! </h5>
+  
+        This is the admin window!
+    </Authorized>
+
+
+
+<NotAuthorized>
+    <a href="authentication/register">Registrer</a>
+    <a href="authentication/login">Log ind</a>
+</NotAuthorized>
+</AuthorizeView>
+
+
+
+@code {
+    
+}
