@@ -16,7 +16,7 @@ namespace CRM.Server.Data
         }
         public DbSet<Customer> Customers { get; set; }
 
-        public DbSet<Contact> Contact { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
     }
 
 
