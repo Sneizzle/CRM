@@ -1,5 +1,7 @@
 ﻿@page "/customer"
+@using CRM.Client.Components
 @using CRM.Shared
+@using CRM.Shared.Model;
 @inject HttpClient http
 
 <PageTitle>CustomersIndex</PageTitle>
@@ -10,39 +12,51 @@
 }
 else
 {
- <table class="table">
-  <thead>
-    <tr>
-        <th>Name</th>
-        <th>Phonenumber</th>
-        <th>Servicehours</th>
-        <th>Date Modified</th>
-    </tr>
-</thead>
-<tbody>
-
-            @foreach(var customer in customers)
-            {
-              <tr>
-                    <td>@customer.Name</td>
-                    <td>@customer.PhoneNumber</td>
-                    <td>@customer.ServiceHours</td>
-                    <td>@customer.DateModified</td>
-
-              </tr>
-            }
-        </tbody>
- </table>
-   
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phonenumber</th>
+                    <th>Servicehours</th>
+                    <th>Date Modified</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var customer in customers)
+                {
+                    <tr>
+                        <td>@customer.Name</td>
+                        <td>@customer.PhoneNumber</td>
+                        <td>@customer.ServiceHours</td>
+                        <td>@customer.DateModified</td>
+                        @* <button @onclick="@(() => Modal.Show<CustomerInfo>($"Information for {customer.Name}"))" type="button">open</button> *@
+                        <button @onclick="@( () => OpenModal(customer) )" type="button">open</button>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 
 
 @code {
-    private List<CRM.Shared.Model.Customer> customers;
+    private List<Customer> customers;
+    [CascadingParameter] public IModalService Modal { get; set; } = default!;
 
+    private void OpenModal(Customer customer)
+    {
+        var parameters = new ModalParameters().Add(nameof(CustomerInfo.SelectedItem), customer);
+        var options = new ModalOptions()
+        {
+            Size = ModalSize.Automatic
+        };
+        Modal.Show<CustomerInfo>($"Information for {customer.Name}", parameters, options);
+        StateHasChanged();
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        customers = await http.GetFromJsonAsync<List<CRM.Shared.Model.Customer>>("api/Customers");
+        customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
     }
 }

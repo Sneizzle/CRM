@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRM.Client", "CRM\Client\CR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRM.Shared", "CRM\Shared\CRM.Shared.csproj", "{F9A9CE6E-CF7B-473F-BE01-A13AF54A3E4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMApi", "CRMApi\CRMApi.csproj", "{47E5004F-F695-42C1-BDE7-1A43C1BB63F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRMApi", "CRMApi\CRMApi.csproj", "{47E5004F-F695-42C1-BDE7-1A43C1BB63F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
