@@ -1,4 +1,9 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using CRM.Shared
+@attribute [Authorize]
+@inject HttpClient Http
 
 <PageTitle>Index</PageTitle>
 
@@ -6,4 +11,4 @@
 
 Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<SurveyPrompt Title="Hvornår virker det hele?" />

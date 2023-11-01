@@ -1,10 +1,12 @@
 ﻿@page "/fetchdata"
+
+@*Requires login for this page Code*@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using CRM.Shared
 @attribute [Authorize]
 @inject HttpClient Http
-
+@*///////////////////////////////////////////*@
 <PageTitle>Weather forecast</PageTitle>
 
 <h1>Weather forecast</h1>
