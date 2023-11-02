@@ -1,6 +1,8 @@
 ﻿@page "/customer"
 @using CRM.Shared
+@using CRM.Shared.Model
 @inject HttpClient http
+
 
 <PageTitle>CustomersIndex</PageTitle>
 
@@ -10,9 +12,11 @@
 }
 else
 {
- <table class="table">
+    <div style="max-width: 800px; margin:auto;">
+        <table class="table">
   <thead>
     <tr>
+
         <th>Name</th>
         <th>Phonenumber</th>
         <th>Servicehours</th>
@@ -21,28 +25,49 @@ else
 </thead>
 <tbody>
 
+
             @foreach(var customer in customers)
             {
+
+                    
               <tr>
+                        
                     <td>@customer.Name</td>
                     <td>@customer.PhoneNumber</td>
                     <td>@customer.ServiceHours</td>
                     <td>@customer.DateModified</td>
+                    <td>
+                        <div>                          
+                            <button style="border:thin"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25" /></button>
+                        </div>
+                    </td>
+                    <td>
+                         <div>
+                            <button style="border: thin"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></button>
+                        </div>
+
+                    </td>
+                    
+
 
               </tr>
+                    <tr style="border-bottom: 1px solid #ccc;"></tr>
+              
             }
         </tbody>
  </table>
+ </div>
    
 }
 
 
 @code {
-    private List<CRM.Shared.Model.Customer> customers;
+    private List<Customer> customers;
 
+    public string ButtonContent = "Tank op";
 
     protected override async Task OnInitializedAsync()
     {
-        customers = await http.GetFromJsonAsync<List<CRM.Shared.Model.Customer>>("api/Customers");
+        customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
     }
 }
