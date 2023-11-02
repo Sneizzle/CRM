@@ -6,7 +6,7 @@
 }
 else
 {
-    <div >
+    <div>
         <table class="table">
             <thead>
                 <tr>
@@ -16,6 +16,7 @@ else
                     <th>Zipcode</th>
                     <th>City</th>
                     <th>Servicehours</th>
+                    <th>Employees</th>
                     <th>CVR</th>
                     <th>EAN</th>
                     <th>Date Modified</th>
@@ -29,15 +30,16 @@ else
                     <td>@SelectedItem.ZipCode</td>
                     <td>@SelectedItem.CityName</td>
                     <td>@SelectedItem.ServiceHours</td>
+                    <td>@SelectedItem.EmployeeCount</td>
                     <td>@SelectedItem.CVR</td>
                     <td>@SelectedItem.EAN</td>
                     <td>@SelectedItem.DateModified</td>
-                 </tr>
+                </tr>
 
             </tbody>
         </table>
         <h3>Contacts</h3>
-        <table>
+        <table class="table">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -46,11 +48,15 @@ else
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                </tr>
+                @foreach (var contact in Contacts)
+                {
+                    <tr>
+                        <td>@contact.Name</td>
+                        <td>@contact.Email</td>
+                        <td>@contact.PhoneNumber</td>
+                    </tr>
+                }
+
             </tbody>
         </table>
     </div>
@@ -63,12 +69,10 @@ else
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
-    //[Parameter]
+    [Parameter]
     public Customer? SelectedItem { get; set; }
+    [Parameter]
     public List<Contact>? Contacts { get; set; }
-
-    // [Parameter]
-    // public EventCallback<MouseEventArgs> OnClose { get; set; }
 
     private async Task Close() => await BlazoredModal.CloseAsync();
 }

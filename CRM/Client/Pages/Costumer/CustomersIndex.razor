@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using CRM.Shared
 @using CRM.Shared.Model;
+@using CRM.Client.Components
 @inject HttpClient http
 
 <PageTitle>CustomersIndex</PageTitle>
@@ -29,7 +30,6 @@ else
                         <td>@customer.PhoneNumber</td>
                         <td>@customer.ServiceHours</td>
                         <td>@customer.DateModified</td>
-                        @* <button @onclick="@(() => Modal.Show<CustomerInfo>($"Information for {customer.Name}"))" type="button">open</button> *@
                         <button @onclick="@( () => OpenModal(customer) )" type="button">open</button>
                     </tr>
                 }
@@ -41,11 +41,24 @@ else
 
 @code {
     private List<Customer> customers;
+    private List<Contact> contacts;
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
 
     private void OpenModal(Customer customer)
     {
-        var parameters = new ModalParameters().Add(nameof(CustomerInfo.SelectedItem), customer);
+        var customerContacts = new List<Contact>();
+        for (int i = 0; i < contacts.Count; i++)
+        {
+            if (contacts[i].CustomerId == customer.Id)
+            {
+                customerContacts.Add(contacts[i]);
+
+            }
+        }
+
+        var parameters = new ModalParameters()
+            .Add(nameof(CustomerInfo.SelectedItem), customer)
+            .Add(nameof(CustomerInfo.Contacts), customerContacts);
         var options = new ModalOptions()
         {
             Size = ModalSize.Automatic
@@ -57,5 +70,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
+        contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
     }
 }
