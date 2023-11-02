@@ -6,24 +6,6 @@
 
 <PageTitle>CustomersIndex</PageTitle>
 
-
-<style style="text/css">
-    /*Taget herfra: https://www.textfixer.com/tutorials/highlight-table-row.php*/
-    .hoverTable {
-        /* width: 100%; */
-        border-collapse: collapse;
-    }
-
-    /* Define the default color for all the table rows */
-    .hoverTable tr {
-        background: none;
-    }
-    /* Define the hover highlight color for the table row */
-    .hoverTable tr:hover {
-        background-color: lightgray;
-    }
-</style>
-
 @if (customers == null)
 {
     <p><em>Loading..</em></p>
@@ -48,7 +30,6 @@ else
                         <td>@customer.PhoneNumber</td>
                         <td>@customer.ServiceHours</td>
                         <td>@customer.DateModified</td>
-                        <td><button @onclick="@( () => OpenModal(customer) )" type="button">open</button></td>
                     </tr>
                 }
             </tbody>
@@ -93,3 +74,20 @@ else
         contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
     }
 }
+
+<style style="text/css">
+    /* Source: https://www.textfixer.com/tutorials/highlight-table-row.php*/
+    .hoverTable {
+        /* width: 100%; */
+        border-collapse: collapse;
+    }
+
+        /* Define the default color for all the table rows */
+        .hoverTable tr {
+            background: none;
+        }
+            /* Define the hover highlight color for the table row */
+            .hoverTable tr:hover {
+                background-color: lightgray;
+            }
+</style>
