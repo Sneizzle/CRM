@@ -17,10 +17,12 @@ namespace CRM.Shared.Model
         public string? CityName { get; set; }
         public string? PhoneNumber { get; set; }
         public int? ServiceHours { get; set; }
+        public int? EmployeeCount { get; set; }
         public string CVR { get; set; }
         public string EAN { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; }
         public bool IsHidden { get; set; }
+
     }
 }
