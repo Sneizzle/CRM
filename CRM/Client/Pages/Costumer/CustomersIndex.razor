@@ -6,6 +6,24 @@
 
 <PageTitle>CustomersIndex</PageTitle>
 
+
+<style style="text/css">
+    /*Taget herfra: https://www.textfixer.com/tutorials/highlight-table-row.php*/
+    .hoverTable {
+        /* width: 100%; */
+        border-collapse: collapse;
+    }
+
+    /* Define the default color for all the table rows */
+    .hoverTable tr {
+        background: none;
+    }
+    /* Define the hover highlight color for the table row */
+    .hoverTable tr:hover {
+        background-color: lightgray;
+    }
+</style>
+
 @if (customers == null)
 {
     <p><em>Loading..</em></p>
@@ -22,20 +40,22 @@ else
                     <th>Date Modified</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="hoverTable">
                 @foreach (var customer in customers)
                 {
-                    <tr>
+                    <tr @onclick="@(() => OpenModal(customer))">
                         <td>@customer.Name</td>
                         <td>@customer.PhoneNumber</td>
                         <td>@customer.ServiceHours</td>
                         <td>@customer.DateModified</td>
-                        <button @onclick="@( () => OpenModal(customer) )" type="button">open</button>
+                        <td><button @onclick="@( () => OpenModal(customer) )" type="button">open</button></td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+
+
 }
 
 
@@ -60,9 +80,9 @@ else
             .Add(nameof(CustomerInfo.SelectedItem), customer)
             .Add(nameof(CustomerInfo.Contacts), customerContacts);
         var options = new ModalOptions()
-        {
-            Size = ModalSize.Automatic
-        };
+            {
+                Size = ModalSize.Automatic
+            };
         Modal.Show<CustomerInfo>($"Information for {customer.Name}", parameters, options);
         StateHasChanged();
     }
