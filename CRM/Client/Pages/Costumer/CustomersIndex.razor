@@ -24,15 +24,10 @@ else
                     <th>Date Modified</th>
                 </tr>
             </thead>
-            <tbody>
-
-
+            <tbody class="hoverTable">
                 @foreach (var customer in customers)
                 {
-
-
-                    <tr>
-
+                    <tr @onclick="@(() => OpenModal(customer))">
                         <td>@customer.Name</td>
                         <td>@customer.PhoneNumber</td>
                         <td>@customer.ServiceHours</td>
@@ -96,3 +91,20 @@ else
         contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
     }
 }
+
+<style style="text/css">
+    /* Source: https://www.textfixer.com/tutorials/highlight-table-row.php*/
+    .hoverTable {
+        /* width: 100%; */
+        border-collapse: collapse;
+    }
+
+        /* Define the default color for all the table rows */
+        .hoverTable tr {
+            background: none;
+        }
+            /* Define the hover highlight color for the table row */
+            .hoverTable tr:hover {
+                background-color: lightgray;
+            }
+</style>
