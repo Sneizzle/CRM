@@ -10,11 +10,13 @@
        
 
         <div class="top-row px-4 auth">
-            <href @onclick="@( () => OpenModal() )">Opret Kunde</href>
-                <a href="/admin">Admin stuffs</a>
-                <LoginDisplay/>
-   
-            </div>
+            <a style="color: #0071C1; cursor: pointer">
+                <href @onclick="@(() => OpenModal())">Opret Kunde</href>
+            </a>
+            <a href="/admin">Admin stuffs</a>
+            <LoginDisplay/>
+               
+        </div>
         <article class="content px-4">
             @Body
         </article>
