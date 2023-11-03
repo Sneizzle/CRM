@@ -1,0 +1,78 @@
+﻿@using CRM.Shared.Model;
+
+@if (SelectedItem == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phonenumber</th>
+                    <th>Street name</th>
+                    <th>Zipcode</th>
+                    <th>City</th>
+                    <th>Servicehours</th>
+                    <th>Employees</th>
+                    <th>CVR</th>
+                    <th>EAN</th>
+                    <th>Date Modified</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@SelectedItem.Name</td>
+                    <td>@SelectedItem.PhoneNumber</td>
+                    <td>@SelectedItem.StreetName</td>
+                    <td>@SelectedItem.ZipCode</td>
+                    <td>@SelectedItem.CityName</td>
+                    <td>@SelectedItem.ServiceHours</td>
+                    <td>@SelectedItem.EmployeeCount</td>
+                    <td>@SelectedItem.CVR</td>
+                    <td>@SelectedItem.EAN</td>
+                    <td>@SelectedItem.DateModified</td>
+                </tr>
+
+            </tbody>
+        </table>
+        <h3>Contacts</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone number</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var contact in Contacts)
+                {
+                    <tr>
+                        <td>@contact.Name</td>
+                        <td>@contact.Email</td>
+                        <td>@contact.PhoneNumber</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" @onclick="Close">Okay</button>
+        <button type="button" @onclick="Close">Close</button>
+    </div>
+}
+
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    [Parameter]
+    public Customer? SelectedItem { get; set; }
+    [Parameter]
+    public List<Contact>? Contacts { get; set; }
+
+    private async Task Close() => await BlazoredModal.CloseAsync();
+}
