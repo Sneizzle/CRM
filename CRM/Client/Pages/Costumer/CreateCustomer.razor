@@ -1,0 +1,63 @@
+﻿@page "/CreateCustomer"
+
+<h3>Opret Kunde</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <div class="mb-3">
+                <label class="form-label">Navn</label>
+                <input class="form-control" type="text" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Adresse</label>
+                <input class="form-control" type="text" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">By</label>
+                <input class="form-control" type="text" />
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Postnummer</label>
+                <input class="form-control" type="text" />
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="mb-3">
+                <label class="form-label">Telefonnummer</label>
+                <input class="form-control" type="text" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Servicetimer</label>
+                <input class="form-control" type="text" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">CVR</label>
+                <input class="form-control" type="text" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">EAN</label>
+                <input class="form-control" type="text" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="">
+            <button class="btn btn-primary">Opret kunde</button>
+            <button class="btn btn-danger">Annuller</button>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    private async Task Close() => await BlazoredModal.CloseAsync();
+}
+
+<style style="text/css">
+    
+
+</style>
