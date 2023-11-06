@@ -61,7 +61,7 @@ else
         </table>
     </div>
     <div class="modal-footer">
-        <button type ="button" @onclick="OpenEditModal"> Rediger</button>
+        <button type="button @onclick="> Rediger</button>
         <button type="button" @onclick="Close">Okay</button>
         <button type="button" @onclick="Close">Close</button>
     </div>
@@ -69,29 +69,16 @@ else
 
 
 @code {
+
+
+
+
+
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
-    [CascadingParameter] public IModalService EditModal { get; set; } = default!;
     [Parameter]
     public Customer? SelectedItem { get; set; }
     [Parameter]
     public List<Contact>? Contacts { get; set; }
 
     private async Task Close() => await BlazoredModal.CloseAsync();
-
-
-    private void OpenEditModal()
-    {
-       
-        var parameters = new ModalParameters()
-            .Add(nameof(EditCust.CustomerToEdit), SelectedItem)
-            .Add(nameof(EditCust.Contacts), Contacts);
-        var options = new ModalOptions()
-            {
-                Size = ModalSize.Automatic
-            };
-        EditModal.Show<EditCust>($"Information lolle for {SelectedItem.Name}", parameters, options);
-        StateHasChanged();
-    }
-    //Databinding to Edit modal
-
 }

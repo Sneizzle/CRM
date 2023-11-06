@@ -75,7 +75,7 @@ else
 
             }
         }
-
+        
         var parameters = new ModalParameters()
             .Add(nameof(CustomerInfo.SelectedItem), customer)
             .Add(nameof(CustomerInfo.Contacts), customerContacts);
@@ -86,6 +86,12 @@ else
         Modal.Show<CustomerInfo>($"Information for {customer.Name}", parameters, options);
         StateHasChanged();
     }
+   
+    
+
+
+
+
 
     protected override async Task OnInitializedAsync()
     {
