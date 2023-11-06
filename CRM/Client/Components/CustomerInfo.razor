@@ -7,19 +7,19 @@
 else
 {
     <div>
-        <table class="table">
+@*         <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Phonenumber</th>
-                    <th>Street name</th>
-                    <th>Zipcode</th>
-                    <th>City</th>
-                    <th>Servicehours</th>
-                    <th>Employees</th>
+                    <th>Navn</th>
+                    <th>Tlf. nr</th>
+                    <th>Vej</th>
+                    <th>Postnummer</th>
+                    <th>By</th>
+                    <th>Servicetimer</th>
+                    <th>Ansatte</th>
                     <th>CVR</th>
                     <th>EAN</th>
-                    <th>Date Modified</th>
+                    <th>Sidst modificeret</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,16 +37,19 @@ else
                 </tr>
 
             </tbody>
-        </table>
-        <h3>Contacts</h3>
+        </table> *@
+        <div>
+            <p style="align-self: center"> <b>Telefonnummer:</b> @SelectedItem.PhoneNumber</p>
+        </div>
         <table class="table">
-            <thead>
+            <caption style="caption-side:top; align-content:center ;color:black;"><b>Kontaktpersoner</b></caption>
+@*             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Navn</th>
                     <th>Email</th>
-                    <th>Phone number</th>
+                    <th>Tlf. nr</th>
                 </tr>
-            </thead>
+            </thead> *@
             <tbody>
                 @foreach (var contact in Contacts)
                 {
@@ -59,16 +62,32 @@ else
 
             </tbody>
         </table>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <p> <b>Tilgængelige servicetimer:</b> @SelectedItem.ServiceHours</p>
+                    <p> <b>Størrelse på kunden:</b> @SelectedItem.EmployeeCount</p>
+                    <p> <b>Adresse:</b> @SelectedItem.StreetName, @SelectedItem.ZipCode @SelectedItem.CityName</p>
+                    <p> <b>CVR:</b> @SelectedItem.CVR</p>
+                    <p> <b>EAN:</b> @SelectedItem.EAN</p>
+                </div>
+                <div class="col-sm" style="">
+                    <button class="btn" style="border-color:black; height: 75px; width: 200px;">Task logbog</button>
+                    <textarea style="margin-top: 10px; " placeholder="Kommentarboks"></textarea>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
-        <button type="button" @onclick="Close">Okay</button>
-        <button type="button" @onclick="Close">Close</button>
+        <button class="btn btn-dark" type="button" >Rediger</button>
+        <button class="btn btn-primary" type="button" @onclick="Close">Okay</button>
     </div>
 }
 
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    [CascadingParameter] List<Customer> c { get; set; } 
     [Parameter]
     public Customer? SelectedItem { get; set; }
     [Parameter]
