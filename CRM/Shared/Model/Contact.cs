@@ -17,9 +17,10 @@ namespace CRM.Shared.Model
         public string? PhoneNumber { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; }
-        public bool IsHidden { get; set; }
+        public bool IsHidden { get; set; } = false;
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
-        public Customer Customer { get; set; } // Reference navigation
+        //TODO Skal den være nullable: ? 
+        public Customer? Customer { get; set; } // Reference navigation
     }
 }

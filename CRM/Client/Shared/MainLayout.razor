@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@using CRM.Client.Components;
 @using CRM.Client.Pages.Costumer;
 
 <div class="page">
@@ -12,6 +13,9 @@
         <div class="top-row px-4 auth">
             <a style="color: #0071C1; cursor: pointer">
                 <href @onclick="@(() => OpenModal())">Opret Kunde</href>
+            </a>
+            <a>
+                <href @onclick="@(() => CreateContactModal())">Opret Kontaktperson</href>
             </a>
             <a href="/admin">Admin stuffs</a>
             <LoginDisplay/>
@@ -28,13 +32,21 @@
 
     private void OpenModal()
     {
-
-
         var options = new ModalOptions()
         {
             Size = ModalSize.Automatic
         };
         Modal.Show<CreateCustomer>();
+        StateHasChanged();
+    }
+
+    private void CreateContactModal()
+    {
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Automatic
+            };
+        Modal.Show<CreateContact>("", options);
         StateHasChanged();
     }
 }
