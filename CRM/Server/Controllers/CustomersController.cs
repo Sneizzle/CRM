@@ -57,6 +57,7 @@ namespace CRMApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer(int id, Customer customer)
         {
+            customer.DateModified = DateTime.Now;
             if (id != customer.Id)
             {
                 return BadRequest();
@@ -88,6 +89,8 @@ namespace CRMApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
+            customer.DateCreated = DateTime.Now;
+            customer.DateModified = DateTime.Now;
             if (_context.Customers == null)
             {
                 return Problem("Entity set 'CRMContext.Customers'  is null.");
@@ -112,6 +115,8 @@ namespace CRMApi.Controllers
             {
                 return NotFound();
             }
+            customer.IsHidden = true;
+            customer.DateModified = DateTime.Now;
 
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
