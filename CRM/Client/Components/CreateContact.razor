@@ -25,13 +25,16 @@
                 <option selected disabled>Vælg en kunde</option>
                 @foreach (Customer item in customers)
                 {
-                    Console.WriteLine("Item id" + item.Id);
                     <option value="@item.Id">@item.Name</option>
                 }
             </select>
         </div>
     </div>
     <div class="row">
+        @if (showErrorMessage == true)
+        {
+            <h5 class="alert-warning">En kontaktperson skal som minimum have et navn</h5>
+        }
         <button @onclick="Close" class="btn btn-danger">Anuller</button>
         <button @onclick="SaveContact" class="btn btn-primary">Gem</button>
     </div>
@@ -43,6 +46,8 @@
     private Contact newContact = new();
     private List<Customer> customers = new();
     private async Task Close() => await BlazoredModal.CloseAsync();
+    private bool showErrorMessage = false;
+
 
     private async void SaveContact()
     {
@@ -50,7 +55,16 @@
         newContact.DateModified = DateTime.Now; //TODO delete
         try
         {
-            await http.PostAsJsonAsync<Contact>("api/Contacts", newContact);
+            var response = await http.PostAsJsonAsync<Contact>("api/Contacts", newContact);
+            if (response.IsSuccessStatusCode == true)
+            {
+                await Close();
+            }
+            else
+            {
+                showErrorMessage = true;
+                StateHasChanged(); // This re-renders the component.
+            }
         }
         catch (Exception e)
         {
@@ -62,5 +76,6 @@
     {
         // eventuelt pass customer listen fra forsiden, så man ikke behøver at lave et apikald hver gang
         customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
+
     }
 }

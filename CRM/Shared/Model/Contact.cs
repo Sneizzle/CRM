@@ -20,7 +20,8 @@ namespace CRM.Shared.Model
         public bool IsHidden { get; set; } = false;
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
-        //TODO Skal den være nullable: ? 
+
+        //TODO I made this nullable. I haven't migrated this to the database
         public Customer? Customer { get; set; } // Reference navigation
     }
 }
