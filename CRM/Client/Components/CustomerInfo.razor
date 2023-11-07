@@ -6,69 +6,130 @@
 }
 else
 {
-    <div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Phonenumber</th>
-                    <th>Street name</th>
-                    <th>Zipcode</th>
-                    <th>City</th>
-                    <th>Servicehours</th>
-                    <th>Employees</th>
-                    <th>CVR</th>
-                    <th>EAN</th>
-                    <th>Date Modified</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@SelectedItem.Name</td>
-                    <td>@SelectedItem.PhoneNumber</td>
-                    <td>@SelectedItem.StreetName</td>
-                    <td>@SelectedItem.ZipCode</td>
-                    <td>@SelectedItem.CityName</td>
-                    <td>@SelectedItem.ServiceHours</td>
-                    <td>@SelectedItem.EmployeeCount</td>
-                    <td>@SelectedItem.CVR</td>
-                    <td>@SelectedItem.EAN</td>
-                    <td>@SelectedItem.DateModified</td>
-                </tr>
+    @*edit data*@
+    @if (isEditing)
+    {
+        <div style="text-align: center;">
+            <h1>Rediger "@SelectedItem.Name"</h1>
+            <div style="border: 1px solid #000; border-radius: 5px; display: inline-block;">
+                <h2 style="font-size: 18px; display: inline-block; padding: 5px;">TLF:</h2>
+                <input type="text" @bind="@SelectedItem.PhoneNumber" style="border: none; outline: none; display: inline-block; padding: 5px; width: 150px;"/>
+            </div>
+            <div style="display: flex;">
+                <div style="width: 70%; padding: 10px;">
+                    <h3>Kontaktpersoner</h3>
+                    <div style="width: 75%; padding: 10px;">
+                        <div style="display: flex; flex-direction: column; max-height: 600px; max-width: 600px; overflow-y: auto">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var contact in Contacts)
+                                {
+                                    <tr>
+                                        <td>@contact.Name</td>
+                                        <td> <button @onclick="() => DeletePerson(contact)">Delete</button> </td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-            </tbody>
-        </table>
-        <h3>Contacts</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone number</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var contact in Contacts)
-                {
+            </div>
+                </div>
+
+               
+     
+    }
+    @*view data*@
+    else
+    {
+        <div>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>@contact.Name</td>
-                        <td>@contact.Email</td>
-                        <td>@contact.PhoneNumber</td>
+                        <th>Name</th>
+                        <th>Phonenumber</th>
+                        <th>Street name</th>
+                        <th>Zipcode</th>
+                        <th>City</th>
+                        <th>Servicehours</th>
+                        <th>Employees</th>
+                        <th>CVR</th>
+                        <th>EAN</th>
+                        <th>Date Modified</th>
                     </tr>
-                }
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@SelectedItem.Name</td>
+                        <td>@SelectedItem.PhoneNumber</td>
+                        <td>@SelectedItem.StreetName</td>
+                        <td>@SelectedItem.ZipCode</td>
+                        <td>@SelectedItem.CityName</td>
+                        <td>@SelectedItem.ServiceHours</td>
+                        <td>@SelectedItem.EmployeeCount</td>
+                        <td>@SelectedItem.CVR</td>
+                        <td>@SelectedItem.EAN</td>
+                        <td>@SelectedItem.DateModified</td>
+                    </tr>
 
-            </tbody>
-        </table>
-    </div>
-    <div class="modal-footer">
-        <button type ="button" @onclick="OpenEditModal"> Rediger</button>
-        <button type="button" @onclick="Close">Okay</button>
-        <button type="button" @onclick="Close">Close</button>
-    </div>
+                </tbody>
+            </table>
+            <h3>Contacts</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var contact in Contacts)
+                    {
+                        <tr>
+                            <td>@contact.Name</td>
+                            <td>@contact.Email</td>
+                            <td>@contact.PhoneNumber</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            @*<button type="button" @onclick="OpenEditModal"> Rediger</button>*@
+            <button type="button" @onclick="editCustomer">Edit</button>
+            <button type="button" @onclick="Close">Okay</button>
+            <button type="button" @onclick="Close">Close</button>
+        </div>
+    }
+
+   
 }
 
 
 @code {
+
+    private bool isEditing = false;
+
+    public void DeletePerson(Contact contact)
+    {
+        
+    }
+    private void editCustomer()
+    {
+        isEditing = true;
+    }
+
+
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     [CascadingParameter] public IModalService EditModal { get; set; } = default!;
     [Parameter]
@@ -79,19 +140,19 @@ else
     private async Task Close() => await BlazoredModal.CloseAsync();
 
 
-    private void OpenEditModal()
-    {
+    //private void OpenEditModal()
+    //{
        
-        var parameters = new ModalParameters()
-            .Add(nameof(EditCust.CustomerToEdit), SelectedItem)
-            .Add(nameof(EditCust.Contacts), Contacts);
-        var options = new ModalOptions()
-            {
-                Size = ModalSize.Automatic
-            };
-        EditModal.Show<EditCust>($"Information lolle for {SelectedItem.Name}", parameters, options);
-        StateHasChanged();
-    }
+    //    var parameters = new ModalParameters()
+    //        .Add(nameof(EditCust.CustomerToEdit), SelectedItem)
+    //        .Add(nameof(EditCust.Contacts), Contacts);
+    //    var options = new ModalOptions()
+    //        {
+    //            Size = ModalSize.Automatic
+    //        };
+    //    EditModal.Show<EditCust>($"Information lolle for {SelectedItem.Name}", parameters, options);
+    //    StateHasChanged();
+    //}
     //Databinding to Edit modal
 
 }

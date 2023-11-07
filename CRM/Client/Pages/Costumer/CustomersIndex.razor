@@ -81,7 +81,7 @@ else
             .Add(nameof(CustomerInfo.Contacts), customerContacts);
         var options = new ModalOptions()
             {
-                Size = ModalSize.Automatic
+                Size = ModalSize.ExtraLarge
             };
         Modal.Show<CustomerInfo>($"Information for {customer.Name}", parameters, options);
         StateHasChanged();
