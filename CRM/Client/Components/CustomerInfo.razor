@@ -6,14 +6,17 @@
 }
 else
 {
-    @*edit data*@
+    @*-----------------------------------------------------------------edit data-----------------------------------------------*@
     @if (isEditing)
     {
+
+       
+
         <div style="text-align: center;">
             <h1>Rediger "@SelectedItem.Name"</h1>
             <div style="border: 1px solid #000; border-radius: 5px; display: inline-block; position: relative;">
                 @*Phone number styling*@
-                <h2 style="font-size: 18px; display: inline-block; padding: 5px;">TLF:</h2>
+                <h2 style="font-size: 18px; display: inline-block; margin: 15px; padding: 12px;">TLF:</h2>
                 <input type="text" @bind="@SelectedItem.PhoneNumber" style="border: none; outline: none; display: inline-block; padding: 5px; width: 150px;"/>
 
 
@@ -22,15 +25,22 @@ else
             </div>
             <div style="display: flex;">
                 <div style="width: 70%; padding: 10px;">
+                    @*Left side content*@
+            
+
+            <div style="display: flex;">
+                <div style="width: 70%; padding: 10px;">
+                    @*kontaktpersoner styling*@
                     <h3>Kontaktpersoner</h3>
                     <div style="border: 1px solid #000; border-radius: 5px; display: flex;">
                         <div style="width: 75%; padding: 10px;">
                             <div style="display: flex; flex-direction: column; max-height: 600px; max-width: 600px; overflow-y: auto">
+                                @*table deklarering*@
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Delete</th>
+                                        <th>Navn</th>
+                                        <th>Handling</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -38,36 +48,58 @@ else
                                     {
                                         <tr>
                                             <td>@contact.Name</td>
-                                            <td> <button @onclick="() => DeletePerson(contact)">Delete</button> </td>
+                                            <td> <button style="color:red" @onclick="() => DeletePerson(contact)">Delete</button> </td>
                                         </tr>
                                     }
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div style="padding: 75px;">
-                            <button style="font-size: 24px;">+</button>
+                        <div style="padding: 0px; margin-left: 55px">
+                                    <button class="btn btn-primary" style="font-size: 40px;">+</button>
                         </div>
                     </div>
                 </div>
             </div>
+            
+        </div>
+        <div style="width: 60%; padding: 10px;">
+            @*Right side content *@
+            
+                    @*(Task Logbook)*@
+            <button style="border: 1px solid #000; border-radius: 5px; padding: 10px; margin-left: 160px;">
+                
+                <h3>Task Logbog</h3>
+                       
+            </button>
+            @*(Remarks)*@
+            
+            <h3 style="margin-top: 30px;">Bemærkning</h3>
+            <div style="border: 1px solid #000; border-radius: 5px; padding: 10px;">
+                <textarea @bind="@SelectedItem.StreetName" style="width: 100%; min-height: 100px; border: hidden; margin: 8px; padding: 5px; font-size: 18px;"></textarea>
+            </div>
+           
+        </div>
+        </div>
+
             <div style="width: 60%; padding: 10px;">
                 <div>
+                    @*kundeinfo bottom section styling*@
                     <div style="display: flex">
                         <h4 style="padding-top: 8px;">Størrelsen på Kunden: </h4>
-                        <input type="text" @bind="@SelectedItem.EmployeeCount" style="display: inline-block; width: 40px;margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
-                        <div />
+                        <input type="text" @bind="@SelectedItem.EmployeeCount" style="display: inline-block; width: 52px; margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;"/>
+                        <div/>
                     </div>
                     <div>
                         <div style="display: flex">
                             <h4 style="padding-top: 8px;">Tilgængelige Servicetimer:</h4>
-                            <input type="text" @bind="@SelectedItem.ServiceHours" style="display: inline-block; width: 40px;margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
+                            <input type="text" @bind="@SelectedItem.ServiceHours" style="display: inline-block; width: 40px; margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;"/>
                         </div>
                     </div>
                     <div>
                         <div style="display: flex">
                             <h4 style="padding-top: 12px;">Addresse: </h4>
-                            <input type="text" @bind="@SelectedItem.StreetName" style="display: inline-block; width: 240px; margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
+                            <input type="text" @bind="@SelectedItem.StreetName" style="display: inline-block; width: 240px; margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;"/>
                         </div> </div>
                 </div>
             </div>
@@ -78,7 +110,7 @@ else
         <button> Luk</button>
         </div>
     }
-    @*view data*@
+    @*------------------------------------------------------view data-------------------------------------------------------------*@
     else
     {
         <div>
@@ -146,7 +178,7 @@ else
    
 }
 
-
+@*-------------------------------------------------------------------Logik---------------------------------------------------- *@
 @code {
 
     private bool isEditing = false;
