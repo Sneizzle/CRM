@@ -11,13 +11,14 @@
 {
     <p><em>Loading..</em></p>
 }
+
 else
 {
-    <div style="max-width: 800px;max-height:200px; margin:auto; overflow: auto;">
+    <div style="max-width: 800px;max-height:300px; margin:auto; overflow: auto;">
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search up a customer..">
         <table class="table">
             <thead>
                 <tr>
-
                     <th>Name</th>
                     <th>Phonenumber</th>
                     <th>Servicehours</th>
@@ -109,4 +110,16 @@ else
             .hoverTable tr:hover {
                 background-color: lightgray;
             }
+</style>
+<style>
+    #myInput {
+       
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 250px; /* Full-width */
+        font-size: 16px; /* Increase font-size */
+        padding: 12px 20px 12px 40px; /* Add some padding */
+        border: 5px solid #ddd; /* Add a grey border */
+        margin-bottom: 12px; /* Add some space below the input */
+    }
 </style>
