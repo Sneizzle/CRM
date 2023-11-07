@@ -74,17 +74,23 @@ else
                 customerContacts.Add(contacts[i]);
             }
         }
-
+        
         var parameters = new ModalParameters()
             .Add(nameof(CustomerInfo.SelectedItem), customer)
             .Add(nameof(CustomerInfo.Contacts), customerContacts);
         var options = new ModalOptions()
             {
-                Size = ModalSize.Automatic
+                Size = ModalSize.ExtraLarge
             };
         Modal.Show<CustomerInfo>($"Information for {customer.Name}", parameters, options);
         StateHasChanged();
     }
+   
+    
+
+
+
+
 
     protected override async Task OnInitializedAsync()
     {

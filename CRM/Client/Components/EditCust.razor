@@ -1,0 +1,36 @@
+﻿
+@using CRM.Shared.Model
+@using CRM.Client.Components
+
+<PageTitle>Edit Customer</PageTitle>
+
+<h3>Edit Customer Information</h3>
+
+@if (CustomerToEdit == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p>Customer Name: <input @bind="CustomerToEdit.Name" /></p>
+    <p>Phone Number: <input @bind="CustomerToEdit.PhoneNumber" /></p>
+
+
+    <button @onclick="SaveChanges">Save Changes</button>
+    <button @onclick="Cancel">Cancel</button>
+}
+
+@code {
+    [Parameter] public Customer CustomerToEdit { get; set; }
+    [Parameter] public List<Contact> Contacts { get; set; }
+
+    private void SaveChanges()
+    {
+
+    }
+
+    private void Cancel()
+    {
+
+    }
+}
