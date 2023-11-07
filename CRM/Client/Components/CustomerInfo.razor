@@ -7,49 +7,49 @@
 else
 {
     <div>
-@*         <table class="table">
-            <thead>
-                <tr>
-                    <th>Navn</th>
-                    <th>Tlf. nr</th>
-                    <th>Vej</th>
-                    <th>Postnummer</th>
-                    <th>By</th>
-                    <th>Servicetimer</th>
-                    <th>Ansatte</th>
-                    <th>CVR</th>
-                    <th>EAN</th>
-                    <th>Sidst modificeret</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@SelectedItem.Name</td>
-                    <td>@SelectedItem.PhoneNumber</td>
-                    <td>@SelectedItem.StreetName</td>
-                    <td>@SelectedItem.ZipCode</td>
-                    <td>@SelectedItem.CityName</td>
-                    <td>@SelectedItem.ServiceHours</td>
-                    <td>@SelectedItem.EmployeeCount</td>
-                    <td>@SelectedItem.CVR</td>
-                    <td>@SelectedItem.EAN</td>
-                    <td>@SelectedItem.DateModified</td>
-                </tr>
+        @*         <table class="table">
+    <thead>
+    <tr>
+    <th>Navn</th>
+    <th>Tlf. nr</th>
+    <th>Vej</th>
+    <th>Postnummer</th>
+    <th>By</th>
+    <th>Servicetimer</th>
+    <th>Ansatte</th>
+    <th>CVR</th>
+    <th>EAN</th>
+    <th>Sidst modificeret</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>@SelectedItem.Name</td>
+    <td>@SelectedItem.PhoneNumber</td>
+    <td>@SelectedItem.StreetName</td>
+    <td>@SelectedItem.ZipCode</td>
+    <td>@SelectedItem.CityName</td>
+    <td>@SelectedItem.ServiceHours</td>
+    <td>@SelectedItem.EmployeeCount</td>
+    <td>@SelectedItem.CVR</td>
+    <td>@SelectedItem.EAN</td>
+    <td>@SelectedItem.DateModified</td>
+    </tr>
 
-            </tbody>
-        </table> *@
+    </tbody>
+    </table> *@
         <div>
             <p style="align-self: center"> <b>Telefonnummer:</b> @SelectedItem.PhoneNumber</p>
         </div>
         <table class="table">
             <caption style="caption-side:top; align-content:center ;color:black;"><b>Kontaktpersoner</b></caption>
-@*             <thead>
-                <tr>
-                    <th>Navn</th>
-                    <th>Email</th>
-                    <th>Tlf. nr</th>
-                </tr>
-            </thead> *@
+            @*             <thead>
+        <tr>
+        <th>Navn</th>
+        <th>Email</th>
+        <th>Tlf. nr</th>
+        </tr>
+        </thead> *@
             <tbody>
                 @foreach (var contact in Contacts)
                 {
@@ -59,7 +59,6 @@ else
                         <td>@contact.PhoneNumber</td>
                     </tr>
                 }
-
             </tbody>
         </table>
         <div class="container">
@@ -71,15 +70,15 @@ else
                     <p> <b>CVR:</b> @SelectedItem.CVR</p>
                     <p> <b>EAN:</b> @SelectedItem.EAN</p>
                 </div>
-                <div class="col-sm" style="">
-                    <button class="btn" style="border-color:black; height: 75px; width: 200px;">Task logbog</button>
-                    <textarea style="margin-top: 10px; " placeholder="Kommentarboks"></textarea>
+                <div class="col-sm">
+                    <button class="btn" style="float:right; border-color:black; height: 75px; width: 200px;">Task logbog</button>
+                    <textarea style="float:right; margin-top: 10px; " placeholder="Kommentarboks"></textarea>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-dark" type="button" >Rediger</button>
+        <button class="btn btn-dark" type="button">Rediger</button>
         <button class="btn btn-primary" type="button" @onclick="Close">Okay</button>
     </div>
 }
@@ -87,7 +86,7 @@ else
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
-    [CascadingParameter] List<Customer> c { get; set; } 
+    [CascadingParameter] List<Customer> c { get; set; }
     [Parameter]
     public Customer? SelectedItem { get; set; }
     [Parameter]
