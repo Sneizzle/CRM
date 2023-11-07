@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@using CRM.Client.Components
 @using CRM.Client.Pages.Costumer;
 
 <div class="page">
@@ -34,7 +35,7 @@
         {
             Size = ModalSize.Automatic
         };
-        Modal.Show<CreateCustomer>();
+        Modal.Show<CreateCustomer>("Opret Kunde");
         StateHasChanged();
     }
 }
