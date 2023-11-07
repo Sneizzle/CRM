@@ -83,6 +83,38 @@ namespace CRMApi.Controllers
             return NoContent();
         }
 
+        // PUT: api/Contacts/Archive/5
+        [HttpPut("Archive/{id}")]
+        public async Task<IActionResult> ArchiveContact(int id, Contact contact)
+        {
+            contact.IsHidden = true;
+            contact.DateModified = DateTime.Now;
+            if (id != contact.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(contact).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ContactExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
         // POST: api/Contacts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -98,29 +130,6 @@ namespace CRMApi.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetContact", new { id = contact.Id }, contact);
-        }
-
-        // DELETE: api/Contacts/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteContact(int id)
-        {
-
-            if (_context.Contacts == null)
-            {
-                return NotFound();
-            }
-            var contact = await _context.Contacts.FindAsync(id);
-            if (contact == null)
-            {
-                return NotFound();
-            }
-            contact.IsHidden = true;
-            contact.DateModified = DateTime.Now;
-
-            _context.Contacts.Remove(contact);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool ContactExists(int id)
