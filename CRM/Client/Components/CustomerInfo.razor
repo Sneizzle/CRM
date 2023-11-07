@@ -11,41 +11,72 @@ else
     {
         <div style="text-align: center;">
             <h1>Rediger "@SelectedItem.Name"</h1>
-            <div style="border: 1px solid #000; border-radius: 5px; display: inline-block;">
+            <div style="border: 1px solid #000; border-radius: 5px; display: inline-block; position: relative;">
+                @*Phone number styling*@
                 <h2 style="font-size: 18px; display: inline-block; padding: 5px;">TLF:</h2>
                 <input type="text" @bind="@SelectedItem.PhoneNumber" style="border: none; outline: none; display: inline-block; padding: 5px; width: 150px;"/>
+
+
+                <div style="position: absolute; top: 0; right: 0; bottom: 0; display: flex; align-items: center; padding: 10px;">
+                </div>
             </div>
             <div style="display: flex;">
                 <div style="width: 70%; padding: 10px;">
                     <h3>Kontaktpersoner</h3>
-                    <div style="width: 75%; padding: 10px;">
-                        <div style="display: flex; flex-direction: column; max-height: 600px; max-width: 600px; overflow-y: auto">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Delete</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach (var contact in Contacts)
-                                {
+                    <div style="border: 1px solid #000; border-radius: 5px; display: flex;">
+                        <div style="width: 75%; padding: 10px;">
+                            <div style="display: flex; flex-direction: column; max-height: 600px; max-width: 600px; overflow-y: auto">
+                                <table class="table">
+                                    <thead>
                                     <tr>
-                                        <td>@contact.Name</td>
-                                        <td> <button @onclick="() => DeletePerson(contact)">Delete</button> </td>
+                                        <th>Name</th>
+                                        <th>Delete</th>
                                     </tr>
-                                }
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    @foreach (var contact in Contacts)
+                                    {
+                                        <tr>
+                                            <td>@contact.Name</td>
+                                            <td> <button @onclick="() => DeletePerson(contact)">Delete</button> </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div style="padding: 75px;">
+                            <button style="font-size: 24px;">+</button>
                         </div>
                     </div>
                 </div>
-
             </div>
+            <div style="width: 60%; padding: 10px;">
+                <div>
+                    <div style="display: flex">
+                        <h4 style="padding-top: 8px;">Størrelsen på Kunden: </h4>
+                        <input type="text" @bind="@SelectedItem.EmployeeCount" style="display: inline-block; width: 40px;margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
+                        <div />
+                    </div>
+                    <div>
+                        <div style="display: flex">
+                            <h4 style="padding-top: 8px;">Tilgængelige Servicetimer:</h4>
+                            <input type="text" @bind="@SelectedItem.ServiceHours" style="display: inline-block; width: 40px;margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex">
+                            <h4 style="padding-top: 12px;">Addresse: </h4>
+                            <input type="text" @bind="@SelectedItem.StreetName" style="display: inline-block; width: 240px; margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
+                        </div> </div>
                 </div>
-
-               
-     
+            </div>
+           
+        </div>
+        <div style="float: right; margin: 10px; font-size: 22px">
+        <button> Gem</button>
+        <button> Luk</button>
+        </div>
     }
     @*view data*@
     else
@@ -119,6 +150,10 @@ else
 @code {
 
     private bool isEditing = false;
+    public void AddPerson(Contact contact)
+    {
+
+    }
 
     public void DeletePerson(Contact contact)
     {
