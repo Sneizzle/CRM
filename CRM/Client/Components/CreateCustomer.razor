@@ -43,8 +43,8 @@
     </div>
     <div class="row">
         <div class="col-sm">
-            <button class="btn btn-danger" style="float:right" @onclick="Create">Annuller</button>
-            <button class="btn btn-primary" style="float:right" @onclick="Close" >Opret kunde</button>
+            <button class="btn btn-danger" style="float:right" @onclick="Close">Annuller</button>
+            <button class="btn btn-primary" style="float:right" @onclick="Create" >Opret kunde</button>
         </div>
     </div>
 </div>
@@ -59,7 +59,7 @@
     private async Task Create()
     {
         
-        await http.PostAsJsonAsync<Customer>("api/Customer", customer);
+        await http.PostAsJsonAsync<Customer>("api/Customers", customer);
     }
 
 }
