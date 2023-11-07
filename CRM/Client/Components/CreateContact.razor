@@ -31,13 +31,16 @@
         </div>
     </div>
     <div class="row">
-        @if (showErrorMessage == true)
-        {
-            <h5 class="alert-warning">En kontaktperson skal som minimum have et navn</h5>
-        }
-        <button @onclick="Close" class="btn btn-danger">Anuller</button>
-        <button @onclick="SaveContact" class="btn btn-primary">Gem</button>
+        <div class="col-sm">
+            @if (showErrorMessage == true)
+            {
+                <h5 class="alert-warning">En kontaktperson skal som minimum have et navn</h5>
+            }
+            <button style="float:right" @onclick="Close" class="btn btn-danger">Anuller</button>
+            <button style="float:right" @onclick="SaveContact" class="btn btn-primary">Gem</button>
+        </div>
     </div>
+
 </div>
 
 @code {
