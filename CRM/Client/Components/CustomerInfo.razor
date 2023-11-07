@@ -7,49 +7,11 @@
 else
 {
     <div>
-        @*         <table class="table">
-    <thead>
-    <tr>
-    <th>Navn</th>
-    <th>Tlf. nr</th>
-    <th>Vej</th>
-    <th>Postnummer</th>
-    <th>By</th>
-    <th>Servicetimer</th>
-    <th>Ansatte</th>
-    <th>CVR</th>
-    <th>EAN</th>
-    <th>Sidst modificeret</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td>@SelectedItem.Name</td>
-    <td>@SelectedItem.PhoneNumber</td>
-    <td>@SelectedItem.StreetName</td>
-    <td>@SelectedItem.ZipCode</td>
-    <td>@SelectedItem.CityName</td>
-    <td>@SelectedItem.ServiceHours</td>
-    <td>@SelectedItem.EmployeeCount</td>
-    <td>@SelectedItem.CVR</td>
-    <td>@SelectedItem.EAN</td>
-    <td>@SelectedItem.DateModified</td>
-    </tr>
-
-    </tbody>
-    </table> *@
         <div>
             <p style="align-self: center"> <b>Telefonnummer:</b> @SelectedItem.PhoneNumber</p>
         </div>
         <table class="table">
             <caption style="caption-side:top; align-content:center ;color:black;"><b>Kontaktpersoner</b></caption>
-            @*             <thead>
-        <tr>
-        <th>Navn</th>
-        <th>Email</th>
-        <th>Tlf. nr</th>
-        </tr>
-        </thead> *@
             <tbody>
                 @foreach (var contact in Contacts)
                 {
