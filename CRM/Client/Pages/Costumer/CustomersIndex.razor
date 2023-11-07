@@ -13,16 +13,22 @@
 }
 
 else
-{
-    <div style="max-width: 800px;max-height:300px; margin:auto; overflow: auto;">
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search up a customer..">
+{  
+
+    <div style="max-width: 1000px;max-height:800px; margin:auto; overflow: auto;">
+        <input type="text" id="myInput" onkeyup="searchNames()" placeholder="Search up a customer..">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>
+                        <a style="color: black; cursor: pointer">
+                            <href @onclick="SortByName"> name  </href>
+                        </a>
+
+                    </th>
                     <th>Phonenumber</th>
-                    <th>Servicehours</th>
-                    <th>Date Modified</th>
+                    <th @onclick="SortByServiceHours">Servicehours</th>
+                    <th @onclick="SortByDateModified">Date Modified</th>
                     <th>Opret task</th>
                     <th>Tank op</th>
                 </tr>
@@ -62,6 +68,9 @@ else
 
 @code {
     private List<Customer> customers;
+    private bool sortAscending = true;
+    private bool sortAscendingName = true;
+    private bool sortAscendingHours = true;
     private List<Contact> contacts;
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
 
@@ -93,6 +102,58 @@ else
         customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
         contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
     }
+    private void SortByName()
+    {
+        sortAscendingName = !sortAscendingName; //Sætter til false onClick
+        sortAscendingHours = true;
+        sortAscending = true;
+        if (sortAscendingName == true)
+        {
+            customers = customers.OrderByDescending(c => c.Name).ToList();
+        }
+        else
+        {
+            customers = customers.OrderBy(c => c.Name).ToList();
+
+        }
+    }
+    private void SortByDateModified()
+    {
+        sortAscending = !sortAscending;
+        sortAscendingHours = true; // hvis vi ikke resetter, bliver der ikke ønsket adfærd 
+        sortAscendingName = true;
+        if (sortAscending == true)
+        {
+            customers = customers.OrderByDescending(c => c.DateModified).ToList();
+        }
+        else
+        {
+            customers = customers.OrderBy(c => c.DateModified).ToList();
+
+            //customers => customers.DateModified is < DateTime.
+        }
+    }
+    private void SortByServiceHours()
+    {
+        sortAscending = true;
+        sortAscendingName = true;
+        sortAscendingHours = !sortAscendingHours;
+        if(sortAscendingHours == true)
+        {
+            customers = customers.OrderByDescending(c => c.ServiceHours).ToList();
+
+        }
+        else 
+        {
+            customers = customers.OrderBy(c => c.ServiceHours).ToList();
+        }
+
+    }
+    private void searchNames()
+    {
+        
+    }
+}
 }
 
 <style style="text/css">
@@ -113,7 +174,7 @@ else
 </style>
 <style>
     #myInput {
-       
+        background-image: url('/css/searchicon.png'); /* Add a search icon to input */
         background-position: 10px 12px; /* Position the search icon */
         background-repeat: no-repeat; /* Do not repeat the icon image */
         width: 250px; /* Full-width */
