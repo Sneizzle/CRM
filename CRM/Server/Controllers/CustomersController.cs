@@ -23,7 +23,7 @@ namespace CRMApi.Controllers
             _context = context;
         }
 
-        
+        // GET: api/Customers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
@@ -52,11 +52,12 @@ namespace CRMApi.Controllers
             return customer;
         }
 
-        // PUT: api/Customer/5
+        // PUT: api/Customers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer(int id, Customer customer)
         {
+            customer.DateModified = DateTime.Now;
             if (id != customer.Id)
             {
                 return BadRequest();
@@ -83,11 +84,13 @@ namespace CRMApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Customer
+        // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
+            customer.DateCreated = DateTime.Now;
+            customer.DateModified = DateTime.Now;
             if (_context.Customers == null)
             {
                 return Problem("Entity set 'CRMContext.Customers'  is null.");
@@ -99,7 +102,7 @@ namespace CRMApi.Controllers
             return CreatedAtAction(nameof(GetCustomer), new { id = customer.Id }, customer);
         }
 
-        // DELETE: api/Customer/5
+        // DELETE: api/Customers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
@@ -112,6 +115,8 @@ namespace CRMApi.Controllers
             {
                 return NotFound();
             }
+            customer.IsHidden = true;
+            customer.DateModified = DateTime.Now;
 
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();

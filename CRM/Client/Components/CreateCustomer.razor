@@ -1,53 +1,51 @@
-﻿@page "/CreateCustomer"
-
-<h3>Opret Kunde</h3>
+﻿@using CRM.Shared.Model;
+@inject HttpClient http;
 
 <div class="container">
     <div class="row">
         <div class="col-sm">
             <div class="mb-3">
                 <label class="form-label">Navn</label>
-                <input class="form-control" type="text" />
+                <input class="form-control" @bind="customer.Name" type="text" />
             </div>
             <div class="mb-3">
                 <label class="form-label">Adresse</label>
-                <input class="form-control" type="text" />
+                <input class="form-control" @bind="customer.StreetName" type="text" />
             </div>
             <div class="mb-3">
                 <label class="form-label">By</label>
-                <input class="form-control" type="text" />
+                <input class="form-control" @bind="customer.CityName" type="text" />
 
             </div>
             <div class="mb-3">
                 <label class="form-label">Postnummer</label>
-                <input class="form-control" type="text" />
+                <input class="form-control" @bind="customer.ZipCode" type="text" />
             </div>
         </div>
         <div class="col-sm">
             <div class="mb-3">
                 <label class="form-label">Telefonnummer</label>
-                <input class="form-control" type="text" />
+                <input class="form-control" @bind="customer.PhoneNumber" type="text" />
             </div>
             <div class="mb-3">
                 <label class="form-label">Servicetimer</label>
-                <input class="form-control" type="text" />
+                <input class="form-control" @bind="customer.ServiceHours" type="text" />
             </div>
             <div class="mb-3">
                 <label class="form-label">CVR</label>
-                <input class="form-control" type="text" />
+                <input class="form-control" @bind="customer.CVR" type="text" />
             </div>
             <div class="mb-3">
                 <label class="form-label">EAN</label>
-                <input class="form-control" type="text" />
+                <input class="form-control" @bind="customer.EAN" type="text"/>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="">
-            <button class="btn btn-primary">Opret kunde</button>
-            <button class="btn btn-danger">Annuller</button>
+        <div class="col-sm">
+            <button class="btn btn-danger" style="float:right" @onclick="Close">Annuller</button>
+            <button class="btn btn-primary" style="float:right" @onclick="Create" >Opret kunde</button>
         </div>
-
     </div>
 </div>
 
@@ -55,6 +53,20 @@
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
     private async Task Close() => await BlazoredModal.CloseAsync();
+
+    private Customer customer = new Customer();
+
+    private async Task Create()
+    {
+
+        var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
+
+        if (response.IsSuccessStatusCode)
+        {
+            await BlazoredModal.CloseAsync();
+        }
+    }
+
 }
 
 <style style="text/css">

@@ -1,0 +1,90 @@
+﻿@page "/CreateContact"
+@using CRM.Shared.Model;
+@inject HttpClient http;
+
+
+<h3>Opret kontaktperson</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <div class="mb-3">
+                <label class="form-label">Navn:</label>
+                <input @bind="newContact.Name" class="form-control" type="text" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Telefonnummer:</label>
+                <input @bind="newContact.PhoneNumber" class="form-control" type="text" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email: </label>
+                <input @bind=newContact.Email class="form-control" type="text" />
+            </div>
+        </div>
+        @* <div class="col-sm">
+            <select @bind="newContact.CustomerId">
+                <option selected disabled>Vælg en kunde</option>
+                @foreach (Customer item in customers)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </div> *@
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            @if (showErrorMessage == true)
+            {
+                <h5 class="alert-warning">En kontaktperson skal som minimum have et navn</h5>
+            }
+            <button style="float:right" @onclick="Close" class="btn btn-danger">Anuller</button>
+            <button style="float:right" @onclick="SaveContact" class="btn btn-primary">Gem</button>
+        </div>
+    </div>
+
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    [Parameter]
+    public Customer SelectedItem { get; set; }
+    private Contact newContact = new();
+
+    //private List<Customer> customers = new();
+    private async Task Close() => await BlazoredModal.CloseAsync();
+    private bool showErrorMessage = false;
+
+
+    private async void SaveContact()
+    {
+        newContact.CustomerId = SelectedItem.Id;
+        newContact.DateCreated = DateTime.Now;
+        newContact.DateModified = DateTime.Now; //TODO delete
+        try
+        {
+            var response = await http.PostAsJsonAsync<Contact>("api/Contacts", newContact);
+            if (response.IsSuccessStatusCode == true)
+            {
+                await Close();
+            }
+            else
+            {
+                showErrorMessage = true;
+                StateHasChanged(); // This re-renders the component.
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("CUSTOMER ID: " + SelectedItem.Id);
+
+        // eventuelt pass customer listen fra forsiden, så man ikke behøver at lave et apikald hver gang
+        // customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
+
+    }
+}

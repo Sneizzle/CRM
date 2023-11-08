@@ -56,6 +56,7 @@ namespace CRMApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutContact(int id, Contact contact)
         {
+            contact.DateModified = DateTime.Now;
             if (id != contact.Id)
             {
                 return BadRequest();
@@ -87,6 +88,8 @@ namespace CRMApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Contact>> PostContact(Contact contact)
         {
+            contact.DateModified = DateTime.Now;
+            contact.DateCreated = DateTime.Now;
             if (_context.Contacts == null)
             {
                 return Problem("Entity set 'CRMContext.Contacts'  is null.");
@@ -101,6 +104,7 @@ namespace CRMApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContact(int id)
         {
+
             if (_context.Contacts == null)
             {
                 return NotFound();
@@ -110,6 +114,8 @@ namespace CRMApi.Controllers
             {
                 return NotFound();
             }
+            contact.IsHidden = true;
+            contact.DateModified = DateTime.Now;
 
             _context.Contacts.Remove(contact);
             await _context.SaveChangesAsync();

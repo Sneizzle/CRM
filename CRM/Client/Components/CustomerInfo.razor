@@ -6,73 +6,192 @@
 }
 else
 {
-    <div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Phonenumber</th>
-                    <th>Street name</th>
-                    <th>Zipcode</th>
-                    <th>City</th>
-                    <th>Servicehours</th>
-                    <th>Employees</th>
-                    <th>CVR</th>
-                    <th>EAN</th>
-                    <th>Date Modified</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@SelectedItem.Name</td>
-                    <td>@SelectedItem.PhoneNumber</td>
-                    <td>@SelectedItem.StreetName</td>
-                    <td>@SelectedItem.ZipCode</td>
-                    <td>@SelectedItem.CityName</td>
-                    <td>@SelectedItem.ServiceHours</td>
-                    <td>@SelectedItem.EmployeeCount</td>
-                    <td>@SelectedItem.CVR</td>
-                    <td>@SelectedItem.EAN</td>
-                    <td>@SelectedItem.DateModified</td>
-                </tr>
+    @*-----------------------------------------------------------------edit data-----------------------------------------------*@
+    @if (isEditing)
+    {
+        <div style="text-align: center;">
+            <h1>Rediger "@SelectedItem.Name"</h1>
+            <div style="border: 1px solid #000; border-radius: 5px; display: inline-block; position: relative;">
+                @*Phone number styling*@
+                <h2 style="font-size: 18px; display: inline-block; margin: 15px; padding: 12px;">TLF:</h2>
+                <input type="text" @bind="@SelectedItem.PhoneNumber" style="border: none; outline: none; display: inline-block; padding: 5px; width: 150px;" />
 
-            </tbody>
-        </table>
-        <h3>Contacts</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone number</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var contact in Contacts)
-                {
-                    <tr>
-                        <td>@contact.Name</td>
-                        <td>@contact.Email</td>
-                        <td>@contact.PhoneNumber</td>
-                    </tr>
-                }
 
-            </tbody>
-        </table>
-    </div>
-    <div class="modal-footer">
-        <button type="button" @onclick="Close">Okay</button>
-        <button type="button" @onclick="Close">Close</button>
-    </div>
+                <div style="position: absolute; top: 0; right: 0; bottom: 0; display: flex; align-items: center; padding: 10px;">
+                </div>
+            </div>
+            <div style="display: flex;">
+                <div style="width: 70%; padding: 10px;">
+                    @*Left side content*@
+
+
+                    <div style="display: flex;">
+                        <div style="width: 70%; padding: 10px;">
+                            @*kontaktpersoner styling*@
+                            <h3>Kontaktpersoner</h3>
+                            <div style="border: 1px solid #000; border-radius: 5px; display: flex;">
+                                <div style="width: 75%; padding: 10px;">
+                                    <div style="display: flex; flex-direction: column; max-height: 600px; max-width: 600px; overflow-y: auto">
+                                        @*table deklarering*@
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Navn</th>
+                                                    <th>Handling</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var contact in Contacts)
+                                                {
+                                                    <tr>
+                                                        <td>@contact.Name</td>
+                                                        <td> <button style="color:red" @onclick="() => DeleteContact(contact)">Delete</button> </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div style="padding: 0px; margin-left: 55px">
+                                    <button @onclick="@(() => CreateContactModal())" class="btn btn-primary" style="font-size: 40px;">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div style="width: 60%; padding: 10px;">
+                    @*Right side content *@
+
+                    @*(Task Logbook)*@
+                    <button style="border: 1px solid #000; border-radius: 5px; padding: 10px; margin-left: 160px;">
+
+                        <h3>Task Logbog</h3>
+
+                    </button>
+                    @*(Remarks)*@
+
+                    <h3 style="margin-top: 30px;">Bemærkning</h3>
+                    <div style="border: 1px solid #000; border-radius: 5px; padding: 10px;">
+                        <textarea @bind="@SelectedItem.StreetName" style="width: 100%; min-height: 100px; border: hidden; margin: 8px; padding: 5px; font-size: 18px;"></textarea>
+                    </div>
+
+                </div>
+            </div>
+            <div style="width: 60%; padding: 10px;">
+                <div>
+                    @*kundeinfo bottom section styling*@
+                    <div style="display: flex">
+                        <h4 style="padding-top: 8px;">Størrelsen på Kunden: </h4>
+                        <input type="text" @bind="@SelectedItem.EmployeeCount" style="display: inline-block; width: 52px; margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
+                        <div />
+                    </div>
+                    <div>
+                        <div style="display: flex">
+                            <h4 style="padding-top: 8px;">Tilgængelige Servicetimer:</h4>
+                            <input type="text" @bind="@SelectedItem.ServiceHours" style="display: inline-block; width: 40px; margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex">
+                            <h4 style="padding-top: 12px;">Addresse: </h4>
+                            <input type="text" @bind="@SelectedItem.StreetName" style="display: inline-block; width: 240px; margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div style="float: right; margin: 10px; font-size: 22px">
+            <button> Gem</button>
+            <button @onclick="closeEdit"> Luk</button>
+        </div>
+    }
+    @*------------------------------------------------------view data-------------------------------------------------------------*@
+    else
+    {
+        <div>
+            <div>
+                <p style="align-self: center"> <b>Telefonnummer:</b> @SelectedItem.PhoneNumber</p>
+            </div>
+            <table class="table">
+                <caption style="caption-side:top; align-content:center ;color:black;"><b>Kontaktpersoner</b></caption>
+                <tbody>
+                    @foreach (var contact in Contacts)
+                    {
+                        <tr>
+                            <td>@contact.Name</td>
+                            <td>@contact.Email</td>
+                            <td>@contact.PhoneNumber</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        <p> <b>Tilgængelige servicetimer:</b> @SelectedItem.ServiceHours</p>
+                        <p> <b>Størrelse på kunden:</b> @SelectedItem.EmployeeCount</p>
+                        <p> <b>Adresse:</b> @SelectedItem.StreetName, @SelectedItem.ZipCode @SelectedItem.CityName</p>
+                        <p> <b>CVR:</b> @SelectedItem.CVR</p>
+                        <p> <b>EAN:</b> @SelectedItem.EAN</p>
+                    </div>
+                    <div class="col-sm">
+                        <button class="btn" style="float:right; border-color:black; height: 75px; width: 200px;">Task logbog</button>
+                        <textarea style="float:right; margin-top: 10px; " placeholder="Kommentarboks"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-dark" type="button" @onclick="editCustomer">Rediger</button>
+            <button class="btn btn-primary" type="button" @onclick="Close">Okay</button>
+        </div>
+    }
 }
 
-
+@*-------------------------------------------------------------------Logik---------------------------------------------------- *@
 @code {
+    private bool isEditing = false;
+    public void AddContact(Contact contact)
+    {
+
+    }
+
+    public void DeleteContact(Contact contact)
+    {
+
+    }
+    private void editCustomer()
+    {
+        isEditing = true;
+    }
+    private void closeEdit()
+    {
+        isEditing = false;
+    }
+
+
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    [CascadingParameter] List<Customer> c { get; set; }
+    [CascadingParameter] public IModalService Modal { get; set; } = default!;
     [Parameter]
     public Customer? SelectedItem { get; set; }
     [Parameter]
     public List<Contact>? Contacts { get; set; }
 
     private async Task Close() => await BlazoredModal.CloseAsync();
+
+
+    private void CreateContactModal()
+    {
+        var parameters = new ModalParameters()
+          .Add(nameof(CreateContact.SelectedItem), SelectedItem);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Automatic
+            };
+        Modal.Show<CreateContact>("", parameters, options);
+        StateHasChanged();
+    }
 }
