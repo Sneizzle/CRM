@@ -14,9 +14,6 @@
             <a style="color: #0071C1; cursor: pointer">
                 <href @onclick="@(() => OpenModal())">Opret Kunde</href>
             </a>
-            <a>
-                <href @onclick="@(() => CreateContactModal())">Opret Kontaktperson</href>
-            </a>
             <a href="/admin">Admin stuffs</a>
             <LoginDisplay/>
                
@@ -40,13 +37,5 @@
         StateHasChanged();
     }
 
-    private void CreateContactModal()
-    {
-        var options = new ModalOptions()
-            {
-                Size = ModalSize.Automatic
-            };
-        Modal.Show<CreateContact>("", options);
-        StateHasChanged();
-    }
+
 }

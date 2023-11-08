@@ -20,7 +20,7 @@
                 <input @bind=newContact.Email class="form-control" type="text" />
             </div>
         </div>
-        <div class="col-sm">
+        @* <div class="col-sm">
             <select @bind="newContact.CustomerId">
                 <option selected disabled>Vælg en kunde</option>
                 @foreach (Customer item in customers)
@@ -28,7 +28,7 @@
                     <option value="@item.Id">@item.Name</option>
                 }
             </select>
-        </div>
+        </div> *@
     </div>
     <div class="row">
         <div class="col-sm">
@@ -46,14 +46,18 @@
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
+    [Parameter]
+    public Customer SelectedItem { get; set; }
     private Contact newContact = new();
-    private List<Customer> customers = new();
+
+    //private List<Customer> customers = new();
     private async Task Close() => await BlazoredModal.CloseAsync();
     private bool showErrorMessage = false;
 
 
     private async void SaveContact()
     {
+        newContact.CustomerId = SelectedItem.Id;
         newContact.DateCreated = DateTime.Now;
         newContact.DateModified = DateTime.Now; //TODO delete
         try
@@ -77,8 +81,10 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine("CUSTOMER ID: " + SelectedItem.Id);
+
         // eventuelt pass customer listen fra forsiden, så man ikke behøver at lave et apikald hver gang
-        customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
+        // customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
 
     }
 }

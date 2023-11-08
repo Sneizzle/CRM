@@ -53,7 +53,7 @@ else
                                     </div>
                                 </div>
                                 <div style="padding: 0px; margin-left: 55px">
-                                    <button class="btn btn-primary" style="font-size: 40px;">+</button>
+                                    <button @onclick="@(() => CreateContactModal())" class="btn btn-primary" style="font-size: 40px;">+</button>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +104,7 @@ else
         </div>
         <div style="float: right; margin: 10px; font-size: 22px">
             <button> Gem</button>
-            <button> Luk</button>
+            <button @onclick="closeEdit"> Luk</button>
         </div>
     }
     @*------------------------------------------------------view data-------------------------------------------------------------*@
@@ -152,7 +152,6 @@ else
 
 @*-------------------------------------------------------------------Logik---------------------------------------------------- *@
 @code {
-
     private bool isEditing = false;
     public void AddContact(Contact contact)
     {
@@ -167,15 +166,32 @@ else
     {
         isEditing = true;
     }
+    private void closeEdit()
+    {
+        isEditing = false;
+    }
 
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     [CascadingParameter] List<Customer> c { get; set; }
-    [CascadingParameter] public IModalService EditModal { get; set; } = default!;
+    [CascadingParameter] public IModalService Modal { get; set; } = default!;
     [Parameter]
     public Customer? SelectedItem { get; set; }
     [Parameter]
     public List<Contact>? Contacts { get; set; }
 
     private async Task Close() => await BlazoredModal.CloseAsync();
+
+
+    private void CreateContactModal()
+    {
+        var parameters = new ModalParameters()
+          .Add(nameof(CreateContact.SelectedItem), SelectedItem);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Automatic
+            };
+        Modal.Show<CreateContact>("", parameters, options);
+        StateHasChanged();
+    }
 }
