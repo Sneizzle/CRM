@@ -16,19 +16,55 @@ else
 {  
 
     <div style="max-width: 1000px;max-height:800px; margin:auto; overflow: auto;">
-        <input type="text" id="myInput" onkeyup="searchNames()" placeholder="Search up a customer..">
+        <div style="max-width:300px">
+        <input class="form-control" type="text" placeholder="Search up a customer.."
+        @bind="Filter"
+        @bind:event="oninput">
+        </div>
         <table class="table">
             <thead>
                 <tr>
                     <th>
                         <a style="color: black; cursor: pointer">
-                            <href @onclick="SortByName"> name  </href>
+                            <href @onclick="SortByName">
+                                Name  
+                                @if (sortAscendingName == false)
+                                {
+                                    <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
+                                }
+                                else
+                                {
+                                    <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
+
+                                }
+                              </href>
                         </a>
 
                     </th>
                     <th>Phonenumber</th>
-                    <th @onclick="SortByServiceHours">Servicehours</th>
-                    <th @onclick="SortByDateModified">Date Modified</th>
+                    <th @onclick="SortByServiceHours">Servicehours
+                        @if (sortAscendingHours == false)
+                        {
+                            <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
+                        }
+                        else
+                        {
+                            <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
+
+                        }
+                        
+                    </th>
+                    <th @onclick="SortByDateModified">Date Modified
+                        @if(sortAscending == false)
+                        {
+                            <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
+                        }
+                        else
+                        {
+                            <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
+                            
+                        }
+                    </th>
                     <th>Opret task</th>
                     <th>Tank op</th>
                 </tr>
@@ -36,6 +72,8 @@ else
             <tbody class="hoverTable">
                 @foreach (var customer in customers)
                 {
+                    if (!IsVisible(customer))
+                        continue;
                     <tr @onclick="@(() => OpenModal(customer))">
                         <td>@customer.Name</td>
                         <td>@customer.PhoneNumber</td>
@@ -68,9 +106,11 @@ else
 
 @code {
     private List<Customer> customers;
+    public string Filter { get; set; }
     private bool sortAscending = true;
     private bool sortAscendingName = true;
     private bool sortAscendingHours = true;
+
     private List<Contact> contacts;
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
 
@@ -104,7 +144,7 @@ else
     }
     private void SortByName()
     {
-        sortAscendingName = !sortAscendingName; //Sætter til false onClick
+        sortAscendingName = !sortAscendingName; //Sætter til false onClick // intially true. 
         sortAscendingHours = true;
         sortAscending = true;
         if (sortAscendingName == true)
@@ -149,12 +189,13 @@ else
         }
 
     }
-    private void searchNames()
+    public bool IsVisible(Customer customer)
     {
-        
+        return string.IsNullOrEmpty(Filter) || customer.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
+
     }
 }
-}
+
 
 <style style="text/css">
     /* Source: https://www.textfixer.com/tutorials/highlight-table-row.php*/
