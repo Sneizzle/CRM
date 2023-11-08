@@ -1,20 +1,25 @@
 ﻿@inherits LayoutComponentBase
 @using CRM.Client.Components;
 @using CRM.Client.Pages.Costumer;
+@using Microsoft.AspNetCore.Authorization;
+@attribute [Authorize]
 
 <div class="page">
   @*  <div class="sidebar">
         <NavMenu />
     </div>*@
 
-    <main>
-       
-
+    <main>    
         <div class="top-row px-4 auth">
-            <a style="color: #0071C1; cursor: pointer">
-                <href @onclick="@(() => OpenModal())">Opret Kunde</href>
-            </a>
-            <a href="/admin">Admin stuffs</a>
+            <AuthorizeView>
+                <Authorized>
+                    <a style="color: #0071C1; cursor: pointer">
+                        <href @onclick="@(() => OpenModal())">Opret Kunde</href>
+                    </a>
+                    <a href="/admin">Admin stuffs</a>
+                </Authorized>
+            </AuthorizeView>
+
             <LoginDisplay/>
                
         </div>
