@@ -23,7 +23,7 @@ namespace CRM.Shared.Model
 
         public string? PhoneNumber { get; set; }
 
-        public int? ServiceHours { get; set; }
+        public float? ServiceHours { get; set; }
 
         public int? EmployeeCount { get; set; }
 
