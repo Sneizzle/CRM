@@ -1,22 +1,21 @@
 ﻿@using CRM.Shared.Model;
 @inject HttpClient http;
 
-
-<h3>Opret kontaktperson</h3>
+<h3>EditContact</h3>
 <div class="container">
     <div class="row">
         <div class="col-sm">
             <div class="mb-3">
                 <label class="form-label">Navn:</label>
-                <input @bind="newContact.Name" class="form-control" type="text" />
+                <input @bind="ContactToEdit.Name" class="form-control" type="text" />
             </div>
             <div class="mb-3">
                 <label class="form-label">Telefonnummer:</label>
-                <input @bind="newContact.PhoneNumber" class="form-control" type="text" />
+                <input @bind="ContactToEdit.PhoneNumber" class="form-control" type="text" />
             </div>
             <div class="mb-3">
                 <label class="form-label">Email: </label>
-                <input @bind=newContact.Email class="form-control" type="text" />
+                <input @bind=ContactToEdit.Email class="form-control" type="text" />
             </div>
         </div>
     </div>
@@ -36,22 +35,17 @@
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
     [Parameter]
-    public Customer SelectedItem { get; set; }
-    private Contact newContact = new();
-
-    //private List<Customer> customers = new();
-    private async Task Close() => await BlazoredModal.CloseAsync();
+    public Contact ContactToEdit { get; set; }
     private bool showErrorMessage = false;
+
+    private async Task Close() => await BlazoredModal.CloseAsync();
 
 
     private async void SaveContact()
     {
-        newContact.CustomerId = SelectedItem.Id;
-        newContact.DateCreated = DateTime.Now;
-        newContact.DateModified = DateTime.Now; //TODO delete
         try
         {
-            var response = await http.PostAsJsonAsync<Contact>("api/Contacts", newContact);
+            var response = await http.PutAsJsonAsync<Contact>($"api/Contacts/{ContactToEdit.Id}", ContactToEdit);
             if (response.IsSuccessStatusCode == true)
             {
                 await Close();
@@ -59,21 +53,12 @@
             else
             {
                 showErrorMessage = true;
-                StateHasChanged(); // This re-renders the component.
+                StateHasChanged();
             }
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Console.WriteLine("CUSTOMER ID: " + SelectedItem.Id);
-
-        // eventuelt pass customer listen fra forsiden, så man ikke behøver at lave et apikald hver gang
-        // customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
-
     }
 }
