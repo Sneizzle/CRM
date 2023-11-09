@@ -13,8 +13,19 @@ else
     @*-----------------------------------------------------------------edit data-----------------------------------------------*@
     @if (isEditing)
     {
-        <div>
-            <h2>@SelectedItem.Name <b style="font-weight: bolder;">Kontaktpersoner</b></h2>
+        <div class="container">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2>@SelectedItem.Name <b style="font-weight: bolder;">Kontaktpersoner</b></h2>
+                    </div>
+                    <div class="col-sm-4">
+                        <button style="border-radius: 60px; float: right; color: white; font-weight: bolder; background: deepskyblue; padding-left: 10px; padding-right: 10px;" class="btn" type="button"> + Tilføj ny</button>
+                       
+                    </div>
+                </div>
+            </div>
+            
             <table class="table">
                 <tr style="font-weight: bold; border: black; border-bottom-style: solid;">
                     <th>Navn</th>
@@ -29,12 +40,12 @@ else
                         <td>@contact.Name</td>
                         <td>@contact.Email</td>
                         <td>@contact.PhoneNumber</td>
-                        <td> <a><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant"/></a> 
+                        <td> <a><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant"/></a>
                             <a><img src="/css/Logos/Delete.svg" style="height: 30px; width: 33px;" alt="du furet"/></a>
-                            </td>
+                        </td>
                     </tr>
                 }
-                </tbody> 
+                </tbody>
             </table>
         </div>
         <div style="float: right; margin: 10px; font-size: 22px">
