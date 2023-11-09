@@ -3,6 +3,9 @@
 @using CRM.Shared.Model;
 @using CRM.Client.Components.Customer;
 @inject HttpClient http;
+@using CRM.Client.repositories;
+
+
 
 <PageTitle>CustomersIndex</PageTitle>
 
@@ -100,8 +103,8 @@ else
     private bool sortAscending = true;
     private bool sortAscendingName = true;
     private bool sortAscendingHours = true;
-
     private List<Contact> contacts;
+  
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
 
     private void OpenModal(Customer customer)
