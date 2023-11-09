@@ -104,7 +104,6 @@ namespace CRMApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContact(int id)
         {
-
             if (_context.Contacts == null)
             {
                 return NotFound();

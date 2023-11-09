@@ -1,5 +1,8 @@
 ﻿@using CRM.Client.Components.Contacts;
 @using CRM.Shared.Model;
+@using Microsoft.JSInterop;
+@inject HttpClient http;
+@inject IJSRuntime JsRuntime
 
 @if (SelectedItem == null)
 {
@@ -154,24 +157,7 @@ else
 
 @*-------------------------------------------------------------------Logik---------------------------------------------------- *@
 @code {
-    private bool isEditing = false;
-    public void AddContact(Contact contact)
-    {
 
-    }
-
-    public void DeleteContact(Contact contact)
-    {
-
-    }
-    private void editCustomer()
-    {
-        isEditing = true;
-    }
-    private void closeEdit()
-    {
-        isEditing = false;
-    }
 
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
@@ -181,19 +167,18 @@ else
     public Customer? SelectedItem { get; set; }
     [Parameter]
     public List<Contact>? Contacts { get; set; }
+    private bool isEditing = false;
 
     private async Task Close() => await BlazoredModal.CloseAsync();
 
-    private void EditContactModal(Contact contact)
-    {
-        var parameters = new ModalParameters()
-        .Add(nameof(EditContact.ContactToEdit), contact);
-        var options = new ModalOptions()
-            {
-                Size = ModalSize.Automatic
-            };
-        Modal.Show<EditContact>("", parameters, options);
 
+    private void editCustomer()
+    {
+        isEditing = true;
+    }
+    private void closeEdit()
+    {
+        isEditing = false;
     }
 
     private void CreateContactModal()
@@ -206,5 +191,32 @@ else
             };
         Modal.Show<CreateContact>("", parameters, options);
         StateHasChanged();
+    }
+    private void EditContactModal(Contact contact)
+    {
+        var parameters = new ModalParameters()
+        .Add(nameof(EditContact.ContactToEdit), contact);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Automatic
+            };
+        Modal.Show<EditContact>("", parameters, options);
+    }
+    public async Task DeleteContact(Contact contact)
+    {
+        // https://stackoverflow.com/questions/60773229/how-to-use-alert-confirm-and-prompt-function-using-blazor
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            try
+            {
+                await http.DeleteAsync($"api/Contacts/{contact.Id}");
+                //StateHasChanged(); // It doesn't update when an element is deleted
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 }
