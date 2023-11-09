@@ -1,4 +1,5 @@
 ﻿using CRM.Shared.Model;
+using System.Net;
 using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
 
@@ -10,17 +11,20 @@ namespace CRM.Client.repositories
     {
         static HttpClient http = new HttpClient();
 
-        private List<Customer> customers;
+        public List<Customer> customers = new List<Customer>();
+        public List<Customer> GetList()
+        {
+            return customers;
+        }
 
-        private List<Contact> contacts;
+        public List<Contact> contacts;
 
+      
         protected async Task gottaGetThemAll()
         {
-
             customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
             contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
-
-
+     
         }
 
     }
