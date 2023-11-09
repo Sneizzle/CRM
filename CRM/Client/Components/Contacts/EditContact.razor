@@ -1,0 +1,64 @@
+﻿@using CRM.Shared.Model;
+@inject HttpClient http;
+
+<h3>EditContact</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <div class="mb-3">
+                <label class="form-label">Navn:</label>
+                <input @bind="ContactToEdit.Name" class="form-control" type="text" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Telefonnummer:</label>
+                <input @bind="ContactToEdit.PhoneNumber" class="form-control" type="text" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email: </label>
+                <input @bind=ContactToEdit.Email class="form-control" type="text" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            @if (showErrorMessage == true)
+            {
+                <h5 class="alert-warning">En kontaktperson skal som minimum have et navn</h5>
+            }
+            <button style="float:right" @onclick="Close" class="btn btn-danger">Anuller</button>
+            <button style="float:right" @onclick="SaveContact" class="btn btn-primary">Gem</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    [Parameter]
+    public Contact ContactToEdit { get; set; }
+    private bool showErrorMessage = false;
+
+    private async Task Close() => await BlazoredModal.CloseAsync();
+
+
+    private async void SaveContact()
+    {
+        try
+        {
+            var response = await http.PutAsJsonAsync<Contact>($"api/Contacts/{ContactToEdit.Id}", ContactToEdit);
+            if (response.IsSuccessStatusCode == true)
+            {
+                await Close();
+            }
+            else
+            {
+                showErrorMessage = true;
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+}

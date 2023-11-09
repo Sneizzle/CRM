@@ -1,5 +1,4 @@
-﻿@page "/CreateContact"
-@using CRM.Shared.Model;
+﻿@using CRM.Shared.Model;
 @inject HttpClient http;
 
 
@@ -20,15 +19,6 @@
                 <input @bind=newContact.Email class="form-control" type="text" />
             </div>
         </div>
-        @* <div class="col-sm">
-            <select @bind="newContact.CustomerId">
-                <option selected disabled>Vælg en kunde</option>
-                @foreach (Customer item in customers)
-                {
-                    <option value="@item.Id">@item.Name</option>
-                }
-            </select>
-        </div> *@
     </div>
     <div class="row">
         <div class="col-sm">
@@ -40,7 +30,6 @@
             <button style="float:right" @onclick="SaveContact" class="btn btn-primary">Gem</button>
         </div>
     </div>
-
 </div>
 
 @code {

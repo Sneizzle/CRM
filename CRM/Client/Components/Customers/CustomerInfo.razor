@@ -1,4 +1,5 @@
-﻿@using CRM.Shared.Model;
+﻿@using CRM.Client.Components.Contacts;
+@using CRM.Shared.Model;
 
 @if (SelectedItem == null)
 {
@@ -45,7 +46,8 @@ else
                                                 {
                                                     <tr>
                                                         <td>@contact.Name</td>
-                                                        <td> <button style="color:red" @onclick="() => DeleteContact(contact)">Delete</button> </td>
+                                                        <td> <button style="color:green" @onclick="() => EditContactModal(contact)">Rediger</button> </td>
+                                                        <td> <button style="color:red" @onclick="() => DeleteContact(contact)">Slet</button> </td>
                                                     </tr>
                                                 }
                                             </tbody>
@@ -182,6 +184,17 @@ else
 
     private async Task Close() => await BlazoredModal.CloseAsync();
 
+    private void EditContactModal(Contact contact)
+    {
+        var parameters = new ModalParameters()
+        .Add(nameof(EditContact.ContactToEdit), contact);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Automatic
+            };
+        Modal.Show<EditContact>("", parameters, options);
+
+    }
 
     private void CreateContactModal()
     {
