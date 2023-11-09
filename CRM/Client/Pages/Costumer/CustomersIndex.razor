@@ -4,14 +4,12 @@
 @using CRM.Client.Components;
 @inject HttpClient http;
 
-
 <PageTitle>CustomersIndex</PageTitle>
 
 @if (customers == null)
 {
     <p><em>Loading..</em></p>
 }
-
 else
 {  
 
@@ -27,7 +25,7 @@ else
                     <th>
                         <a style="color: black; cursor: pointer">
                             <href @onclick="SortByName">
-                                Name  
+                                Navn  
                                 @if (sortAscendingName == false)
                                 {
                                     <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -35,14 +33,13 @@ else
                                 else
                                 {
                                     <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
-
                                 }
                               </href>
                         </a>
 
                     </th>
-                    <th>Phonenumber</th>
-                    <th @onclick="SortByServiceHours">Servicehours
+                    <th>Telefonnr</th>
+                    <th @onclick="SortByServiceHours">Service timer
                         @if (sortAscendingHours == false)
                         {
                             <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -54,7 +51,7 @@ else
                         }
                         
                     </th>
-                    <th @onclick="SortByDateModified">Date Modified
+                    <th @onclick="SortByDateModified">Dato for optankning
                         @if(sortAscending == false)
                         {
                             <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -62,7 +59,6 @@ else
                         else
                         {
                             <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
-                            
                         }
                     </th>
                     <th>Opret task</th>
@@ -99,6 +95,7 @@ else
 
 
 @code {
+    
     private List<Customer> customers;
     public string Filter { get; set; }
     private bool sortAscending = true;
@@ -148,7 +145,6 @@ else
         else
         {
             customers = customers.OrderBy(c => c.Name).ToList();
-
         }
     }
     private void SortByDateModified()
@@ -163,7 +159,6 @@ else
         else
         {
             customers = customers.OrderBy(c => c.DateModified).ToList();
-
             //customers => customers.DateModified is < DateTime.
         }
     }
@@ -175,7 +170,6 @@ else
         if(sortAscendingHours == true)
         {
             customers = customers.OrderByDescending(c => c.ServiceHours).ToList();
-
         }
         else 
         {
@@ -186,7 +180,6 @@ else
     public bool IsVisible(Customer customer)
     {
         return string.IsNullOrEmpty(Filter) || customer.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
-
     }
 }
 
