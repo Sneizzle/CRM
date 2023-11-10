@@ -1,6 +1,7 @@
 ﻿@using CRM.Client.Components.Contacts;
 @using CRM.Shared.Model;
 @using Microsoft.JSInterop;
+@using System.Linq.Expressions
 @inject HttpClient http;
 @inject IJSRuntime JsRuntime
 
@@ -20,8 +21,9 @@ else
                         <h2>@SelectedItem.Name <b style="font-weight: bolder;">Kontaktpersoner</b></h2>
                     </div>
                     <div class="col-sm-4">
+                        @*---------------TILFØJ NY---------------  *@
                         <button style="border-radius: 60px; float: right; color: white; font-weight: bolder; background: deepskyblue; padding-left: 10px; padding-right: 10px;" class="btn" type="button"> + Tilføj ny</button>
-                       
+
                     </div>
                 </div>
             </div>
@@ -36,14 +38,19 @@ else
                 <tbody>
                 @foreach (var contact in Contacts)
                 {
-                    <tr class="tab-content">
-                        <td>@contact.Name</td>
-                        <td>@contact.Email</td>
-                        <td>@contact.PhoneNumber</td>
-                        <td> <a><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant"/></a>
-                            <a><img src="/css/Logos/Delete.svg" style="height: 30px; width: 33px;" alt="du furet"/></a>
-                        </td>
-                    </tr>
+                    if (contact.IsHidden == false)
+                    {
+                        <tr class="tab-content">
+                            <td>@contact.Name</td>
+                            <td>@contact.Email</td>
+                            <td>@contact.PhoneNumber</td>
+                            @*---------------Handlings knapper--------------- *@
+                            <td> <button><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant"/></button>
+                                <button @onclick="() => ArchiveContact(contact)"><img src="/css/Logos/Delete.svg" style="height: 30px; width: 33px;" alt="du furet"/></button>
+                            </td>
+                        </tr>
+                    }
+                   
                 }
                 </tbody>
             </table>
@@ -63,13 +70,17 @@ else
             <table class="table">
                 <caption style="caption-side:top; align-content:center ;color:black;"><b>Kontaktpersoner</b></caption>
                 <tbody>
-                    @foreach (var contact in Contacts)
+                    @foreach (var contact in Contacts )
                     {
-                        <tr>
-                            <td>@contact.Name</td>
-                            <td>@contact.Email</td>
-                            <td>@contact.PhoneNumber</td>
-                        </tr>
+                        if (contact.IsHidden == false)
+                        {
+                            <tr>
+                                <td>@contact.Name</td>
+                                <td>@contact.Email</td>
+                                <td>@contact.PhoneNumber</td>
+                            </tr>
+                        }
+                       
                     }
                 </tbody>
             </table>
@@ -143,21 +154,47 @@ else
             };
         Modal.Show<EditContact>("", parameters, options);
     }
-    public async Task DeleteContact(Contact contact)
+    //public async void DeleteContact(Contact contact)
+    //{
+    //    // https://stackoverflow.com/questions/60773229/how-to-use-alert-confirm-and-prompt-function-using-blazor
+    //    bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+    //    if (confirmed)
+    //    {
+    //        try
+    //        {
+    //            await http.DeleteAsync($"api/Contacts/{contact.Id}");
+    //            StateHasChanged(); // It doesn't update when an element is deleted
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            Console.WriteLine(e);
+    //        }
+    //    }
+    //}
+
+    public async void ArchiveContact(Contact contact)
     {
-        // https://stackoverflow.com/questions/60773229/how-to-use-alert-confirm-and-prompt-function-using-blazor
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
         if (confirmed)
         {
             try
             {
-                await http.DeleteAsync($"api/Contacts/{contact.Id}");
-                //StateHasChanged(); // It doesn't update when an element is deleted
+                var content = JsonContent.Create(contact);
+                await http.PutAsync($"api/Contacts/Archive/{contact.Id}", content);
+                StateHasChanged();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                
             }
+            
         }
+       
+            
     }
+
+
+
+
 }
