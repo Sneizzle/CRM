@@ -1,5 +1,6 @@
 ﻿@using CRM.Shared.Model;
 @inject HttpClient http;
+@using CRM.Client.Pages.Customer;
 
 <div class="container">
     <EditForm Model="customer"> 
@@ -68,8 +69,10 @@
 
     private async Task Create()
     {
-
+     
+        
         var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
+        
 
         //if (response.IsSuccessStatusCode)
         //{

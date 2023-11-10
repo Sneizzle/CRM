@@ -98,7 +98,7 @@ else
 
 
 @code {
-    private List<Customer> customers;
+    public List<Customer> customers;
     public string Filter { get; set; }
     private bool sortAscending = true;
     private bool sortAscendingName = true;
@@ -133,6 +133,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+
         customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
         contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
     }
