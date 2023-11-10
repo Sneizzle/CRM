@@ -71,10 +71,10 @@
 
         var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
 
-        //if (response.IsSuccessStatusCode)
-        //{
-        //    await BlazoredModal.CloseAsync();
-        //}
+        if (response.IsSuccessStatusCode)
+        {
+            await BlazoredModal.CloseAsync();
+        }
     }
 
 }
