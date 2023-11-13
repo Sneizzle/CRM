@@ -9,6 +9,7 @@ namespace CRM.Client.repositories
 {
     public class CustomerRepo
     {
+
         static HttpClient http = new HttpClient();
         private static CustomerRepo instance;
         public static CustomerRepo Instance
