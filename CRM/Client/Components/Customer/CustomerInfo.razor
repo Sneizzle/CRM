@@ -1,6 +1,7 @@
 ﻿@using CRM.Client.Components.Contacts;
 @using CRM.Shared.Model;
 @using Microsoft.JSInterop;
+@using System.Linq.Expressions
 @inject HttpClient http;
 @inject IJSRuntime JsRuntime
 
@@ -13,99 +14,46 @@ else
     @*-----------------------------------------------------------------edit data-----------------------------------------------*@
     @if (isEditing)
     {
-        <div style="text-align: center;">
-            <h1>Rediger "@SelectedItem.Name"</h1>
-            <div style="border: 1px solid #000; border-radius: 5px; display: inline-block; position: relative;">
-                @*Phone number styling*@
-                <h2 style="font-size: 18px; display: inline-block; margin: 15px; padding: 12px;">TLF:</h2>
-                <input type="text" @bind="@SelectedItem.PhoneNumber" style="border: none; outline: none; display: inline-block; padding: 5px; width: 150px;" />
-
-
-                <div style="position: absolute; top: 0; right: 0; bottom: 0; display: flex; align-items: center; padding: 10px;">
-                </div>
-            </div>
-            <div style="display: flex;">
-                <div style="width: 70%; padding: 10px;">
-                    @*Left side content*@
-
-
-                    <div style="display: flex;">
-                        <div style="width: 70%; padding: 10px;">
-                            @*kontaktpersoner styling*@
-                            <h3>Kontaktpersoner</h3>
-                            <div style="border: 1px solid #000; border-radius: 5px; display: flex;">
-                                <div style="width: 75%; padding: 10px;">
-                                    <div style="display: flex; flex-direction: column; max-height: 600px; max-width: 600px; overflow-y: auto">
-                                        @*table deklarering*@
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Navn</th>
-                                                    <th>Handling</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var contact in Contacts)
-                                                {
-                                                    <tr>
-                                                        <td>@contact.Name</td>
-                                                        <td> <button style="color:green" @onclick="() => EditContactModal(contact)">Rediger</button> </td>
-                                                        <td> <button style="color:red" @onclick="() => DeleteContact(contact)">Slet</button> </td>
-                                                    </tr>
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div style="padding: 0px; margin-left: 55px">
-                                    <button @onclick="@(() => CreateContactModal())" class="btn btn-primary" style="font-size: 40px;">+</button>
-                                </div>
-                            </div>
-                        </div>
+        <div class="container">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2>@SelectedItem.Name <b style="font-weight: bolder;">Kontaktpersoner</b></h2>
                     </div>
+                    <div class="col-sm-4">
+                        @*---------------TILFØJ NY---------------  *@
+                        <button style="border-radius: 60px; float: right; color: white; font-weight: bolder; background: deepskyblue; padding-left: 10px; padding-right: 10px;" class="btn" type="button"> + Tilføj ny</button>
 
-                </div>
-                <div style="width: 60%; padding: 10px;">
-                    @*Right side content *@
-
-                    @*(Task Logbook)*@
-                    <button style="border: 1px solid #000; border-radius: 5px; padding: 10px; margin-left: 160px;">
-
-                        <h3>Task Logbog</h3>
-
-                    </button>
-                    @*(Remarks)*@
-
-                    <h3 style="margin-top: 30px;">Bemærkning</h3>
-                    <div style="border: 1px solid #000; border-radius: 5px; padding: 10px;">
-                        <textarea @bind="@SelectedItem.StreetName" style="width: 100%; min-height: 100px; border: hidden; margin: 8px; padding: 5px; font-size: 18px;"></textarea>
-                    </div>
-
-                </div>
-            </div>
-            <div style="width: 60%; padding: 10px;">
-                <div>
-                    @*kundeinfo bottom section styling*@
-                    <div style="display: flex">
-                        <h4 style="padding-top: 8px;">Størrelsen på Kunden: </h4>
-                        <input type="text" @bind="@SelectedItem.EmployeeCount" style="display: inline-block; width: 52px; margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
-                        <div />
-                    </div>
-                    <div>
-                        <div style="display: flex">
-                            <h4 style="padding-top: 8px;">Tilgængelige Servicetimer:</h4>
-                            <input type="text" @bind="@SelectedItem.ServiceHours" style="display: inline-block; width: 40px; margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
-                        </div>
-                    </div>
-                    <div>
-                        <div style="display: flex">
-                            <h4 style="padding-top: 12px;">Addresse: </h4>
-                            <input type="text" @bind="@SelectedItem.StreetName" style="display: inline-block; width: 240px; margin: 8px; padding: 5px; font-weight: bold; font-size: 18px;" />
-                        </div>
                     </div>
                 </div>
             </div>
-
+            
+            <table class="table">
+                <tr style="font-weight: bold; border: black; border-bottom-style: solid;">
+                    <th>Navn</th>
+                    <th>Email</th>
+                    <th>Telefonnummer</th>
+                    <th>Handlinger</th>
+                </tr>
+                <tbody>
+                @foreach (var contact in Contacts)
+                {
+                    if (contact.IsHidden == false)
+                    {
+                        <tr class="tab-content">
+                            <td>@contact.Name</td>
+                            <td>@contact.Email</td>
+                            <td>@contact.PhoneNumber</td>
+                            @*---------------Handlings knapper--------------- *@
+                            <td> <button><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant"/></button>
+                                <button @onclick="() => ArchiveContact(contact)"><img src="/css/Logos/Delete.svg" style="height: 30px; width: 33px;" alt="du furet"/></button>
+                            </td>
+                        </tr>
+                    }
+                   
+                }
+                </tbody>
+            </table>
         </div>
         <div style="float: right; margin: 10px; font-size: 22px">
             <button> Gem</button>
@@ -122,19 +70,23 @@ else
             <table class="table">
                 <caption style="caption-side:top; align-content:center ;color:black;"><b>Kontaktpersoner</b></caption>
                 <tbody>
-                    @foreach (var contact in Contacts)
+                    @foreach (var contact in Contacts )
                     {
-                        <tr>
-                            <td>@contact.Name</td>
-                            <td>@contact.Email</td>
-                            <td>@contact.PhoneNumber</td>
-                        </tr>
+                        if (contact.IsHidden == false)
+                        {
+                            <tr>
+                                <td>@contact.Name</td>
+                                <td>@contact.Email</td>
+                                <td>@contact.PhoneNumber</td>
+                            </tr>
+                        }
+                       
                     }
                 </tbody>
             </table>
             <div class="container">
                 <div class="row">
-                    <div class="col-sm">
+                    <div class="col-sm"> 
                         <p> <b>Tilgængelige servicetimer:</b> @SelectedItem.ServiceHours</p>
                         <p> <b>Størrelse på kunden:</b> @SelectedItem.EmployeeCount</p>
                         <p> <b>Adresse:</b> @SelectedItem.StreetName, @SelectedItem.ZipCode @SelectedItem.CityName</p>
@@ -202,21 +154,47 @@ else
             };
         Modal.Show<EditContact>("", parameters, options);
     }
-    public async Task DeleteContact(Contact contact)
+    //public async void DeleteContact(Contact contact)
+    //{
+    //    // https://stackoverflow.com/questions/60773229/how-to-use-alert-confirm-and-prompt-function-using-blazor
+    //    bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+    //    if (confirmed)
+    //    {
+    //        try
+    //        {
+    //            await http.DeleteAsync($"api/Contacts/{contact.Id}");
+    //            StateHasChanged(); // It doesn't update when an element is deleted
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            Console.WriteLine(e);
+    //        }
+    //    }
+    //}
+
+    public async void ArchiveContact(Contact contact)
     {
-        // https://stackoverflow.com/questions/60773229/how-to-use-alert-confirm-and-prompt-function-using-blazor
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
         if (confirmed)
         {
             try
             {
-                await http.DeleteAsync($"api/Contacts/{contact.Id}");
-                //StateHasChanged(); // It doesn't update when an element is deleted
+                var content = JsonContent.Create(contact);
+                await http.PutAsync($"api/Contacts/Archive/{contact.Id}", content);
+                StateHasChanged();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                
             }
+            
         }
+       
+            
     }
+
+
+
+
 }

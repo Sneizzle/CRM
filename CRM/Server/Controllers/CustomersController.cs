@@ -32,6 +32,7 @@ namespace CRMApi.Controllers
                 return NotFound();
             }
             return await _context.Customers.ToListAsync();
+
         }
 
         // GET: api/Customer/5
@@ -97,6 +98,7 @@ namespace CRMApi.Controllers
             }
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
+            
 
             //    return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
             return CreatedAtAction(nameof(GetCustomer), new { id = customer.Id }, customer);

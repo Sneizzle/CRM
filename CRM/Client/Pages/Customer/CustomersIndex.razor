@@ -2,7 +2,9 @@
 @using CRM.Shared;
 @using CRM.Shared.Model;
 @using CRM.Client.Components.Customer;
+@using CRM.Client.Components.States
 @inject HttpClient http;
+@inject CustomerStateService CustomerState
 
 
 <PageTitle>CustomersIndex</PageTitle>
@@ -70,28 +72,29 @@ else
                 </tr>
             </thead>
             <tbody class="hoverTable">
-                @foreach (var customer in customers)
-                {
-                    if (!IsVisible(customer))
-                        continue;
-                    <tr @onclick="@(() => OpenModal(customer))">
-                        <td>@customer.Name</td>
-                        <td>@customer.PhoneNumber</td>
-                        <td>@customer.ServiceHours</td>
-                        <td>@customer.DateModified</td>
-                        <td>
-                            <div>
-                                <button style="border:thin; z-index:50"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25" /></button>
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                <button style="border: thin; z-index:50"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #ccc;"></tr>
-                }
+               
+            @foreach (var customer in customers)
+            {
+                if (!IsVisible(customer))
+                    continue;
+                <tr @onclick="@(() => OpenModal(customer))">
+                    <td>@customer.Name</td>
+                    <td>@customer.PhoneNumber</td>
+                    <td>@customer.ServiceHours</td>
+                    <td>@customer.DateModified</td>
+                    <td>
+                        <div>
+                            <button style="border: thin; z-index: 50"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25"/></button>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <button style="border: thin; z-index: 50"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25"/></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ccc;"></tr>
+            }
             </tbody>
         </table>
     </div>
@@ -99,6 +102,10 @@ else
 
 
 @code {
+
+    
+
+
     private List<Customer> customers;
     public string Filter { get; set; }
     private bool sortAscending = true;
@@ -129,13 +136,35 @@ else
         Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
         StateHasChanged();
     }
-   
+    
+
+
 
     protected override async Task OnInitializedAsync()
     {
-        customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
+        
+        customers = CustomerState.GetCustomers();
+        CustomerState.OnChange += UpdateCustomerList;
+        var serverCustomers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
+        foreach (var serverCustomer in serverCustomers)
+        {
+            if (!customers.Any(c => c.Id == serverCustomer.Id))
+            {
+                customers.Add(serverCustomer);
+            }
+        }
+        
+        StateHasChanged();
         contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
+
     }
+
+    private void UpdateCustomerList()
+    {
+        customers = CustomerState.GetCustomers();
+        StateHasChanged();
+    }
+
     private void SortByName()
     {
         sortAscendingName = !sortAscendingName; //Sætter til false onClick // intially true. 
