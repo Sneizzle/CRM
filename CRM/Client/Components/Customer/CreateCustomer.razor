@@ -1,5 +1,7 @@
 ﻿@using CRM.Shared.Model;
+@using CRM.Client.Components.States
 @inject HttpClient http;
+@inject CustomerStateService CustomerState
 
 <div class="container">
     <EditForm Model="customer"> 
@@ -66,16 +68,25 @@
 
     private Customer customer = new Customer();
 
+
+    [Parameter] public EventCallback OnCustomerCreated { get; set; }
+
     private async Task Create()
+{
+    var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var createdCustomer = await response.Content.ReadFromJsonAsync<Customer>();
+            CustomerState.AddCustomer(createdCustomer);
+            await BlazoredModal.CloseAsync();
+            
+        }
+        else
     {
-
-        var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
-
-        //if (response.IsSuccessStatusCode)
-        //{
-        //    await BlazoredModal.CloseAsync();
-        //}
+        Console.WriteLine("Something went wrong tubbe");
     }
+}
 
 }
 
