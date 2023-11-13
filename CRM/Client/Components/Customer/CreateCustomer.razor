@@ -69,8 +69,6 @@
     private Customer customer = new Customer();
 
 
-    [Parameter] public EventCallback OnCustomerCreated { get; set; }
-
     private async Task Create()
 {
     var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
