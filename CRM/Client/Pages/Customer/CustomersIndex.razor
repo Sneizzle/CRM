@@ -1,11 +1,10 @@
 ﻿@page "/"
+@using CRM.Client.Repositories;
 @using CRM.Shared;
 @using CRM.Shared.Model;
 @using CRM.Client.Components.Customer;
 @inject HttpClient http;
-@using CRM.Client.repositories;
-
-
+@inject CustomerRepo CustomerRepo
 
 <PageTitle>CustomersIndex</PageTitle>
 
@@ -15,7 +14,6 @@
 }
 else
 {  
-
     <div style="max-width: 1000px;max-height:800px; margin:auto; overflow: auto;">
         <div style="max-width:300px">
         <input class="form-control" type="text" placeholder="Search up a customer.."
@@ -106,13 +104,7 @@ else
     private bool sortAscendingHours = true;
     private List<Contact> contacts;
 
-    CustomerRepo CRepo = CustomerRepo.Instance;
-
-    // Virker unødvendig? vi har allerede metoden i repo'et
-    // public List<Customer> GetList()
-    // {
-    //     return CRepo.GetList();
-    // }
+    //CustomerRepo CustomerRepo = CustomerRepo.Instance;
 
     private void OpenModal(Customer customer)
     {
@@ -139,13 +131,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        foreach (var customer in CRepo.GetList())
-        {
-            Console.WriteLine(customer.Name);
-        }
-        // customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
-        // contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
+        await CustomerRepo.InitializeCustomers();
+        customers = CustomerRepo.GetList();
     }
+
     private void SortByName()
     {
         sortAscendingName = !sortAscendingName; //Sætter til false onClick // intially true. 

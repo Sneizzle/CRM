@@ -1,6 +1,6 @@
 using Blazored.Modal;
 using CRM.Client;
-using CRM.Client.repositories;
+using CRM.Client.Repositories;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -10,7 +10,6 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddBlazoredModal();
-//builder.Services.AddScoped<CustomerRepo>();
 
 builder.Services.AddHttpClient("CRM.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
@@ -19,4 +18,7 @@ builder.Services.AddHttpClient("CRM.ServerAPI", client => client.BaseAddress = n
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("CRM.ServerAPI"));
 builder.Services.AddApiAuthorization();
 builder.Services.AddSyncfusionBlazor();
+
+builder.Services.AddSingleton<CustomerRepo>();
+
 await builder.Build().RunAsync();
