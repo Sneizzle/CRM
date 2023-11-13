@@ -5,7 +5,7 @@
 @using CRM.Client.Components.States
 @inject HttpClient http;
 @inject CustomerStateService CustomerState
-
+@inject ContactStateService ContactState
 
 <PageTitle>CustomersIndex</PageTitle>
 
@@ -155,8 +155,23 @@ else
         }
         
         StateHasChanged();
-        contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
 
+        contacts = ContactState.GetContacts();
+        ContactState.OnChange += UpdateContactList;
+        var serverContacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
+        foreach (var serverContact in serverContacts)
+        {
+            if (!contacts.Any(b => b.Name == serverContact.Name))
+            {
+                contacts.Add(serverContact);
+            }
+        }
+
+    }
+    private void UpdateContactList()
+    {
+        contacts = ContactState.GetContacts();
+        StateHasChanged();
     }
 
     private void UpdateCustomerList()

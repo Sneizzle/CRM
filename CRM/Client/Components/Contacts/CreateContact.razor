@@ -1,6 +1,7 @@
 ﻿@using CRM.Shared.Model;
+@using CRM.Client.Components.States
 @inject HttpClient http;
-
+@inject ContactStateService ContactState;
 
 <h3>Opret kontaktperson</h3>
 <div class="container">
@@ -51,9 +52,12 @@
         newContact.DateModified = DateTime.Now; //TODO delete
         try
         {
+            
             var response = await http.PostAsJsonAsync<Contact>("api/Contacts", newContact);
             if (response.IsSuccessStatusCode == true)
             {
+                var createdContact = await response.Content.ReadFromJsonAsync<Contact>();
+                ContactState.AddContacts(createdContact);
                 await Close();
             }
             else
