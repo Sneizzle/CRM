@@ -1,4 +1,6 @@
-﻿@using CRM.Shared.Model;
+﻿@using CRM.Client.repositories;
+@using CRM.Shared.Model;
+
 @inject HttpClient http;
 
 <div class="container">
@@ -66,9 +68,9 @@
 
     private Customer customer = new Customer();
 
+
     private async Task Create()
     {
-
         var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
 
         //if (response.IsSuccessStatusCode)
