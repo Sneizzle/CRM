@@ -19,6 +19,6 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddApiAuthorization();
 builder.Services.AddSyncfusionBlazor();
 
-builder.Services.AddSingleton<CustomerRepo>();
+//builder.Services.AddSingleton<CustomerRepo>();
 
 await builder.Build().RunAsync();

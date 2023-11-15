@@ -1,4 +1,5 @@
-﻿@using CRM.Client.repositories;
+﻿@using CRM.Client.Repositories;
+@using CRM.Client.repositories;
 @using CRM.Shared.Model;
 
 @inject HttpClient http;
@@ -68,6 +69,7 @@
     private async Task Close() => await BlazoredModal.CloseAsync();
 
     private Customer customer = new Customer();
+    CustomerRepo CustomerRepo = CustomerRepo.Instance;
 
 
     private async Task Create()
@@ -76,7 +78,9 @@
 
         if (response.IsSuccessStatusCode)
         {
-            await BlazoredModal.CloseAsync();
+            await CustomerRepo.InitializeCustomers();
+            //await BlazoredModal.CloseAsync();
+            await BlazoredModal.CloseAsync(ModalResult.Ok<Customer>(customer));
         }
     }
 

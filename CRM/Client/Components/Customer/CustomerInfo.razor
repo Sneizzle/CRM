@@ -157,11 +157,7 @@ else
 
 @*-------------------------------------------------------------------Logik---------------------------------------------------- *@
 @code {
-
-
-
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
-    [CascadingParameter] List<Customer> c { get; set; }
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
     [Parameter]
     public Customer? SelectedItem { get; set; }
