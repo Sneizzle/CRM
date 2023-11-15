@@ -1,5 +1,7 @@
 ﻿@using CRM.Shared.Model;
+@using CRM.Client.Components.States
 @inject HttpClient http;
+@inject CustomerStateService CustomerState
 
 <div class="container">
     <EditForm Model="customer"> 
@@ -7,7 +9,7 @@
     <div class="row">
         <div class="col-sm">
             <div class="mb-3">
-                <label class="form-label">Navn</label>
+                <label class="form-label">Navn*</label>
                 <input class="form-control" @bind="customer.Name" type="text" />
                 <ValidationMessage For="() => customer.Name"/>
             </div>
@@ -39,12 +41,12 @@
                 <ValidationMessage For="() => customer.ServiceHours"/>
             </div>
             <div class="mb-3">
-                <label class="form-label">CVR</label>
+                <label class="form-label">CVR*</label>
                 <input class="form-control" @bind="customer.CVR" type="text" />
                 <ValidationMessage For="() => customer.CVR"/>
             </div>
             <div class="mb-3">
-                <label class="form-label">EAN</label>
+                <label class="form-label">EAN*</label>
                 <input class="form-control" @bind="customer.EAN" type="text"/>
                 <ValidationMessage For="() => customer.EAN"/>
             </div>
@@ -66,16 +68,23 @@
 
     private Customer customer = new Customer();
 
+
     private async Task Create()
+{
+    var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var createdCustomer = await response.Content.ReadFromJsonAsync<Customer>();
+            CustomerState.AddCustomer(createdCustomer);
+            await BlazoredModal.CloseAsync();
+            
+        }
+        else
     {
-
-        var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
-
-        //if (response.IsSuccessStatusCode)
-        //{
-        //    await BlazoredModal.CloseAsync();
-        //}
+        Console.WriteLine("Something went wrong tubbe");
     }
+}
 
 }
 
