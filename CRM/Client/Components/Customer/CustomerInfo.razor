@@ -45,7 +45,7 @@ else
                             <td>@contact.Email</td>
                             <td>@contact.PhoneNumber</td>
                             @*---------------Handlings knapper--------------- *@
-                            <td> <button><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant"/></button>
+                            <td> <button @onclick="()=> EditContactModal(contact)"><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant"/></button>
                                 <button @onclick="() => ArchiveContact(contact)"><img src="/css/Logos/Delete.svg" style="height: 30px; width: 33px;" alt="du furet"/></button>
                             </td>
                         </tr>
