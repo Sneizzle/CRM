@@ -1,6 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @using CRM.Client.Components.Customer
 @using CRM.Client.Pages.Customer;
+@using CRM.Client.Repositories;
+@using CRM.Shared.Model;
 @using Microsoft.AspNetCore.Authorization;
 @attribute [Authorize]
 
@@ -13,9 +15,9 @@
         <div class="top-row px-4 auth">
             <AuthorizeView>
                 <Authorized>
-                    <a style="color: #0071C1; cursor: pointer">
-                        <href @onclick="@(() => OpenModal())">Opret Kunde</href>
-                    </a>
+@*                     <a style="color: #0071C1; cursor: pointer">
+                        <href @onclick="@(() => CreateCustomerModal())">Opret Kunde</href>
+                    </a> *@
                     <a href="/admin">Admin stuffs</a>
                 </Authorized>
             </AuthorizeView>
@@ -31,17 +33,31 @@
 
 @code{
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
+    //CustomerRepo CR = CustomerRepo.Instance;
 
-    private void OpenModal()
-    {
+    // private async void CreateCustomerModal()
+    // {
+    //     var options = new ModalOptions()
+    //     {
+    //         Size = ModalSize.Automatic
+    //     };
+    //     var customerResult = Modal.Show<CreateCustomer>("Opret Kunde");
 
-        var options = new ModalOptions()
-        {
-            Size = ModalSize.Automatic
-        };
-        Modal.Show<CreateCustomer>("Opret Kunde");
-        StateHasChanged();
-    }
+    //     var result = await customerResult.Result;
+    //     if (!result.Cancelled)
+    //     {
+    //         Customer tmpCustomer = (Customer)result.Data;
+    //         CR.customers.Add(tmpCustomer);
+    //         Console.WriteLine("result.confirmed :)");
+    //         await CR.InitializeCustomers();
+    //         //StateHasChanged();
+    //     }
+    //     else
+    //     {
+    //         Console.WriteLine("result.Ikkeconfirmed :(");
+    //         StateHasChanged();
+    //     }
+    // }
 
 
 }
