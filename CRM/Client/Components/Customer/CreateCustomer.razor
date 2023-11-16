@@ -1,5 +1,4 @@
 ﻿@using CRM.Client.Repositories;
-@using CRM.Client.repositories;
 @using CRM.Shared.Model;
 @inject HttpClient http;
 @using CRM.Client.Pages.Customer;
@@ -56,7 +55,7 @@
     <div class="row">
         <div class="col-sm">
             <button class="btn btn-danger" style="float:right" @onclick="Cancel">Annuller</button>
-            <button class="btn btn-primary" style="float:right" @onclick="Create" >Opret kunde</button>
+            <button class="btn btn-primary" style="float:right" @onclick="SaveCustomer" >Opret kunde</button>
         </div>
     </div>
     </EditForm>
@@ -66,24 +65,23 @@
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
     private async Task Cancel() => await BlazoredModal.CancelAsync();
-    private async Task CreateCust() => await BlazoredModal.CloseAsync(ModalResult.Ok(customer));
+    private async Task CreateCustomerTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(customer));
 
     private Customer customer = new Customer();
-    CustomerRepo CR = CustomerRepo.Instance;
+    //CustomerRepo CR = CustomerRepo.Instance;
 
 
-    private async Task Create()
+    private async Task SaveCustomer()
     {
         var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
 
         if (response.IsSuccessStatusCode)
         {
-            await CreateCust();
+            await CreateCustomerTask();
             //await CR.InitializeCustomers();
             //await BlazoredModal.CloseAsync();
             //await BlazoredModal.CloseAsync(ModalResult.Ok<Customer>(customer));
         }
-        StateHasChanged();
     }
 }
 

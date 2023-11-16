@@ -26,7 +26,7 @@
             {
                 <h5 class="alert-warning">En kontaktperson skal som minimum have et navn</h5>
             }
-            <button style="float:right" @onclick="Close" class="btn btn-danger">Anuller</button>
+            <button style="float:right" @onclick="Cancel" class="btn btn-danger">Anuller</button>
             <button style="float:right" @onclick="SaveContact" class="btn btn-primary">Gem</button>
         </div>
     </div>
@@ -40,7 +40,9 @@
     private Contact newContact = new();
 
     //private List<Customer> customers = new();
-    private async Task Close() => await BlazoredModal.CloseAsync();
+    private async Task Cancel() => await BlazoredModal.CloseAsync();
+    private async Task CreateContactTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(newContact));
+
     private bool showErrorMessage = false;
 
 
@@ -48,13 +50,12 @@
     {
         newContact.CustomerId = SelectedItem.Id;
         newContact.DateCreated = DateTime.Now;
-        newContact.DateModified = DateTime.Now; //TODO delete
         try
         {
             var response = await http.PostAsJsonAsync<Contact>("api/Contacts", newContact);
             if (response.IsSuccessStatusCode == true)
             {
-                await Close();
+                await CreateContactTask();
             }
             else
             {
@@ -66,14 +67,5 @@
         {
             Console.WriteLine(e);
         }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Console.WriteLine("CUSTOMER ID: " + SelectedItem.Id);
-
-        // eventuelt pass customer listen fra forsiden, så man ikke behøver at lave et apikald hver gang
-        // customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
-
     }
 }

@@ -2,6 +2,8 @@
 @using CRM.Shared.Model;
 @using Microsoft.JSInterop;
 @using System.Linq.Expressions
+@using CRM.Client.Repositories;
+
 @inject HttpClient http;
 @inject IJSRuntime JsRuntime
 
@@ -22,12 +24,12 @@ else
                     </div>
                     <div class="col-sm-4">
                         @*---------------TILFØJ NY---------------  *@
-                        <button @onclick="CreateContactModal"style="border-radius: 60px; float: right; color: white; font-weight: bolder; background: deepskyblue; padding-left: 10px; padding-right: 10px;" class="btn" type="button"> + Tilføj ny</button>
-                        
+                        <button @onclick="CreateContactModal" style="border-radius: 60px; float: right; color: white; font-weight: bolder; background: deepskyblue; padding-left: 10px; padding-right: 10px;" class="btn" type="button"> + Tilføj ny</button>
+
                     </div>
                 </div>
             </div>
-            
+
             <table class="table">
                 <tr style="font-weight: bold; border: black; border-bottom-style: solid;">
                     <th>Navn</th>
@@ -36,22 +38,25 @@ else
                     <th>Handlinger</th>
                 </tr>
                 <tbody>
-                @foreach (var contact in Contacts)
-                {
-                    if (contact.IsHidden == false)
+                    @foreach (var contact in ConRepo.contacts)
                     {
-                        <tr class="tab-content">
-                            <td>@contact.Name</td>
-                            <td>@contact.Email</td>
-                            <td>@contact.PhoneNumber</td>
-                            @*---------------Handlings knapper--------------- *@
-                            <td> <button @onclick="()=> EditContactModal(contact)"><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant"/></button>
-                                <button @onclick="() => ArchiveContact(contact)"><img src="/css/Logos/Delete.svg" style="height: 30px; width: 33px;" alt="du furet"/></button>
-                            </td>
-                        </tr>
+                        if (contact.CustomerId == SelectedItem.Id)
+                        {
+                            if (contact.IsHidden == false)
+                            {
+                                <tr class="tab-content">
+                                    <td>@contact.Name</td>
+                                    <td>@contact.Email</td>
+                                    <td>@contact.PhoneNumber</td>
+                                    @*---------------Handlings knapper--------------- *@
+                                    <td>
+                                        <button @onclick="()=> EditContactModal(contact)"><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant" /></button>
+                                        <button @onclick="() => ArchiveContact(contact)"><img src="/css/Logos/Delete.svg" style="height: 30px; width: 33px;" alt="du furet" /></button>
+                                    </td>
+                                </tr>
+                            }
+                        }
                     }
-                   
-                }
                 </tbody>
             </table>
         </div>
@@ -70,23 +75,25 @@ else
             <table class="table">
                 <caption style="caption-side:top; align-content:center ;color:black;"><b>Kontaktpersoner</b></caption>
                 <tbody>
-                    @foreach (var contact in Contacts )
+                    @foreach (var contact in ConRepo.contacts)
                     {
-                        if (contact.IsHidden == false)
+                        if (contact.CustomerId == SelectedItem.Id)
                         {
-                            <tr>
-                                <td>@contact.Name</td>
-                                <td>@contact.Email</td>
-                                <td>@contact.PhoneNumber</td>
-                            </tr>
+                            if (contact.IsHidden == false)
+                            {
+                                <tr>
+                                    <td>@contact.Name</td>
+                                    <td>@contact.Email</td>
+                                    <td>@contact.PhoneNumber</td>
+                                </tr>
+                            }
                         }
-                       
                     }
                 </tbody>
             </table>
             <div class="container">
                 <div class="row">
-                    <div class="col-sm"> 
+                    <div class="col-sm">
                         <p> <b>Tilgængelige servicetimer:</b> @SelectedItem.ServiceHours</p>
                         <p> <b>Størrelse på kunden:</b> @SelectedItem.EmployeeCount</p>
                         <p> <b>Adresse:</b> @SelectedItem.StreetName, @SelectedItem.ZipCode @SelectedItem.CityName</p>
@@ -102,7 +109,7 @@ else
         </div>
         <div class="modal-footer">
             <button class="btn btn-dark" type="button" @onclick="editCustomer">Rediger</button>
-            <button class="btn btn-primary" type="button" @onclick="Close">Okay</button>
+            <button class="btn btn-primary" type="button" @onclick="Cancel">Okay</button>
         </div>
     }
 }
@@ -111,13 +118,17 @@ else
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
+
+    //CustomerRepo CusRepo = CustomerRepo.Instance;
+    ContactsRepo ConRepo = ContactsRepo.Instance;
+
     [Parameter]
     public Customer? SelectedItem { get; set; }
-    [Parameter]
-    public List<Contact>? Contacts { get; set; }
+    // [Parameter]
+    // public List<Contact>? Contacts { get; set; }
     private bool isEditing = false;
 
-    private async Task Close() => await BlazoredModal.CloseAsync();
+    private async Task Cancel() => await BlazoredModal.CloseAsync();
 
 
     private void editCustomer()
@@ -129,7 +140,7 @@ else
         isEditing = false;
     }
 
-    private void CreateContactModal()
+    private async void CreateContactModal()
     {
         var parameters = new ModalParameters()
           .Add(nameof(CreateContact.SelectedItem), SelectedItem);
@@ -137,8 +148,14 @@ else
             {
                 Size = ModalSize.Automatic
             };
-        Modal.Show<CreateContact>("", parameters, options);
-        StateHasChanged();
+        var contactResult = Modal.Show<CreateContact>("", parameters, options);
+        var result = await contactResult.Result;
+        if (!result.Cancelled)
+        {
+            Contact tmpContact = (Contact)result.Data;
+            ConRepo.AddToContacts(tmpContact);
+            StateHasChanged();
+        }
     }
     private void EditContactModal(Contact contact)
     {
@@ -182,15 +199,7 @@ else
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                
             }
-            
         }
-       
-            
     }
-
-
-
-
 }

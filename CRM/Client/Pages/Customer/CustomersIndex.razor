@@ -10,7 +10,7 @@
 
 <PageTitle>CustomersIndex</PageTitle>
 
-@if (CR.customers == null)
+@if (CusRepo.customers == null)
 {
     <p><em>Loading..</em></p>
 }
@@ -72,7 +72,7 @@ else
                 </tr>
             </thead>
             <tbody class="hoverTable">
-                @foreach (var customer in CR.customers)
+                @foreach (var customer in CusRepo.customers)
                 {
                     if (!IsVisible(customer))
                         continue;
@@ -107,24 +107,26 @@ else
     private bool sortAscending = true;
     private bool sortAscendingName = true;
     private bool sortAscendingHours = true;
-    private List<Contact> contacts;
+    //private List<Contact> contacts;
 
-    CustomerRepo CR = CustomerRepo.Instance;
+    CustomerRepo CusRepo = CustomerRepo.Instance;
+    ContactsRepo ConRepo = ContactsRepo.Instance;
+
 
     private async void OpenCustomerInfoModal(Customer customer)
     {
-        var customerContacts = new List<Contact>();
-        for (int i = 0; i < contacts.Count; i++)
-        {
-            if (contacts[i].CustomerId == customer.Id)
-            {
-                customerContacts.Add(contacts[i]);
-            }
-        }
+        // var customerContacts = new List<Contact>();
+        // for (int i = 0; i < contacts.Count; i++)
+        // {
+        //     if (contacts[i].CustomerId == customer.Id)
+        //     {
+        //         customerContacts.Add(contacts[i]);
+        //     }
+        // }
 
         var parameters = new ModalParameters()
-            .Add(nameof(CustomerInfo.SelectedItem), customer)
-            .Add(nameof(CustomerInfo.Contacts), customerContacts);
+            .Add(nameof(CustomerInfo.SelectedItem), customer);
+        //.Add(nameof(CustomerInfo.Contacts), customerContacts);
         var options = new ModalOptions()
             {
                 Size = ModalSize.ExtraLarge
@@ -158,7 +160,7 @@ else
         if (!result.Cancelled)
         {
             Customer tmpCustomer = (Customer)result.Data;
-            CR.AddToCustomers(tmpCustomer);
+            CusRepo.AddToCustomers(tmpCustomer);
             Console.WriteLine("result.confirmed :)");
             StateHasChanged();
         }
@@ -171,10 +173,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await CR.InitializeCustomers();
+        await CusRepo.InitializeCustomers();
+        await ConRepo.InitializeContacts();
         //PopulateCustomerRepo();
         // customers = CustomerRepo.GetList();
-        contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
+        //contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
         StateHasChanged();
     }
 
@@ -203,11 +206,11 @@ else
         sortAscending = true;
         if (sortAscendingName == true)
         {
-            CR.customers = CR.customers.OrderByDescending(c => c.Name).ToList();
+            CusRepo.customers = CusRepo.customers.OrderByDescending(c => c.Name).ToList();
         }
         else
         {
-            CR.customers = CR.customers.OrderBy(c => c.Name).ToList();
+            CusRepo.customers = CusRepo.customers.OrderBy(c => c.Name).ToList();
         }
     }
     private void SortByDateModified()
@@ -217,11 +220,11 @@ else
         sortAscendingName = true;
         if (sortAscending == true)
         {
-            CR.customers = CR.customers.OrderByDescending(c => c.DateModified).ToList();
+            CusRepo.customers = CusRepo.customers.OrderByDescending(c => c.DateModified).ToList();
         }
         else
         {
-            CR.customers = CR.customers.OrderBy(c => c.DateModified).ToList();
+            CusRepo.customers = CusRepo.customers.OrderBy(c => c.DateModified).ToList();
             //customers => customers.DateModified is < DateTime.
         }
     }
@@ -232,11 +235,11 @@ else
         sortAscendingHours = !sortAscendingHours;
         if(sortAscendingHours == true)
         {
-            CR.customers = CR.customers.OrderByDescending(c => c.ServiceHours).ToList();
+            CusRepo.customers = CusRepo.customers.OrderByDescending(c => c.ServiceHours).ToList();
         }
         else 
         {
-            CR.customers = CR.customers.OrderBy(c => c.ServiceHours).ToList();
+            CusRepo.customers = CusRepo.customers.OrderBy(c => c.ServiceHours).ToList();
         }
 
     }

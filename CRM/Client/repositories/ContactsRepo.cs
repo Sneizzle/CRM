@@ -3,7 +3,7 @@ using CRM.Shared.Model;
 using System.Net.Http.Json;
 using System.Security.Cryptography;
 
-namespace CRM.Client.repositories
+namespace CRM.Client.Repositories
 {
     public class ContactsRepo
     {
@@ -12,14 +12,14 @@ namespace CRM.Client.repositories
             BaseAddress = new Uri("https://localhost:7047/api")
         };
 
-        private static CustomerRepo instance;
-        public static CustomerRepo Instance
+        private static ContactsRepo instance;
+        public static ContactsRepo Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new CustomerRepo();
+                    instance = new ContactsRepo();
                 }
                 return instance;
             }
