@@ -3,6 +3,7 @@
 @using CRM.Shared.Model;
 @using CRM.Client.Components.Customer;
 @using CRM.Client.Components.States
+@using CRM.Client.Components.AddHours
 @inject HttpClient http;
 @inject CustomerStateService CustomerState
 
@@ -84,12 +85,13 @@ else
                     <td>@customer.DateModified</td>
                     <td>
                         <div>
-                            <button style="border: thin; z-index: 50"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25"/></button>
+                            <button style="border: thin; z-index: 100"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25"/></button>
                         </div>
                     </td>
+                    
                     <td>
-                        <div>
-                            <button style="border: thin; z-index: 50"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25"/></button>
+                            <div onclick="event.stopPropagation();">
+                                <button position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></button>
                         </div>
                     </td>
                 </tr>
@@ -103,7 +105,7 @@ else
 
 @code {
 
-    
+
 
 
     private List<Customer> customers;
@@ -114,6 +116,18 @@ else
 
     private List<Contact> contacts;
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
+
+    private void OpenRefuel(Customer customer)
+    {
+        var parameters = new ModalParameters().
+        Add(nameof(AddHours.SelectedItem), customer);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.ExtraLarge
+            };
+        Modal.Show<AddHours>();
+    }
+ 
 
     private void OpenModal(Customer customer)
     {
