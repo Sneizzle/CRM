@@ -155,9 +155,8 @@ else
         if (!result.Cancelled)
         {
             Customer tmpCustomer = (Customer)result.Data;
-            CR.customers.Add(tmpCustomer);
+            CR.AddToCustomers(tmpCustomer);
             Console.WriteLine("result.confirmed :)");
-            //await CR.InitializeCustomers();
             StateHasChanged();
         }
         else
