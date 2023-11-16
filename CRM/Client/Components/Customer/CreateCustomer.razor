@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-sm">
             <div class="mb-3">
-                <label class="form-label">Navn</label>
+                <label class="form-label">Navn*</label>
                 <input class="form-control" @bind="customer.Name" type="text" />
                 <ValidationMessage For="() => customer.Name"/>
             </div>
@@ -41,12 +41,12 @@
                 <ValidationMessage For="() => customer.ServiceHours"/>
             </div>
             <div class="mb-3">
-                <label class="form-label">CVR</label>
+                <label class="form-label">CVR*</label>
                 <input class="form-control" @bind="customer.CVR" type="text" />
                 <ValidationMessage For="() => customer.CVR"/>
             </div>
             <div class="mb-3">
-                <label class="form-label">EAN</label>
+                <label class="form-label">EAN*</label>
                 <input class="form-control" @bind="customer.EAN" type="text"/>
                 <ValidationMessage For="() => customer.EAN"/>
             </div>

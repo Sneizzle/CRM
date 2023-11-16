@@ -22,8 +22,8 @@ else
                     </div>
                     <div class="col-sm-4">
                         @*---------------TILFØJ NY---------------  *@
-                        <button style="border-radius: 60px; float: right; color: white; font-weight: bolder; background: deepskyblue; padding-left: 10px; padding-right: 10px;" class="btn" type="button"> + Tilføj ny</button>
-
+                        <button @onclick="CreateContactModal"style="border-radius: 60px; float: right; color: white; font-weight: bolder; background: deepskyblue; padding-left: 10px; padding-right: 10px;" class="btn" type="button"> + Tilføj ny</button>
+                        
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@ else
                             <td>@contact.Email</td>
                             <td>@contact.PhoneNumber</td>
                             @*---------------Handlings knapper--------------- *@
-                            <td> <button><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant"/></button>
+                            <td> <button @onclick="()=> EditContactModal(contact)"><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant"/></button>
                                 <button @onclick="() => ArchiveContact(contact)"><img src="/css/Logos/Delete.svg" style="height: 30px; width: 33px;" alt="du furet"/></button>
                             </td>
                         </tr>

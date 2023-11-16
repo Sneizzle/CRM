@@ -2,6 +2,7 @@
 @using CRM.Client.Components.Customer
 @using CRM.Client.Pages.Customer;
 @using Microsoft.AspNetCore.Authorization;
+@inject NavigationManager Nav
 @attribute [Authorize]
 
 <div class="page">
@@ -21,6 +22,7 @@
             </AuthorizeView>
 
             <LoginDisplay/>
+                    <button style="border:thin; float:left;" @onclick="@(() => Nav.NavigateTo("/"))"><img src="/VicathEQIcon.png" alt="VicathTree" width="50" height="50" /></button>
                
         </div>
         <article class="content px-4">
