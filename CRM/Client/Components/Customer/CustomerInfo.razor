@@ -124,8 +124,6 @@ else
 
     [Parameter]
     public Customer? SelectedItem { get; set; }
-    // [Parameter]
-    // public List<Contact>? Contacts { get; set; }
     private bool isEditing = false;
 
     private async Task Cancel() => await BlazoredModal.CloseAsync();

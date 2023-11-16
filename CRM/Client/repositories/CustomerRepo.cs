@@ -50,18 +50,5 @@ namespace CRM.Client.Repositories
             Console.WriteLine("Added customer to customerslist in repo");
             customers.Add(customer);
         }
-
-        public void AddListToCustomers(List<Customer> customers)
-        {
-            foreach (var customer in customers)
-            {
-                this.customers.Add(customer);
-            }
-        }
-
-        public List<Customer> GetList()
-        {
-            return customers;
-        }
     }
 }

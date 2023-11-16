@@ -100,12 +100,10 @@ else
 
 @code {
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
-    // private List<Customer> customers;
     public string Filter { get; set; }
     private bool sortAscending = true;
     private bool sortAscendingName = true;
     private bool sortAscendingHours = true;
-    //private List<Contact> contacts;
 
     CustomerRepo CusRepo = CustomerRepo.Instance;
     ContactsRepo ConRepo = ContactsRepo.Instance;
@@ -113,38 +111,13 @@ else
 
     private async void OpenCustomerInfoModal(Customer customer)
     {
-        // var customerContacts = new List<Contact>();
-        // for (int i = 0; i < contacts.Count; i++)
-        // {
-        //     if (contacts[i].CustomerId == customer.Id)
-        //     {
-        //         customerContacts.Add(contacts[i]);
-        //     }
-        // }
-
         var parameters = new ModalParameters()
             .Add(nameof(CustomerInfo.SelectedItem), customer);
-        //.Add(nameof(CustomerInfo.Contacts), customerContacts);
         var options = new ModalOptions()
             {
                 Size = ModalSize.ExtraLarge
             };
         var customerResult = Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
-        // var result = await customerResult.Result;
-        // Console.WriteLine("MODALRESULT: " + result.ToString());
-        // if (!result.Cancelled)
-        // {
-        //     Customer tmpCustomer = (Customer)result.Data;
-        //     CR.customers.Add(tmpCustomer);
-        //     Console.WriteLine("result.confirmed :)");
-        //     await CR.InitializeCustomers();
-        //     StateHasChanged();
-        // }
-        // else
-        // {
-        //     Console.WriteLine("result.Ikkeconfirmed :(");
-        //     StateHasChanged();
-        // }
     }
 
     private async void CreateCustomerModal()
@@ -173,29 +146,8 @@ else
     {
         await CusRepo.InitializeCustomers();
         await ConRepo.InitializeContacts();
-        //PopulateCustomerRepo();
-        // customers = CustomerRepo.GetList();
-        //contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
         StateHasChanged();
     }
-
-
-    // private async void PopulateCustomerRepo()
-    // {
-    //     try
-    //     {
-    //         Console.WriteLine("Populating customer list");
-    //         //CustomerRepo.customers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
-    //         var tmp = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
-    //         CustomerRepo.AddListToCustomers(tmp);
-    //         StateHasChanged();
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         await Console.Out.WriteLineAsync("InitializeCustomers error: " + e);
-    //     }
-    // }
-
 
     private void SortByName()
     {
