@@ -1,7 +1,6 @@
 ﻿@using CRM.Shared.Model;
 @inject HttpClient http;
 
-
 <h3>Opret kontaktperson</h3>
 <div class="container">
     <div class="row">
@@ -39,8 +38,7 @@
     public Customer SelectedItem { get; set; }
     private Contact newContact = new();
 
-    //private List<Customer> customers = new();
-    private async Task Cancel() => await BlazoredModal.CloseAsync();
+    private async Task Cancel() => await BlazoredModal.CloseAsync(ModalResult.Cancel());
     private async Task CreateContactTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(newContact));
 
     private bool showErrorMessage = false;

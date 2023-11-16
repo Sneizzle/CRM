@@ -64,12 +64,10 @@
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
-    private async Task Cancel() => await BlazoredModal.CancelAsync();
+    private async Task Cancel() => await BlazoredModal.CancelAsync(ModalResult.Cancel());
     private async Task CreateCustomerTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(customer));
 
     private Customer customer = new Customer();
-    //CustomerRepo CR = CustomerRepo.Instance;
-
 
     private async Task SaveCustomer()
     {
@@ -78,9 +76,6 @@
         if (response.IsSuccessStatusCode)
         {
             await CreateCustomerTask();
-            //await CR.InitializeCustomers();
-            //await BlazoredModal.CloseAsync();
-            //await BlazoredModal.CloseAsync(ModalResult.Ok<Customer>(customer));
         }
     }
 }

@@ -156,6 +156,10 @@ else
             ConRepo.AddToContacts(tmpContact);
             StateHasChanged();
         }
+        else
+        {
+            Console.WriteLine("Create contact cancel");
+        }
     }
     private void EditContactModal(Contact contact)
     {
@@ -167,23 +171,6 @@ else
             };
         Modal.Show<EditContact>("", parameters, options);
     }
-    //public async void DeleteContact(Contact contact)
-    //{
-    //    // https://stackoverflow.com/questions/60773229/how-to-use-alert-confirm-and-prompt-function-using-blazor
-    //    bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
-    //    if (confirmed)
-    //    {
-    //        try
-    //        {
-    //            await http.DeleteAsync($"api/Contacts/{contact.Id}");
-    //            StateHasChanged(); // It doesn't update when an element is deleted
-    //        }
-    //        catch (Exception e)
-    //        {
-    //            Console.WriteLine(e);
-    //        }
-    //    }
-    //}
 
     public async void ArchiveContact(Contact contact)
     {
@@ -194,6 +181,7 @@ else
             {
                 var content = JsonContent.Create(contact);
                 await http.PutAsync($"api/Contacts/Archive/{contact.Id}", content);
+                ConRepo.RemoveFromContacts(contact);
                 StateHasChanged();
             }
             catch (Exception e)

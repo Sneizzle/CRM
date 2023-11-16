@@ -50,5 +50,10 @@ namespace CRM.Client.Repositories
             contacts.Add(contact);
         }
 
+        public void RemoveFromContacts(Contact contact)
+        {
+            contact.IsHidden = true;
+        }
+
     }
 }
