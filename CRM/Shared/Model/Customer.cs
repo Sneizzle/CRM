@@ -27,7 +27,7 @@ namespace CRM.Shared.Model
 
         public int? EmployeeCount { get; set; }
 
-        [Required, MinLength(8, ErrorMessage = "EAN Skal være på 13 tal"), MaxLength(8, ErrorMessage ="CVR Nummer skal være på 8 tal")]
+        [Required, MinLength(8, ErrorMessage = "CVR Nummber skal være på 8 tal"), MaxLength(8, ErrorMessage ="CVR Nummer skal være på 8 tal")]
         public string CVR { get; set; }
 
         [MinLength(13, ErrorMessage = "EAN Skal være på 13 tal"), MaxLength(13, ErrorMessage ="EAN Skal være på 13 tal")]

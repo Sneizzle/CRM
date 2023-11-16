@@ -3,8 +3,11 @@
 @using CRM.Shared;
 @using CRM.Shared.Model;
 @using CRM.Client.Components.Customer;
+@using CRM.Client.Components.States
 @inject HttpClient http;
-@*@inject CustomerRepo CustomerRepo*@
+@inject CustomerStateService CustomerState
+
+
 <PageTitle>CustomersIndex</PageTitle>
 
 @if (CR.customers == null)
