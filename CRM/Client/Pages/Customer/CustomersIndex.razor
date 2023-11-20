@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using CRM.Client.Components.ServiceHours
 @using CRM.Shared;
 @using CRM.Shared.Model;
 @using CRM.Client.Components.Customer;
@@ -83,13 +84,13 @@ else
                     <td>@customer.ServiceHours</td>
                     <td>@customer.DateModified</td>
                     <td>
-                        <div>
-                            <button style="border: thin; z-index: 50"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25"/></button>
+                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true">
+                                <button style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25" /></button>
                         </div>
                     </td>
                     <td>
-                        <div>
-                            <button style="border: thin; z-index: 50"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25"/></button>
+                            <div style=" z-index: 50;">
+                            <button style="border: thin;" ><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25"/></button>
                         </div>
                     </td>
                 </tr>
@@ -103,7 +104,7 @@ else
 
 @code {
 
-    
+
 
 
     private List<Customer> customers;
@@ -125,7 +126,7 @@ else
                 customerContacts.Add(contacts[i]);
             }
         }
-        
+
         var parameters = new ModalParameters()
             .Add(nameof(CustomerInfo.SelectedItem), customer)
             .Add(nameof(CustomerInfo.Contacts), customerContacts);
@@ -136,13 +137,13 @@ else
         Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
         StateHasChanged();
     }
-    
+
 
 
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         customers = CustomerState.GetCustomers();
         CustomerState.OnChange += UpdateCustomerList;
         var serverCustomers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
@@ -153,10 +154,24 @@ else
                 customers.Add(serverCustomer);
             }
         }
-        
+
         StateHasChanged();
         contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
 
+    }
+
+    private void AddTasks(Customer customer)
+    {
+        var parameters = new ModalParameters()
+           .Add(nameof(AddTask.SelectedItem), customer);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Automatic
+            };
+        Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
+        StateHasChanged();
+
+        
     }
 
     private void UpdateCustomerList()
@@ -196,6 +211,7 @@ else
             //customers => customers.DateModified is < DateTime.
         }
     }
+
     private void SortByServiceHours()
     {
         sortAscending = true;

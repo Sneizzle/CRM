@@ -1,0 +1,15 @@
+﻿@using CRM.Shared.Model;
+@using CRM.Client.Components.States;
+@inject CustomerStateService CustomerState;
+
+<h3>AddServiceHours</h3>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    [Parameter]
+    public Customer? SelectedItem { get; set; }
+    
+    private async Task Close() => await BlazoredModal.CloseAsync();
+}
