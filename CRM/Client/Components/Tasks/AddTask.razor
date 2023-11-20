@@ -1,6 +1,5 @@
 ﻿@using CRM.Shared.Model;
-@using CRM.Client.Components.States;
-@inject CustomerStateService CustomerState;
+@inject HttpClient http;
 
 <div class="container">
     <div class="row">
@@ -13,7 +12,7 @@
         <div class="col-sm">
             <div class="mb-3">
                 <label class="form-label">Antal Timer brugt</label>
-                <input class="form-control" type="number" @bind="assignment.Hours"/>
+                <input class="form-control" type="number" @bind="assignment.Hours" />
             </div>
         </div>
         <div class="col-sm">
@@ -30,13 +29,21 @@
         <div class="col-md">
             @if (SelectedItem.ServiceHours != null)
             {
-                <label class="form-label">@(SelectedItem.ServiceHours + assignment.Hours) </label>
+                
+                <label class="form-label">@(SelectedItem.ServiceHours - assignment.Hours) </label>
             }
         </div>
     </div>
     <div class="row">
-        <br />
-        <button class="btn btn-primary" @onclick="Confirm">Tilføj Task</button>
+        <div class="col-sm">
+            @if (showErrorMessage == true)
+            {
+                <h5 class="alert-warning">Hov. Et af felterne er ikke blevet udfyldt!</h5>
+            }
+            <br />
+            <button class="btn btn-primary" @onclick="Confirm">Tilføj Task</button>
+            <button class="btn btn-danger" @onclick="Close">Annuller</button>
+        </div>
     </div>
 </div>
 
@@ -46,13 +53,36 @@
 
     [Parameter]
     public Customer? SelectedItem { get; set; }
+    private Assignment? assignment = new Assignment();
 
-    private Assignment? assignment { get; set; }
+    private bool showErrorMessage = false;
 
     private async Task Close() => await BlazoredModal.CloseAsync();
-
+    private async Task UpdateCustomerTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
     private async Task Confirm()
     {
+        assignment.customerId = SelectedItem.Id;
 
+        try
+        {
+            var response = await http.PostAsJsonAsync<Assignment>("api/Assignments", assignment);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                SelectedItem.ServiceHours = SelectedItem.ServiceHours - assignment.Hours;
+                await http.PutAsJsonAsync<Customer>($"api/Customers/{SelectedItem.Id}", SelectedItem);
+                await UpdateCustomerTask();
+            }
+            else
+            {
+                showErrorMessage = true;
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
+
 }

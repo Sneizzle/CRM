@@ -121,7 +121,7 @@ else
             };
         Modal.Show<AddHours>();
     }
-        
+
 
     private async void OpenCustomerInfoModal(Customer customer)
     {
@@ -213,7 +213,7 @@ else
         return string.IsNullOrEmpty(Filter) || customer.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
     }
 
-    private void AddTasks(Customer customer)
+    private async void AddTasks(Customer customer)
     {
         var parameters = new ModalParameters().
         Add(nameof(AddTask.SelectedItem), customer);
@@ -221,7 +221,13 @@ else
             {
                 Size = ModalSize.Medium
             };
-        Modal.Show<AddTask>($"Opret Task for: {customer.Name}", parameters, options);
+        var customerResult = Modal.Show<AddTask>($"Opret Task for: {customer.Name}", parameters, options);
+
+        var result = await customerResult.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
         
     }
 }
