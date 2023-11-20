@@ -50,19 +50,38 @@ else
                                     <td>@contact.PhoneNumber</td>
                                     @*---------------Handlings knapper--------------- *@
                                     <td>
-                                        <button @onclick="()=> EditContactModal(contact)"><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant" /></button>
-                                        <button @onclick="() => ArchiveContact(contact)"><img src="/css/Logos/Delete.svg" style="height: 30px; width: 33px;" alt="du furet" /></button>
+                                        <a @onclick="()=> EditContactModal(contact)"><img src="/css/Logos/EditColor.svg" style="cursor: pointer;border: none !important; border-style: none !important; border-color: transparent !important; outline: none !important; height: 30px; width: 33px;" alt="blyant" /></a>
+                                        <a @onclick="() => ArchiveContact(contact)"><img src="/css/Logos/DeleteColor.svg" style="cursor: pointer;border: 0 !important; height: 30px; width: 33px;" alt="du furet" /></a>
                                     </td>
                                 </tr>
                             }
                         }
                     }
+                @*New Contact editable field code *@
+                @if (showNewContactRow)
+                {
+                
+
+                    <tr class="tab-content">
+                        <td><input @bind="newContact.Name" /></td>
+                        <td><input @bind="newContact.Email" /></td>
+                        <td><input @bind="newContact.PhoneNumber" /></td>
+                        <td>
+                            <a @onclick="SaveNewContact">
+                                    <img src="/css/Logos/SaveColor.svg" style="cursor: pointer;border: 0 !important; height: 30px; width: 33px; color: green;" alt="gem" />
+                            </a>
+                            <a @onclick="ResetNewContact">
+                                    <img src="/css/Logos/DeleteColor.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px;" alt="du furet" />
+                            </a>
+                        </td>
+                    </tr>
+                    }
                 </tbody>
             </table>
         </div>
         <div style="float: right; margin: 10px; font-size: 22px">
-            <button> Gem</button>
-            <button @onclick="closeEdit"> Luk</button>
+            @*<button> Gem</button>*@
+            <button @onclick="closeEdit"> Afslut Redigering</button>
         </div>
     }
     @*------------------------------------------------------view data-------------------------------------------------------------*@
@@ -116,12 +135,17 @@ else
 
 @*-------------------------------------------------------------------Logik---------------------------------------------------- *@
 @code {
-    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
-    [CascadingParameter] public IModalService Modal { get; set; } = default!;
-
+   
+    private Contact newContact = new();
     //CustomerRepo CusRepo = CustomerRepo.Instance;
     ContactsRepo ConRepo = ContactsRepo.Instance;
 
+
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    [CascadingParameter] public IModalService Modal { get; set; } = default!;
+
+  
     [Parameter]
     public Customer? SelectedItem { get; set; }
     private bool isEditing = false;
@@ -138,26 +162,72 @@ else
         isEditing = false;
     }
 
+    
+    private bool showNewContactRow = false;
+    //private string newContactName = "";
+    //private string newContactEmail = "";
+    //private string newContactPhoneNumber = "";
+
+    private async void SaveNewContact()
+    {
+
+        newContact.CustomerId = SelectedItem.Id;
+        newContact.DateCreated = DateTime.Now;
+        try
+        {
+            var response = await http.PostAsJsonAsync<Contact>("api/Contacts", newContact);
+            if (response.IsSuccessStatusCode == true)
+            {
+                ConRepo.AddToContacts(newContact);
+                ResetNewContact();
+                
+                StateHasChanged();
+            }
+            else
+            {
+                newContact.Name = "Navn Mangler";
+                StateHasChanged();
+
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+    }
+
+    private void ResetNewContact()
+    {
+    //newContactName = "";
+    //newContactEmail = "";
+    //newContactPhoneNumber = "";
+        newContact = new Contact();
+        showNewContactRow = false;
+    }
+
+
     private async void CreateContactModal()
     {
-        var parameters = new ModalParameters()
-          .Add(nameof(CreateContact.SelectedItem), SelectedItem);
-        var options = new ModalOptions()
-            {
-                Size = ModalSize.Automatic
-            };
-        var contactResult = Modal.Show<CreateContact>("", parameters, options);
-        var result = await contactResult.Result;
-        if (!result.Cancelled)
-        {
-            Contact tmpContact = (Contact)result.Data;
-            ConRepo.AddToContacts(tmpContact);
-            StateHasChanged();
-        }
-        else
-        {
-            Console.WriteLine("Create contact cancel");
-        }
+        showNewContactRow = true;
+        //var parameters = new ModalParameters()
+        //  .Add(nameof(CreateContact.SelectedItem), SelectedItem);
+        //var options = new ModalOptions()
+        //    {
+        //        Size = ModalSize.Automatic
+        //    };
+        //var contactResult = Modal.Show<CreateContact>("", parameters, options);
+        //var result = await contactResult.Result;
+        //if (!result.Cancelled)
+        //{
+        //    Contact tmpContact = (Contact)result.Data;
+        //    ConRepo.AddToContacts(tmpContact);
+        //    StateHasChanged();
+        //}
+        //else
+        //{
+        //    Console.WriteLine("Create contact cancel");
+        //}
     }
     private void EditContactModal(Contact contact)
     {
