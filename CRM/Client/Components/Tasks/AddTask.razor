@@ -5,8 +5,38 @@
 <div class="container">
     <div class="row">
         <div class="col-sm">
-            <textarea cols="50" placeholder="Beskrivelse"></textarea>
+            <br /><br /><br />
+            <textarea cols="50" rows="3" placeholder="Beskrivelse" @bind="assignment.Description"></textarea>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <div class="mb-3">
+                <label class="form-label">Antal Timer brugt</label>
+                <input class="form-control" type="number" @bind="assignment.Hours"/>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="mb-3">
+                <label class="form-label">Nuværende antal timer:</label>
+                @if (SelectedItem.ServiceHours != null)
+                {
+                    <input class="form-control-plaintext" readonly @bind="SelectedItem.ServiceHours" />
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md">
+            @if (SelectedItem.ServiceHours != null)
+            {
+                <label class="form-label">@(SelectedItem.ServiceHours + assignment.Hours) </label>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <br />
+        <button class="btn btn-primary" @onclick="Confirm">Tilføj Task</button>
     </div>
 </div>
 
@@ -16,6 +46,13 @@
 
     [Parameter]
     public Customer? SelectedItem { get; set; }
-    
+
+    private Assignment? assignment { get; set; }
+
     private async Task Close() => await BlazoredModal.CloseAsync();
+
+    private async Task Confirm()
+    {
+
+    }
 }
