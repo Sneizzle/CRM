@@ -55,6 +55,7 @@ namespace CRM.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAssignment(int id, Assignment assignment)
         {
+     
             if (id != assignment.Id)
             {
                 return BadRequest();
@@ -86,6 +87,7 @@ namespace CRM.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Assignment>> PostAssignment(Assignment assignment)
         {
+            assignment.DateCreated = DateTime.Now;
           if (_context.Assignments == null)
           {
               return Problem("Entity set 'ApplicationDbContext.Assignments'  is null.");

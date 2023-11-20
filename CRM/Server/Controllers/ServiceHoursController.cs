@@ -86,6 +86,7 @@ namespace CRM.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<ServiceHours>> PostServiceHours(ServiceHours serviceHours)
         {
+            serviceHours.DateCreated = DateTime.Now;
           if (_context.ServiceHours == null)
           {
               return Problem("Entity set 'ApplicationDbContext.ServiceHours'  is null.");
