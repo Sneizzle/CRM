@@ -90,7 +90,7 @@ else
                     </td>
                     
                     <td>
-                            <div onclick="event.stopPropagation();">
+                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true">
                                 <button position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></button>
                         </div>
                     </td>
