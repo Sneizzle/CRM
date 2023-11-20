@@ -117,9 +117,9 @@ else
         Add(nameof(AddHours.SelectedItem), customer);
         var options = new ModalOptions()
             {
-                Size = ModalSize.ExtraLarge
+                Size = ModalSize.Medium
             };
-        Modal.Show<AddHours>();
+        var refuelResult = Modal.Show<AddHours>($"add hours for: {customer.Name}", parameters, options);
     }
         
 

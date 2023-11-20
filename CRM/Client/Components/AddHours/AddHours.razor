@@ -2,31 +2,60 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-9">
-            Task Beskrivelse
-        </div>
-        <div class="col-4">
-            One of three columns
-        </div>
-        <div class="col-6">
-            One of three columns
+        <div class="col-sm">
+            <div class="row">
+                <div class="col-6">
+                    <label class="form-label"style="width:100px;">tilføj timer:</label>
+                    <input style="width:100px" @bind="HoursToBeAdded" type="number" oninput="@addHoursNow">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" style="width:100px;">Timer pt:</label>
+                    <input style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; width:100px" @bind="SelectedItem.ServiceHours" disabled="true">
+                </div>
+            </div>
+            <br />
+            <button style="color:green">
+                Godkend 
+            </button>
+            <label></label>
+            <button style="color:red">
+                Fortryd
+            </button>
         </div>
     </div>
 </div>
-
 
 
 @code {
 
     [Parameter]
     public Customer? SelectedItem { get; set; }
+    public Customer? HoursToBeAdded { get; set; }
+
+
 }
 <style>
     #formItem label {
-        display: block;
+        position: absolute;
         text-align: center;
         line-height: 150%;
         font-size: .85em;
     }
 
+    textarea {
+        width: 175px;
+        height: 100px;
+    }
+
+    .table,
+    .row,
+    .col-12,
+    .col-6 {
+        margin: 0;
+        padding: 0;
+    }
+
+    .box {
+        display: flex;
+    }
 </style>
