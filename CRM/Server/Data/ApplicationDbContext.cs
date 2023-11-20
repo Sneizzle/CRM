@@ -18,7 +18,7 @@ namespace CRM.Server.Data
 
         public DbSet<Contact> Contacts { get; set; }
 
-        public DbSet<Assignment> Tasks { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
 
         public DbSet<ServiceHours> ServiceHours { get; set; }
     }
