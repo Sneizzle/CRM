@@ -1,4 +1,5 @@
 ﻿@using CRM.Client.Components.Contacts;
+@using CRM.Client.Components.Tasks;
 @using CRM.Shared.Model;
 @using Microsoft.JSInterop;
 @using System.Linq.Expressions
@@ -101,7 +102,7 @@ else
                         <p> <b>EAN:</b> @SelectedItem.EAN</p>
                     </div>
                     <div class="col-sm">
-                        <button class="btn" style="float:right; border-color:black; height: 75px; width: 200px;">Task logbog</button>
+                        <button @onclick="OpenTaskLogModal" class="btn" style="float:right; border-color:black; height: 75px; width: 200px;">Task logbog</button>
                         <textarea style="float:right; margin-top: 10px; " placeholder="Kommentarboks"></textarea>
                     </div>
                 </div>
@@ -168,6 +169,14 @@ else
                 Size = ModalSize.Automatic
             };
         Modal.Show<EditContact>("", parameters, options);
+    }
+    private void OpenTaskLogModal()
+    {
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Automatic
+            };
+        Modal.Show<TaskLog>($"Task logbog for: {SelectedItem.Name}", options);
     }
 
     public async void ArchiveContact(Contact contact)

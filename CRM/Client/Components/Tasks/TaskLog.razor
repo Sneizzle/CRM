@@ -1,0 +1,27 @@
+﻿@using CRM.Shared.Model;
+
+@inject HttpClient http;
+
+
+<p>Ja det godt du hej</p>
+
+<div>
+    <table>
+        <tr>
+            <th>Beskrivelse</th>
+            <th>Timer</th>
+        </tr>
+        <tbody>
+            <tr></tr>
+            <tr></tr>
+        </tbody>
+    </table>
+</div>
+@code {
+    List<Assignment> assignments = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        assignments = await http.GetFromJsonAsync<List<Assignment>>("/api/Assignments");
+    }
+}
