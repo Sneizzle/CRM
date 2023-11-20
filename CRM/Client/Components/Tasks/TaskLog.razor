@@ -3,25 +3,30 @@
 @inject HttpClient http;
 
 
-<p>Ja det godt du hej</p>
-
 <div>
-    <table>
+    <table class="table">
         <tr>
             <th>Beskrivelse</th>
             <th>Timer</th>
         </tr>
         <tbody>
-            <tr></tr>
-            <tr></tr>
+            @foreach (var item in assignments)
+            {
+                <tr>
+                    <td>@item.Description</td>
+                    <td>@item.Hours</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
 @code {
     List<Assignment> assignments = new();
+    List<ServiceHours> serviceHours = new();
 
     protected override async Task OnInitializedAsync()
     {
         assignments = await http.GetFromJsonAsync<List<Assignment>>("/api/Assignments");
+        serviceHours = await http.GetFromJsonAsync<List<ServiceHours>>("/api/ServiceHours");
     }
 }
