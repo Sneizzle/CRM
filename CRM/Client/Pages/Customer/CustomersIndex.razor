@@ -1,5 +1,5 @@
 ﻿@page "/"
-@using CRM.Client.Components.ServiceHours
+@using CRM.Client.Components.Tasks;
 @using CRM.Client.Repositories;
 @using CRM.Shared;
 @using CRM.Shared.Model;
@@ -213,8 +213,19 @@ else
     {
         return string.IsNullOrEmpty(Filter) || customer.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
     }
-}
 
+    private void AddTasks(Customer customer)
+    {
+        var parameters = new ModalParameters().
+        Add(nameof(AddTask.SelectedItem), customer);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Medium
+            };
+        Modal.Show<AddTask>($"Opret Task for: {customer.Name}", parameters, options);
+        
+    }
+}
 
 
 <style style="text/css">
