@@ -1,8 +1,18 @@
 ﻿@using CRM.Shared.Model;
 
-
-<h3>AddHours</h3>
-
+<div class="container">
+    <div class="row">
+        <div class="col-9">
+            Task Beskrivelse
+        </div>
+        <div class="col-4">
+            One of three columns
+        </div>
+        <div class="col-6">
+            One of three columns
+        </div>
+    </div>
+</div>
 
 
 
@@ -11,3 +21,12 @@
     [Parameter]
     public Customer? SelectedItem { get; set; }
 }
+<style>
+    #formItem label {
+        display: block;
+        text-align: center;
+        line-height: 150%;
+        font-size: .85em;
+    }
+
+</style>
