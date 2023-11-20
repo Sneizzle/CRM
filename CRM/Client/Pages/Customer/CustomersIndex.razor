@@ -72,11 +72,11 @@ else
             </thead>
             <tbody class="hoverTable">
                
-            @foreach (var customer in customers)
+            @foreach (var customer in CusRepo.customers)
             {
                 if (!IsVisible(customer))
                     continue;
-                <tr @onclick="@(() => OpenModal(customer))">
+                <tr @onclick="@(() => OpenCustomerInfoModal(customer))">
                     <td>@customer.Name</td>
                     <td>@customer.PhoneNumber</td>
                     <td>@customer.ServiceHours</td>
@@ -121,18 +121,6 @@ else
             };
         Modal.Show<AddHours>();
     }
- 
-
-    private void OpenModal(Customer customer)
-    {
-        var customerContacts = new List<Contact>();
-        for (int i = 0; i < contacts.Count; i++)
-        {
-            if (contacts[i].CustomerId == customer.Id)
-            {
-                customerContacts.Add(contacts[i]);
-            }
-        }
         
 
     private async void OpenCustomerInfoModal(Customer customer)
@@ -224,6 +212,7 @@ else
         return string.IsNullOrEmpty(Filter) || customer.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
     }
 }
+
 
 
 <style style="text/css">
