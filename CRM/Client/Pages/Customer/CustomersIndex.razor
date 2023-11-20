@@ -1,28 +1,29 @@
 ﻿@page "/"
 @using CRM.Client.Components.ServiceHours
+@using CRM.Client.Repositories;
 @using CRM.Shared;
 @using CRM.Shared.Model;
 @using CRM.Client.Components.Customer;
 @using CRM.Client.Components.States
+@using CRM.Client.Components.AddHours
 @inject HttpClient http;
-@inject CustomerStateService CustomerState
-
 
 <PageTitle>CustomersIndex</PageTitle>
 
-@if (customers == null)
+@if (CusRepo.customers == null)
 {
     <p><em>Loading..</em></p>
 }
-
 else
 {  
-
     <div style="max-width: 1000px;max-height:800px; margin:auto; overflow: auto;">
         <div style="max-width:300px">
         <input class="form-control" type="text" placeholder="Search up a customer.."
         @bind="Filter"
         @bind:event="oninput">
+        </div>
+        <div>
+            <button @onclick="@(() => CreateCustomerModal())">KNAP</button>
         </div>
         <table class="table">
             <thead>
@@ -30,7 +31,7 @@ else
                     <th>
                         <a style="color: black; cursor: pointer">
                             <href @onclick="SortByName">
-                                Name  
+                                Navn  
                                 @if (sortAscendingName == false)
                                 {
                                     <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -38,14 +39,13 @@ else
                                 else
                                 {
                                     <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
-
                                 }
                               </href>
                         </a>
 
                     </th>
-                    <th>Phonenumber</th>
-                    <th @onclick="SortByServiceHours">Servicehours
+                    <th>Telefonnr</th>
+                    <th @onclick="SortByServiceHours">Service timer
                         @if (sortAscendingHours == false)
                         {
                             <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -57,7 +57,7 @@ else
                         }
                         
                     </th>
-                    <th @onclick="SortByDateModified">Date Modified
+                    <th @onclick="SortByDateModified">Dato for optankning
                         @if(sortAscending == false)
                         {
                             <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -65,7 +65,6 @@ else
                         else
                         {
                             <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
-                            
                         }
                     </th>
                     <th>Opret task</th>
@@ -74,11 +73,11 @@ else
             </thead>
             <tbody class="hoverTable">
                
-            @foreach (var customer in customers)
+            @foreach (var customer in CusRepo.customers)
             {
                 if (!IsVisible(customer))
                     continue;
-                <tr @onclick="@(() => OpenModal(customer))">
+                <tr @onclick="@(() => OpenCustomerInfoModal(customer))">
                     <td>@customer.Name</td>
                     <td>@customer.PhoneNumber</td>
                     <td>@customer.ServiceHours</td>
@@ -88,9 +87,10 @@ else
                                 <button style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25" /></button>
                         </div>
                     </td>
+                    
                     <td>
-                            <div style=" z-index: 50;">
-                            <button style="border: thin;" ><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25"/></button>
+                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true">
+                                <button position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></button>
                         </div>
                     </td>
                 </tr>
@@ -103,80 +103,64 @@ else
 
 
 @code {
-
-
-
-
-    private List<Customer> customers;
+    [CascadingParameter] public IModalService Modal { get; set; } = default!;
     public string Filter { get; set; }
     private bool sortAscending = true;
     private bool sortAscendingName = true;
     private bool sortAscendingHours = true;
 
-    private List<Contact> contacts;
-    [CascadingParameter] public IModalService Modal { get; set; } = default!;
+    CustomerRepo CusRepo = CustomerRepo.Instance;
+    ContactsRepo ConRepo = ContactsRepo.Instance;
 
-    private void OpenModal(Customer customer)
+    private void OpenRefuel(Customer customer)
     {
-        var customerContacts = new List<Contact>();
-        for (int i = 0; i < contacts.Count; i++)
-        {
-            if (contacts[i].CustomerId == customer.Id)
-            {
-                customerContacts.Add(contacts[i]);
-            }
-        }
-
-        var parameters = new ModalParameters()
-            .Add(nameof(CustomerInfo.SelectedItem), customer)
-            .Add(nameof(CustomerInfo.Contacts), customerContacts);
+        var parameters = new ModalParameters().
+        Add(nameof(AddHours.SelectedItem), customer);
         var options = new ModalOptions()
             {
                 Size = ModalSize.ExtraLarge
             };
-        Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
-        StateHasChanged();
+        Modal.Show<AddHours>();
     }
+        
 
-
-
-
-    protected override async Task OnInitializedAsync()
-    {
-
-        customers = CustomerState.GetCustomers();
-        CustomerState.OnChange += UpdateCustomerList;
-        var serverCustomers = await http.GetFromJsonAsync<List<Customer>>("api/Customers");
-        foreach (var serverCustomer in serverCustomers)
-        {
-            if (!customers.Any(c => c.Id == serverCustomer.Id))
-            {
-                customers.Add(serverCustomer);
-            }
-        }
-
-        StateHasChanged();
-        contacts = await http.GetFromJsonAsync<List<Contact>>("api/Contacts");
-
-    }
-
-    private void AddTasks(Customer customer)
+    private async void OpenCustomerInfoModal(Customer customer)
     {
         var parameters = new ModalParameters()
-           .Add(nameof(AddTask.SelectedItem), customer);
+            .Add(nameof(CustomerInfo.SelectedItem), customer);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.ExtraLarge
+            };
+        var customerResult = Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
+    }
+
+    private async void CreateCustomerModal()
+    {
         var options = new ModalOptions()
             {
                 Size = ModalSize.Automatic
             };
-        Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
-        StateHasChanged();
-
-        
+        var customerResult = Modal.Show<CreateCustomer>("Opret Kunde");
+        var result = await customerResult.Result;
+        if (!result.Cancelled)
+        {
+            Customer tmpCustomer = (Customer)result.Data;
+            CusRepo.AddToCustomers(tmpCustomer);
+            Console.WriteLine("result.confirmed :)");
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("result.Ikkeconfirmed :(");
+            StateHasChanged();
+        }
     }
 
-    private void UpdateCustomerList()
+    protected override async Task OnInitializedAsync()
     {
-        customers = CustomerState.GetCustomers();
+        await CusRepo.InitializeCustomers();
+        await ConRepo.InitializeContacts();
         StateHasChanged();
     }
 
@@ -187,12 +171,11 @@ else
         sortAscending = true;
         if (sortAscendingName == true)
         {
-            customers = customers.OrderByDescending(c => c.Name).ToList();
+            CusRepo.customers = CusRepo.customers.OrderByDescending(c => c.Name).ToList();
         }
         else
         {
-            customers = customers.OrderBy(c => c.Name).ToList();
-
+            CusRepo.customers = CusRepo.customers.OrderBy(c => c.Name).ToList();
         }
     }
     private void SortByDateModified()
@@ -202,12 +185,11 @@ else
         sortAscendingName = true;
         if (sortAscending == true)
         {
-            customers = customers.OrderByDescending(c => c.DateModified).ToList();
+            CusRepo.customers = CusRepo.customers.OrderByDescending(c => c.DateModified).ToList();
         }
         else
         {
-            customers = customers.OrderBy(c => c.DateModified).ToList();
-
+            CusRepo.customers = CusRepo.customers.OrderBy(c => c.DateModified).ToList();
             //customers => customers.DateModified is < DateTime.
         }
     }
@@ -219,21 +201,20 @@ else
         sortAscendingHours = !sortAscendingHours;
         if(sortAscendingHours == true)
         {
-            customers = customers.OrderByDescending(c => c.ServiceHours).ToList();
-
+            CusRepo.customers = CusRepo.customers.OrderByDescending(c => c.ServiceHours).ToList();
         }
         else 
         {
-            customers = customers.OrderBy(c => c.ServiceHours).ToList();
+            CusRepo.customers = CusRepo.customers.OrderBy(c => c.ServiceHours).ToList();
         }
 
     }
     public bool IsVisible(Customer customer)
     {
         return string.IsNullOrEmpty(Filter) || customer.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
-
     }
 }
+
 
 
 <style style="text/css">

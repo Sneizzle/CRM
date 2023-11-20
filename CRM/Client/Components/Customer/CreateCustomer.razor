@@ -1,7 +1,7 @@
-﻿@using CRM.Shared.Model;
-@using CRM.Client.Components.States
+﻿@using CRM.Client.Repositories;
+@using CRM.Shared.Model;
 @inject HttpClient http;
-@inject CustomerStateService CustomerState
+@using CRM.Client.Pages.Customer;
 
 <div class="container">
     <EditForm Model="customer"> 
@@ -54,8 +54,8 @@
     </div>
     <div class="row">
         <div class="col-sm">
-            <button class="btn btn-danger" style="float:right" @onclick="Close">Annuller</button>
-            <button class="btn btn-primary" style="float:right" @onclick="Create" >Opret kunde</button>
+            <button class="btn btn-danger" style="float:right" @onclick="Cancel">Annuller</button>
+            <button class="btn btn-primary" style="float:right" @onclick="SaveCustomer" >Opret kunde</button>
         </div>
     </div>
     </EditForm>
@@ -64,28 +64,20 @@
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
-    private async Task Close() => await BlazoredModal.CloseAsync();
+    private async Task Cancel() => await BlazoredModal.CancelAsync(ModalResult.Cancel());
+    private async Task CreateCustomerTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(customer));
 
     private Customer customer = new Customer();
 
-
-    private async Task Create()
-{
-    var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
+    private async Task SaveCustomer()
+    {
+        var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
 
         if (response.IsSuccessStatusCode)
         {
-            var createdCustomer = await response.Content.ReadFromJsonAsync<Customer>();
-            CustomerState.AddCustomer(createdCustomer);
-            await BlazoredModal.CloseAsync();
-            
+            await CreateCustomerTask();
         }
-        else
-    {
-        Console.WriteLine("Something went wrong tubbe");
     }
-}
-
 }
 
 <style style="text/css">
