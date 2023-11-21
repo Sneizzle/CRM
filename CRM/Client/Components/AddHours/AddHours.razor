@@ -24,7 +24,7 @@
                 </div>
             </div>
             <br />
-            <button class="btn btn-primary" onclick="Confirm">
+            <button class="btn btn-primary" @onclick="Confirm">
                 Godkend 
             </button>
             <label></label>
@@ -43,17 +43,23 @@
     public Customer? SelectedItem { get; set; }
     public float? HoursToBeAdded { get; set; }
     public ServiceHours serviceHours = new();
-
+    private async Task UpdateCustomerTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
     private async Task Close() => await BlazoredModal.CloseAsync();
 
     private async Task Confirm()
     {
+        serviceHours.customerId = SelectedItem.Id;
         try
         {
-            var response = await http.PostAsJsonAsync<ServiceHours>($"api/ServiceHours/", serviceHours);
+            var response = await http.PostAsJsonAsync<ServiceHours>("api/ServiceHours", serviceHours );
+
+
             if (response.IsSuccessStatusCode == true)
             {
-                await Close();
+                SelectedItem.ServiceHours = SelectedItem.ServiceHours;
+                await http.PutAsJsonAsync<Customer>($"api/Customers/{SelectedItem.Id}", SelectedItem);
+                await UpdateCustomerTask();
+                StateHasChanged();
             }
             else
             {
@@ -64,8 +70,46 @@
         {
             Console.WriteLine(e);
         }
-        }
     }
+}
 }
 
 
+@*     
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    [Parameter]
+    public Customer? SelectedItem { get; set; }
+    private Assignment? assignment = new Assignment();
+
+    private bool showErrorMessage = false;
+
+    private async Task Close() => await BlazoredModal.CloseAsync();
+    private async Task UpdateCustomerTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
+    private async Task Confirm()
+    {
+        assignment.customerId = SelectedItem.Id;
+
+        try
+        {
+            var response = await http.PostAsJsonAsync<Assignment>("api/Assignments", assignment);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                SelectedItem.ServiceHours = SelectedItem.ServiceHours - assignment.Hours;
+                await http.PutAsJsonAsync<Customer>($"api/Customers/{SelectedItem.Id}", SelectedItem);
+                await UpdateCustomerTask();
+            }
+            else
+            {
+                showErrorMessage = true;
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+} *@
