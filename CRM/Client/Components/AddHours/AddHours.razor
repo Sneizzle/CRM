@@ -1,4 +1,5 @@
 ﻿@using CRM.Shared.Model;
+@inject HttpClient http;
 
 <div class="container">
     <div class="row">
@@ -9,26 +10,25 @@
                     <input style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; width:100px" @bind="SelectedItem.ServiceHours" type="number">
                 </div>
                 <div class="col-6">
-                    <label class="form-label" style="width:100px;">Nyt antal timer : @SelectedItem.ServiceHours</label>
                     @if (SelectedItem.ServiceHours != null)
                     {
 
-                        <label class="form-label">@(SelectedItem.ServiceHours + HoursToBeAdded)</label>
+                        <label class="form-label">@(SelectedItem.ServiceHours) timer </label>
                     }
-                    @if(SelectedItem.ServiceHours == null)
+                    else
                     {
 
-                        <label class="form-label">@(SelectedItem.ServiceHours + HoursToBeAdded) ingen timer pt</label>
+                        <label class="form-label">@(SelectedItem.ServiceHours ) ingen timer pt</label>
                     }
                   
                 </div>
             </div>
             <br />
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" onclick="Confirm">
                 Godkend 
             </button>
             <label></label>
-            <button class="btn btn-danger">
+            <button class="btn btn-danger" @onclick="Close">
                 Fortryd
             </button>
         </div>
@@ -38,9 +38,17 @@
 
 @code {
 
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     [Parameter]
     public Customer? SelectedItem { get; set; }
     public float? HoursToBeAdded { get; set; }
 
+    private async Task Close() => await BlazoredModal.CloseAsync();
 
+    private async Task Confirm()
+    {
+        
+    }
 }
+
+
