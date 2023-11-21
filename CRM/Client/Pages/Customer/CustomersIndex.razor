@@ -80,14 +80,14 @@ else
                     <td>@customer.PhoneNumber</td>
                     <td>@customer.ServiceHours</td>
                     <td>@customer.DateModified</td>
-                    <td>
-                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true">
-                                <button style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25" /></button>
+                        <td style="text-align: center; ">
+                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
+                                <a style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/Createtask.svg" alt="Star SVG" width="35" height="35" /></a>
                         </div>
                     </td>
-                    <td>
-                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true">
-                                <button position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></button>
+                        <td style="text-align: center;">
+                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
+                                <a position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></a>
                         </div>
                     </td>
                 </tr>
