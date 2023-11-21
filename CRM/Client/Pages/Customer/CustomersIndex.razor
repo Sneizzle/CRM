@@ -127,7 +127,9 @@ else
             .Add(nameof(CustomerInfo.SelectedItem), customer);
         var options = new ModalOptions()
             {
-                Size = ModalSize.ExtraLarge
+                Size = ModalSize.ExtraLarge,
+        DisableBackgroundCancel = true
+
             };
         var customerResult = Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
     }
