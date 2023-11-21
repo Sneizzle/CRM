@@ -110,7 +110,7 @@ else
     CustomerRepo CusRepo = CustomerRepo.Instance;
     ContactsRepo ConRepo = ContactsRepo.Instance;
 
-    private void OpenRefuel(Customer customer)
+    private async void OpenRefuel(Customer customer)
     {
         var parameters = new ModalParameters().
         Add(nameof(AddHours.SelectedItem), customer);
@@ -119,6 +119,12 @@ else
                 Size = ModalSize.Medium
             };
         var refuelResult = Modal.Show<AddHours>($"add hours for: {customer.Name}", parameters, options);
+
+        var result = await refuelResult.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
     }
         
 
