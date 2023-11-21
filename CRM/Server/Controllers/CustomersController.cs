@@ -92,6 +92,12 @@ namespace CRMApi.Controllers
         {
             customer.DateCreated = DateTime.Now;
             customer.DateModified = DateTime.Now;
+
+            if(customer.ServiceHours != null)
+            {
+                customer.LastRefill = DateTime.Now;
+            }
+
             if (_context.Customers == null)
             {
                 return Problem("Entity set 'CRMContext.Customers'  is null.");

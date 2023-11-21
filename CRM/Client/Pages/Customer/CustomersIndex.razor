@@ -79,7 +79,7 @@ else
                     <td>@customer.Name</td>
                     <td>@customer.PhoneNumber</td>
                     <td>@customer.ServiceHours</td>
-                    <td>@customer.DateModified</td>
+                    <td>@customer.LastRefill</td>
                     <td>
                             <div @onclick:stopPropagation="true" @onclick:preventDefault="true">
                                 <button style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25" /></button>
