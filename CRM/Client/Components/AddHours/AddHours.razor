@@ -42,12 +42,29 @@
     [Parameter]
     public Customer? SelectedItem { get; set; }
     public float? HoursToBeAdded { get; set; }
+    public ServiceHours serviceHours = new();
 
     private async Task Close() => await BlazoredModal.CloseAsync();
 
     private async Task Confirm()
     {
-        
+        try
+        {
+            var response = await http.PostAsJsonAsync<ServiceHours>($"api/ServiceHours/", serviceHours);
+            if (response.IsSuccessStatusCode == true)
+            {
+                await Close();
+            }
+            else
+            {
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        }
     }
 }
 
