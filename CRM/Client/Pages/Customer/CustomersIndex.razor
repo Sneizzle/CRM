@@ -44,7 +44,7 @@ else
 
                     </th>
                     <th>Telefonnr</th>
-                    <th @onclick="SortByServiceHours">Service timer
+                    <th style="cursor: pointer" @onclick="SortByServiceHours">Service timer
                         @if (sortAscendingHours == false)
                         {
                             <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -56,7 +56,7 @@ else
                         }
                         
                     </th>
-                    <th @onclick="SortByDateModified">Dato for optankning
+                    <th style="cursor: pointer" @onclick="SortByDateModified">Dato for optankning
                         @if(sortAscending == false)
                         {
                             <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -85,9 +85,9 @@ else
                                 <button style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25" /></button>
                         </div>
                     </td>
-                    <td>
-                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true">
-                                <button position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></button>
+                        <td style="text-align: center;">
+                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
+                                <a position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></a>
                         </div>
                     </td>
                 </tr>
@@ -127,7 +127,9 @@ else
             .Add(nameof(CustomerInfo.SelectedItem), customer);
         var options = new ModalOptions()
             {
-                Size = ModalSize.ExtraLarge
+                Size = ModalSize.ExtraLarge,
+        DisableBackgroundCancel = true
+
             };
         var customerResult = Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
     }
