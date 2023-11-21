@@ -48,5 +48,6 @@ namespace CRM.Client.Repositories
             Console.WriteLine("Added customer to customerslist in repo");
             customers.Add(customer);
         }
+
     }
 }
