@@ -13,9 +13,11 @@
             <button class="btn" style="border:solid;border-width:1px;margin-right:5px;" @onclick="AssignmentBool">Opgaver</button>
             <button class="btn btn-primary"  @onclick="ServiceHoursBool">Servicetimer</button>
         }
+        <input class="form-control" type="text" style="margin-left:5px;" placeholder="Søg.."
+        @bind="Filter" @bind:event="oninput"/>
     </div>
     <hr />
-    @if (contentSwitch == true)
+    @if (contentSwitch == true) // Assignment
     {
         <table class="table">
             <tr>
@@ -26,6 +28,10 @@
             <tbody>
                 @foreach (var item in assignments)
                 {
+                    if (!SearchAssignment(item))
+                    {
+                        continue;
+                    }
                     if (SelectedItem.Id == item.customerId)
                     {
                         <tr>
@@ -38,7 +44,7 @@
             </tbody>
         </table>
     }
-    else
+    else // ServiceHours
     {
         <table class="table">
             <tr>
@@ -49,6 +55,10 @@
             <tbody>
                 @foreach (var item in serviceHours)
                 {
+                    if (!SearchServiceHours(item))
+                    {
+                        continue;
+                    }
                     if (SelectedItem.Id == item.customerId)
                     {
                         <tr>
@@ -66,6 +76,7 @@
     List<Assignment> assignments = new();
     List<ServiceHours> serviceHours = new();
     private bool contentSwitch = true;
+    public string? Filter { get; set; }
 
     [Parameter]
     public Customer? SelectedItem { get; set; }
@@ -83,6 +94,15 @@
     private void ServiceHoursBool()
     {
         contentSwitch = false;
+    }
+
+    public bool SearchAssignment(Assignment assignment)
+    {
+        return string.IsNullOrEmpty(Filter) || assignment.Description.Contains(Filter, StringComparison.OrdinalIgnoreCase) || assignment.DateCreated.ToShortDateString().Contains(Filter, StringComparison.OrdinalIgnoreCase);
+    }
+    public bool SearchServiceHours(ServiceHours serviceHours)
+    {
+        return string.IsNullOrEmpty(Filter) || serviceHours.DateCreated.ToShortDateString().Contains(Filter, StringComparison.OrdinalIgnoreCase);
     }
 
     protected override async Task OnInitializedAsync()
