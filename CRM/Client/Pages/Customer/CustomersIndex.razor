@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using CRM.Client.Components.Tasks;
 @using CRM.Client.Repositories;
 @using CRM.Shared;
 @using CRM.Shared.Model;
@@ -80,8 +81,8 @@ else
                     <td>@customer.ServiceHours</td>
                     <td>@customer.DateModified</td>
                     <td>
-                        <div>
-                            <button style="border: thin; z-index: 100"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25"/></button>
+                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true">
+                                <button style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25" /></button>
                         </div>
                     </td>
                     <td>
@@ -118,7 +119,7 @@ else
             };
         Modal.Show<AddHours>();
     }
-        
+
 
     private async void OpenCustomerInfoModal(Customer customer)
     {
@@ -189,6 +190,7 @@ else
             //customers => customers.DateModified is < DateTime.
         }
     }
+
     private void SortByServiceHours()
     {
         sortAscending = true;
@@ -208,8 +210,25 @@ else
     {
         return string.IsNullOrEmpty(Filter) || customer.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
     }
-}
 
+    private async void AddTasks(Customer customer)
+    {
+        var parameters = new ModalParameters().
+        Add(nameof(AddTask.SelectedItem), customer);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Medium
+            };
+        var customerResult = Modal.Show<AddTask>($"Opret Task for: {customer.Name}", parameters, options);
+
+        var result = await customerResult.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
+        
+    }
+}
 
 
 <style style="text/css">
