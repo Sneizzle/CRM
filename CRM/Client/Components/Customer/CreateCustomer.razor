@@ -2,7 +2,6 @@
 @using CRM.Shared.Model;
 @inject HttpClient http;
 @using CRM.Client.Pages.Customer;
-
 <div class="container">
     <EditForm Model="customer"> 
         <DataAnnotationsValidator/>
@@ -60,27 +59,18 @@
     </div>
     </EditForm>
 </div>
-
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
-
     private async Task Cancel() => await BlazoredModal.CancelAsync(ModalResult.Cancel());
-    private async Task CreateCustomerTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(customer));
-
+    private async Task CloseModal() => await BlazoredModal.CloseAsync(ModalResult.Ok(customer));
     private Customer customer = new Customer();
-
     private async Task SaveCustomer()
     {
         var response = await http.PostAsJsonAsync<Customer>("api/Customers", customer);
 
         if (response.IsSuccessStatusCode)
         {
-            await CreateCustomerTask();
+            await CloseModal();
         }
     }
 }
-
-<style style="text/css">
-    
-
-</style>

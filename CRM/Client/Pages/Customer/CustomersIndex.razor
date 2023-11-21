@@ -4,7 +4,7 @@
 @using CRM.Shared;
 @using CRM.Shared.Model;
 @using CRM.Client.Components.Customer;
-@using CRM.Client.Components.States
+@using CRM.Client.Components.AddHours;
 @inject HttpClient http;
 
 <PageTitle>CustomersIndex</PageTitle>
@@ -44,7 +44,7 @@ else
 
                     </th>
                     <th>Telefonnr</th>
-                    <th @onclick="SortByServiceHours">Service timer
+                    <th style="cursor: pointer" @onclick="SortByServiceHours">Service timer
                         @if (sortAscendingHours == false)
                         {
                             <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -56,7 +56,7 @@ else
                         }
                         
                     </th>
-                    <th @onclick="SortByDateModified">Dato for optankning
+                    <th style="cursor: pointer" @onclick="SortByDateModified">Dato for optankning
                         @if(sortAscending == false)
                         {
                             <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -71,7 +71,6 @@ else
                 </tr>
             </thead>
             <tbody class="hoverTable">
-               
             @foreach (var customer in CusRepo.customers)
             {
                 if (!IsVisible(customer))
@@ -81,15 +80,14 @@ else
                     <td>@customer.PhoneNumber</td>
                     <td>@customer.ServiceHours</td>
                     <td>@customer.DateModified</td>
-                    <td>
-                        <div>
-                            <button style="border: thin; z-index: 100"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25"/></button>
+                        <td style="text-align: center; ">
+                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
+                                <a style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/Createtask.svg" alt="Star SVG" width="35" height="35" /></a>
                         </div>
                     </td>
-                    
-                    <td>
-                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true">
-                                <button position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></button>
+                        <td style="text-align: center;">
+                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
+                                <a position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></a>
                         </div>
                     </td>
                 </tr>
@@ -121,7 +119,7 @@ else
             };
         Modal.Show<AddHours>();
     }
-        
+
 
     private async void OpenCustomerInfoModal(Customer customer)
     {
@@ -129,7 +127,9 @@ else
             .Add(nameof(CustomerInfo.SelectedItem), customer);
         var options = new ModalOptions()
             {
-                Size = ModalSize.ExtraLarge
+                Size = ModalSize.ExtraLarge,
+        DisableBackgroundCancel = true
+
             };
         var customerResult = Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
     }
@@ -144,8 +144,8 @@ else
         var result = await customerResult.Result;
         if (!result.Cancelled)
         {
-            Customer tmpCustomer = (Customer)result.Data;
-            CusRepo.AddToCustomers(tmpCustomer);
+            //Customer tmpCustomer = (Customer)result.Data;
+            await CusRepo.InitializeCustomers();
             Console.WriteLine("result.confirmed :)");
             StateHasChanged();
         }
@@ -192,6 +192,7 @@ else
             //customers => customers.DateModified is < DateTime.
         }
     }
+
     private void SortByServiceHours()
     {
         sortAscending = true;
@@ -211,8 +212,25 @@ else
     {
         return string.IsNullOrEmpty(Filter) || customer.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
     }
-}
 
+    private async void AddTasks(Customer customer)
+    {
+        var parameters = new ModalParameters().
+        Add(nameof(AddTask.SelectedItem), customer);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Medium
+            };
+        var customerResult = Modal.Show<AddTask>($"Opret Task for: {customer.Name}", parameters, options);
+
+        var result = await customerResult.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
+        
+    }
+}
 
 
 <style style="text/css">

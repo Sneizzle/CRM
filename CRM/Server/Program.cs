@@ -12,15 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-builder.Services.AddSingleton<HelperMan>();
-
 var conStrBuilder = new SqlConnectionStringBuilder(
     builder.Configuration.GetConnectionString("DefaultConnection"));
 conStrBuilder.Password = builder.Configuration["DBPassword"];
 var connection = conStrBuilder.ConnectionString;
-
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

@@ -26,9 +26,7 @@ namespace CRM.Client.Repositories
             }
             set { instance = value; }
         }
-
         public List<Customer>? customers;
-
         public CustomerRepo()
         {
             customers = new List<Customer>();
@@ -50,5 +48,6 @@ namespace CRM.Client.Repositories
             Console.WriteLine("Added customer to customerslist in repo");
             customers.Add(customer);
         }
+
     }
 }
