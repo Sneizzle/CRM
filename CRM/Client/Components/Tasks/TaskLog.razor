@@ -1,32 +1,94 @@
 ﻿@using CRM.Shared.Model;
-
 @inject HttpClient http;
 
-
 <div>
-    <table class="table">
-        <tr>
-            <th>Beskrivelse</th>
-            <th>Timer</th>
-        </tr>
-        <tbody>
-            @foreach (var item in assignments)
-            {
-                <tr>
-                    <td>@item.Description</td>
-                    <td>@item.Hours</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div style="display:flex; justify-content:center;">
+        @if (contentSwitch == true)
+        {
+            <button class="btn btn-primary" style="margin-right:5px;" @onclick="AssignmentBool">Opgaver</button>
+            <button class="btn" style="border:solid;border-width:1px;" @onclick="ServiceHoursBool">Servicetimer</button>
+        }
+        else
+        {
+            <button class="btn" style="border:solid;border-width:1px;margin-right:5px;" @onclick="AssignmentBool">Opgaver</button>
+            <button class="btn btn-primary"  @onclick="ServiceHoursBool">Servicetimer</button>
+        }
+    </div>
+    <hr />
+    @if (contentSwitch == true)
+    {
+        <table class="table">
+            <tr>
+                <th>Beskrivelse</th>
+                <th>Timer</th>
+                <th>Dato Oprettet</th>
+            </tr>
+            <tbody>
+                @foreach (var item in assignments)
+                {
+                    if (SelectedItem.Id == item.customerId)
+                    {
+                        <tr>
+                            <td>@item.Description</td>
+                            <td>- @item.Hours</td>
+                            <td>@item.DateCreated</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <table class="table">
+            <tr>
+                <th>Beskrivelse</th>
+                <th>Timer</th>
+                <th>Dato Oprettet</th>
+            </tr>
+            <tbody>
+                @foreach (var item in serviceHours)
+                {
+                    if (SelectedItem.Id == item.customerId)
+                    {
+                        <tr>
+                            <td>Antal timer tanket op: </td>
+                            <td>+ @item.Hours</td>
+                            <td>@item.DateCreated</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
 </div>
 @code {
     List<Assignment> assignments = new();
     List<ServiceHours> serviceHours = new();
+    private bool contentSwitch = true;
+
+    [Parameter]
+    public Customer? SelectedItem { get; set; }
+
+    private void Sort()
+    {
+        assignments.Sort((x, y) => DateTime.Compare(y.DateCreated, x.DateCreated));
+        serviceHours.Sort((x, y) => DateTime.Compare(y.DateCreated, x.DateCreated));
+    }
+
+    private void AssignmentBool()
+    {
+        contentSwitch = true;
+    }
+    private void ServiceHoursBool()
+    {
+        contentSwitch = false;
+    }
 
     protected override async Task OnInitializedAsync()
     {
         assignments = await http.GetFromJsonAsync<List<Assignment>>("/api/Assignments");
         serviceHours = await http.GetFromJsonAsync<List<ServiceHours>>("/api/ServiceHours");
+        Sort();
     }
 }

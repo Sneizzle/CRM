@@ -163,7 +163,7 @@ else
     private void EditContactModal(Contact contact)
     {
         var parameters = new ModalParameters()
-        .Add(nameof(EditContact.ContactToEdit), contact);
+            .Add(nameof(EditContact.ContactToEdit), contact);
         var options = new ModalOptions()
             {
                 Size = ModalSize.Automatic
@@ -172,11 +172,13 @@ else
     }
     private void OpenTaskLogModal()
     {
+        var parameters = new ModalParameters()
+            .Add(nameof(TaskLog.SelectedItem), SelectedItem);
         var options = new ModalOptions()
             {
                 Size = ModalSize.Automatic
             };
-        Modal.Show<TaskLog>($"Task logbog for: {SelectedItem.Name}", options);
+        Modal.Show<TaskLog>($"Task logbog for: {SelectedItem.Name}", parameters, options);
     }
 
     public async void ArchiveContact(Contact contact)
