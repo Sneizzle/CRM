@@ -39,7 +39,9 @@
     [Parameter]
     public Customer? SelectedItem { get; set; }
     public float? HoursToBeAdded { get; set; }
+
     public ServiceHours serviceHours = new();
+
     private async Task UpdateCustomerTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
     private async Task Close() => await BlazoredModal.CloseAsync();
 
