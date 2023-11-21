@@ -40,32 +40,71 @@ else
                 <tbody>
                     @foreach (var contact in ConRepo.contacts)
                     {
-                        if (contact.CustomerId == SelectedItem.Id)
+                        if (contact.CustomerId == SelectedItem.Id && contact.IsHidden == false) 
                         {
-                            if (contact.IsHidden == false)
-                            {
-                                <tr class="tab-content">
-                                    <td>@contact.Name</td>
-                                    <td>@contact.Email</td>
-                                    <td>@contact.PhoneNumber</td>
-                                    @*---------------Handlings knapper--------------- *@
-                                    <td>
-                                        <button @onclick="()=> EditContactModal(contact)"><img src="/css/Logos/Edit.svg" style="height: 30px; width: 33px;" alt="blyant" /></button>
-                                        <button @onclick="() => ArchiveContact(contact)"><img src="/css/Logos/Delete.svg" style="height: 30px; width: 33px;" alt="du furet" /></button>
-                                    </td>
-                                </tr>
-                            }
+                            var currentContact = contact;
+                            var tmp = contact;
+
+                                if (editingContact && editingContactData == currentContact)
+                                {
+                                    // ----------------------------------  INPUT FIELDS FOR EDITING EXISTING CONTACT-------------------------------
+                                    <tr class="tab-content">
+                                        <td><input @bind="editingContactData.Name" /></td>
+                                        <td><input @bind="editingContactData.Email" /></td>
+                                        <td><input @bind="editingContactData.PhoneNumber" /></td>
+                                        <td>
+                                            <a @onclick="() => SaveEditedContact(currentContact)">
+                                                <img src="/css/Logos/SaveColor.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px; color: green;" alt="gem" />
+                                            </a>
+                                            <a @onclick="() => CancelEdit(tmp)">
+                                                <img src="/css/Logos/Cancel.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px;" alt="du furet" />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    // --------------------------------------- Show regular Table ----------------------------------------
+                                    <tr class="tab-content">
+                                        <td>@currentContact.Name</td>
+                                        <td>@currentContact.Email</td>
+                                        <td>@currentContact.PhoneNumber</td>
+                                        <td>
+                                            <a @onclick="()=> EditContact(currentContact)"><img src="/css/Logos/EditColor.svg" style="cursor: pointer; border: none !important; border-style: none !important; border-color: transparent !important; outline: none !important; height: 30px; width: 33px;" alt="blyant" /></a>
+                                            <a @onclick="() => ArchiveContact(currentContact)"><img src="/css/Logos/DeleteColor.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px;" alt="du furet" /></a>
+                                        </td>
+                                    </tr>
+                                }
                         }
+                    }
+                @*----------------------------------------New Contact Editable Field Code ----------------------------------*@
+                @if (showNewContactRow)
+                {
+                
+
+                    <tr class="tab-content">
+                        <td><input @bind="newContact.Name" /></td>
+                        <td><input @bind="newContact.Email" /></td>
+                        <td><input @bind="newContact.PhoneNumber" /></td>
+                        <td>
+                            <a @onclick="SaveNewContact">
+                                    <img src="/css/Logos/SaveColor.svg" style="cursor: pointer;border: 0 !important; height: 30px; width: 33px; color: green;" alt="gem" />
+                            </a>
+                            <a @onclick="ResetNewContact">
+                                    <img src="/css/Logos/DeleteColor.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px;" alt="du furet" />
+                            </a>
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
         </div>
         <div style="float: right; margin: 10px; font-size: 22px">
-            <button> Gem</button>
-            <button @onclick="closeEdit"> Luk</button>
+            @*<button> Gem</button>*@
+            <button @onclick="closeEdit"> Afslut Redigering</button>
         </div>
     }
-    @*------------------------------------------------------view data-------------------------------------------------------------*@
+    @*------------------------------------------------------view data (not editing window)--------------------------------------------------*@
     else
     {
         <div>
@@ -116,19 +155,60 @@ else
 
 @*-------------------------------------------------------------------Logik---------------------------------------------------- *@
 @code {
-    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
-    [CascadingParameter] public IModalService Modal { get; set; } = default!;
 
+    
+
+    private bool editingContact = false;
+    private Contact editingContactData;
+    private Contact initialman = new();
+    private void EditContact(Contact contact)
+    {
+        initialman.Name = contact.Name;
+        initialman.Email = contact.Email;
+        initialman.PhoneNumber = contact.PhoneNumber;
+        editingContactData = contact;
+        editingContact = true;
+    }
+    private async void SaveEditedContact(Contact currentContact)
+    {
+        try
+        {
+            var response = await http.PutAsJsonAsync<Contact>($"api/Contacts/{currentContact.Id}", editingContactData);
+            if (response.IsSuccessStatusCode == true)
+            {
+                editingContact = false;
+                StateHasChanged();
+            }
+            else
+            {
+                Console.WriteLine("somfing went wong");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+    private void CancelEdit(Contact tmp)
+    {
+
+        editingContactData.Name = initialman.Name;
+        editingContactData.Email = initialman.Email;
+        editingContactData.PhoneNumber = initialman.PhoneNumber;
+        editingContact = false;
+
+
+        StateHasChanged();
+    }
+    private Contact newContact = new();
     //CustomerRepo CusRepo = CustomerRepo.Instance;
     ContactsRepo ConRepo = ContactsRepo.Instance;
-
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    [CascadingParameter] public IModalService Modal { get; set; } = default!;
     [Parameter]
     public Customer? SelectedItem { get; set; }
     private bool isEditing = false;
-
     private async Task Cancel() => await BlazoredModal.CloseAsync();
-
-
     private void editCustomer()
     {
         isEditing = true;
@@ -137,38 +217,73 @@ else
     {
         isEditing = false;
     }
+    private bool showNewContactRow = false;
+    private async void SaveNewContact()
+    {
+        newContact.CustomerId = SelectedItem.Id;
+        newContact.DateCreated = DateTime.Now;
+        try
+        {
+            var response = await http.PostAsJsonAsync<Contact>("api/Contacts", newContact);
+            if (response.IsSuccessStatusCode == true)
+            {
+                ConRepo.AddToContacts(newContact);
+                ResetNewContact();
+                
+                StateHasChanged();
+            }
+            else
+            {
+                newContact.Name = "Navn Mangler";
+                StateHasChanged();
 
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+    private void ResetNewContact()
+    {
+    //newContactName = "";
+    //newContactEmail = "";
+    //newContactPhoneNumber = "";
+        newContact = new Contact();
+        showNewContactRow = false;
+    }
     private async void CreateContactModal()
     {
-        var parameters = new ModalParameters()
-          .Add(nameof(CreateContact.SelectedItem), SelectedItem);
-        var options = new ModalOptions()
-            {
-                Size = ModalSize.Automatic
-            };
-        var contactResult = Modal.Show<CreateContact>("", parameters, options);
-        var result = await contactResult.Result;
-        if (!result.Cancelled)
-        {
-            Contact tmpContact = (Contact)result.Data;
-            ConRepo.AddToContacts(tmpContact);
-            StateHasChanged();
-        }
-        else
-        {
-            Console.WriteLine("Create contact cancel");
-        }
+        showNewContactRow = true;
+        //var parameters = new ModalParameters()
+        //  .Add(nameof(CreateContact.SelectedItem), SelectedItem);
+        //var options = new ModalOptions()
+        //    {
+        //        Size = ModalSize.Automatic
+        //    };
+        //var contactResult = Modal.Show<CreateContact>("", parameters, options);
+        //var result = await contactResult.Result;
+        //if (!result.Cancelled)
+        //{
+        //    Contact tmpContact = (Contact)result.Data;
+        //    ConRepo.AddToContacts(tmpContact);
+        //    StateHasChanged();
+        //}
+        //else
+        //{
+        //    Console.WriteLine("Create contact cancel");
+        //}
     }
-    private void EditContactModal(Contact contact)
-    {
-        var parameters = new ModalParameters()
-        .Add(nameof(EditContact.ContactToEdit), contact);
-        var options = new ModalOptions()
-            {
-                Size = ModalSize.Automatic
-            };
-        Modal.Show<EditContact>("", parameters, options);
-    }
+    //private void EditContactModal(Contact contact)
+    //{
+    //    var parameters = new ModalParameters()
+    //    .Add(nameof(EditContact.ContactToEdit), contact);
+    //    var options = new ModalOptions()
+    //        {
+    //            Size = ModalSize.Automatic
+    //        };
+    //    Modal.Show<EditContact>("", parameters, options);
+    //}
 
     public async void ArchiveContact(Contact contact)
     {

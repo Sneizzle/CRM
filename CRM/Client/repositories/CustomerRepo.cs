@@ -26,9 +26,7 @@ namespace CRM.Client.Repositories
             }
             set { instance = value; }
         }
-
         public List<Customer>? customers;
-
         public CustomerRepo()
         {
             customers = new List<Customer>();

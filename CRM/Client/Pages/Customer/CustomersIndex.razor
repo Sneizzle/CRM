@@ -70,7 +70,6 @@ else
                 </tr>
             </thead>
             <tbody class="hoverTable">
-               
             @foreach (var customer in CusRepo.customers)
             {
                 if (!IsVisible(customer))
@@ -85,7 +84,6 @@ else
                             <button style="border: thin; z-index: 100"><img src="/Createtask.svg" alt="Star SVG" width="25" height="25"/></button>
                         </div>
                     </td>
-                    
                     <td>
                             <div @onclick:stopPropagation="true" @onclick:preventDefault="true">
                                 <button position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></button>
@@ -143,8 +141,8 @@ else
         var result = await customerResult.Result;
         if (!result.Cancelled)
         {
-            Customer tmpCustomer = (Customer)result.Data;
-            CusRepo.AddToCustomers(tmpCustomer);
+            //Customer tmpCustomer = (Customer)result.Data;
+            await CusRepo.InitializeCustomers();
             Console.WriteLine("result.confirmed :)");
             StateHasChanged();
         }
