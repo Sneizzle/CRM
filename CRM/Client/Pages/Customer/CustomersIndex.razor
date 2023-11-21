@@ -1,10 +1,12 @@
-﻿@page "/"
+﻿<body style="background-color: #20283a;">
+@page "/"
 @using CRM.Client.Components.Tasks;
 @using CRM.Client.Repositories;
 @using CRM.Shared;
 @using CRM.Shared.Model;
 @using CRM.Client.Components.Customer;
 @using CRM.Client.Components.AddHours;
+@using System.Reflection
 @inject HttpClient http;
 
 <PageTitle>CustomersIndex</PageTitle>
@@ -15,89 +17,93 @@
 }
 else
 {  
-    <div style="max-width: 1000px;max-height:800px; margin:auto; overflow: auto;">
+    
+    <div style="max-width: 80vw;max-height:100vw; margin:auto; overflow: auto; zoom: ">
         <div style="max-width:300px">
-        <input class="form-control" type="text" placeholder="Search up a customer.."
-        @bind="Filter"
-        @bind:event="oninput">
+            <input class="form-control" type="text" placeholder="Search up a customer.."
+                   @bind="Filter"
+                   @bind:event="oninput">
         </div>
         <div>
             <button @onclick="@(() => CreateCustomerModal())">KNAP</button>
         </div>
         <table class="table">
             <thead>
-                <tr>
-                    <th>
-                        <a style="color: black; cursor: pointer">
-                            <href @onclick="SortByName">
-                                Navn  
-                                @if (sortAscendingName == false)
-                                {
-                                    <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
-                                }
-                                else
-                                {
-                                    <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
-                                }
-                              </href>
-                        </a>
+            <tr>
+                <th>
+                            <a style="font-weight: bolder; color: #1a4c69; cursor: pointer">
+                        <href @onclick="SortByName">
+                            Navn  
+                            @if (sortAscendingName == false)
+                            {
+                                <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
+                            }
+                            else
+                            {
+                                <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
+                            }
+                        </href>
+                    </a>
 
-                    </th>
-                    <th>Telefonnr</th>
-                    <th style="cursor: pointer" @onclick="SortByServiceHours">Service timer
-                        @if (sortAscendingHours == false)
-                        {
-                            <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
-                        }
-                        else
-                        {
-                            <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
+                </th>
+                        <th style="font-weight: bolder; color: #1a4c69;">Telefonnr</th>
+                        <th style="font-weight: bolder; color: #1a4c69; cursor: pointer" @onclick="SortByServiceHours">
+                            Service timer
+                    @if (sortAscendingHours == false)
+                    {
+                        <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
+                    }
+                    else
+                    {
+                        <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
 
-                        }
+                    }
                         
-                    </th>
-                    <th style="cursor: pointer" @onclick="SortByDateModified">Dato for optankning
-                        @if(sortAscending == false)
-                        {
-                            <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
-                        }
-                        else
-                        {
-                            <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
-                        }
-                    </th>
-                    <th>Opret task</th>
-                    <th>Tank op</th>
-                </tr>
+                </th>
+                        <th style="font-weight: bolder;cursor: pointer; color: #1a4c69" @onclick="SortByDateModified">
+                            Dato for optankning
+                    @if(sortAscending == false)
+                    {
+                        <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
+                    }
+                    else
+                    {
+                        <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
+                    }
+                </th>
+                        <th style="color: #1a4c69">Opret task</th>
+                        <th style="color: #1a4c69">Tank op</th>
+            </tr>
             </thead>
             <tbody class="hoverTable">
             @foreach (var customer in CusRepo.customers)
             {
                 if (!IsVisible(customer))
                     continue;
-                <tr @onclick="@(() => OpenCustomerInfoModal(customer))">
-                    <td>@customer.Name</td>
-                    <td>@customer.PhoneNumber</td>
-                    <td>@customer.ServiceHours</td>
-                    <td>@customer.DateModified</td>
-                        <td style="text-align: center; ">
-                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
-                                <a style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/Createtask.svg" alt="Star SVG" width="35" height="35" /></a>
+                        <tr  @onclick="@(() => OpenCustomerInfoModal(customer))">
+                            <td style="font-weight: bolder; font-size: large;color: #bb5c6c">@customer.Name</td>
+                            <td style="color:#808291">@customer.PhoneNumber</td>
+                            <td style="color:#808291">@customer.ServiceHours</td>
+                            <td style ="color:#808291">@customer.DateModified</td>
+                    <td style="text-align: center; ">
+                        <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
+                            <a style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/Createtask.svg" alt="Star SVG" width="35" height="35" /></a>
                         </div>
                     </td>
-                        <td style="text-align: center;">
-                            <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
-                                <a position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></a>
+                    <td style="text-align: center;">
+                        <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
+                            <a position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100; "><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></a>
                         </div>
                     </td>
                 </tr>
-                <tr style="border-bottom: 1px solid #ccc;"></tr>
+                        <tr style="border-bottom: 1px solid #232d3c;"></tr>
             }
             </tbody>
         </table>
     </div>
+    
 }
-
+</body>
 
 @code {
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
@@ -240,11 +246,11 @@ else
     }
 
         .hoverTable tr {
-            background: none;
+            background: #323c50;
         }
 
             .hoverTable tr:hover {
-                background-color: lightgray;
+                background-color: #fcf841;
             }
 </style>
 <style>
