@@ -23,10 +23,10 @@
             }
             else
             {
-                <label class="form-label">@SelectedItem.ServiceHours ingen timer pt</label>
+                <label class="form-label">@serviceHours.Hours timer pt</label>
             }
         </div>
-       
+       <button @onclick="Confirm"></button>
     </div>
 </div>
 @code {

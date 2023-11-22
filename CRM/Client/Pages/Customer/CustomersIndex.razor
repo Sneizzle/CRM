@@ -117,7 +117,7 @@ else
             {
                 Size = ModalSize.Medium
             };
-        var refuelResult = Modal.Show<AddHours>($"add hours for: {customer.Name}", parameters, options);
+        var refuelResult = Modal.Show<AddHours>($"Tank op for: {customer.Name}", parameters, options);
 
         var result = await refuelResult.Result;
         if (!result.Cancelled)
