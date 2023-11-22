@@ -22,19 +22,24 @@
                 <input class="form-control" style="width:100px;" disabled="true" placeholder="@(SelectedItem.ServiceHours + serviceHours.Hours)" />
             }
             else
-            {
-                <label class="form-label">@serviceHours.Hours timer pt</label>
+            {   <label class="form-label" style="width:150px;"> Nye antal timer</label>
+                <input class="form-control" style="width:100px;" disabled="true" placeholder="@(SelectedItem.ServiceHours + serviceHours.Hours)" />
+                
             }
         </div>
-       <button @onclick="Confirm"></button>
+        <input type="range" class="form-range" min="0" max="100" step="1" id="slider" @bind="serviceHours.Hours">
     </div>
+    <br />
+    <button class="btn btn-primary" @onclick="Confirm">Godkend</button>
+    <button class="btn btn-danger" @onclick="Close"> Fortryd </button>
 </div>
+
 @code {
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     [Parameter]
     public Customer? SelectedItem { get; set; }
-    public float? HoursToBeAdded { get; set; }
+ 
 
     public ServiceHours serviceHours = new();
 
@@ -52,6 +57,7 @@
 
     private async Task Confirm()
     {
+
         serviceHours.customerId = SelectedItem.Id;
         try
         {
