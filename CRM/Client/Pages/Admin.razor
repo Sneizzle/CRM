@@ -11,23 +11,88 @@
 
 <AuthorizeView>
     <Authorized>
-        <h1>Vicath EQ</h1>
-        <h3>Customer Relations Management</h3>
-        <h5>Welcome @context.User.Identity?.Name! </h5>
-  
-        This is the admin window!
+        <div style="justify-content:center;display:flex;">
+            <div style="margin-bottom:50px;">
+                <h1>Vicath EQ</h1>
+                <h3>Customer Relations Management</h3>
+                <h5>Welcome @context.User.Identity?.Name! </h5>
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="img">
+                <button class="btn" style="border">
+                    <img width="300" height="300" src="dashboard.png" />
+                </button>
+            </div>
+            <div class="img i2">
+                <button class="btn">
+                    <img width="300" height="300" src="account.jpg" />
+                </button>
+            </div>
+            <div class="img i3">
+                <button class="btn">
+                    <img width="300" height="300" src="roles.jpg" />
+                </button>
+            </div>
+            <div class="img i4">
+                <button class="btn">
+                    <img width="300" height="300" src="https://www.southernliving.com/thmb/Rz-dYEhwq_82C5_Y9GLH2ZlEoYw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/gettyimages-837898820-1-4deae142d4d0403dbb6cb542bfc56934.jpg" />
+                </button>
+            </div>
+            <div>
+            </div>
+        </div>
     </Authorized>
 
 
 
-<NotAuthorized>
-    <a href="authentication/register">Registrer</a>
-    <a href="authentication/login">Log ind</a>
-</NotAuthorized>
+    <NotAuthorized>
+        <a href="authentication/register">Registrer</a>
+        <a href="authentication/login">Log ind</a>
+    </NotAuthorized>
 </AuthorizeView>
 
 
 
 @code {
-    
+
 }
+
+<style>
+    /* Source: https://stackoverflow.com/a/62778657 */
+
+    .center{
+        width: 655px;
+        margin: auto;
+    }
+
+    .container {
+        display: grid;
+        grid-template-rows: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr);
+        width: 60%;
+        height: 400px;
+    }
+
+    .img {
+        width: 100%;
+        height: 100%;
+        border: 1px solid black;
+    }
+
+    .i2 {
+        grid-column: 2/3;
+    }
+
+    .i3 {
+        grid-column: 1/2;
+        grid-row: 2/3;
+    }
+
+    .i4 {
+        grid-column: 2/3;
+        grid-row: 2/3;
+    }
+</style>
