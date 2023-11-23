@@ -28,6 +28,12 @@
             }
         </div>
         <input type="range" class="form-range" min="0" max="100" step="1" id="slider" @bind="serviceHours.Hours">
+        @if (serviceHours.Hours < 0)
+        {
+            <label style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+                *OPS* Negativ time antal, er du sikker? 
+            </label>
+        }
     </div>
     <br />
     <button class="btn btn-primary" @onclick="Confirm">Godkend</button>
