@@ -18,6 +18,58 @@ else
     @if (isEditing)
     {
         <div class="container">
+            <EditForm Model="SelectedItem">
+                <DataAnnotationsValidator />
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="mb-3">
+                            <label class="form-label">Navn*</label>
+                            <input class="form-control" @bind="SelectedItem.Name" type="text" />
+                            <ValidationMessage For="() => SelectedItem.Name" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Adresse</label>
+                            <input class="form-control" @bind="SelectedItem.StreetName" type="text" />
+                            <ValidationMessage For="() => SelectedItem.StreetName" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">By</label>
+                            <input class="form-control" @bind="SelectedItem.CityName" type="text" />
+                            <ValidationMessage For="() => SelectedItem.CityName" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Postnummer</label>
+                            <input class="form-control" @bind="SelectedItem.ZipCode" type="text" />
+                            <ValidationMessage For="() => SelectedItem.ZipCode" />
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="mb-3">
+                            <label class="form-label">Telefonnummer</label>
+                            <input class="form-control" @bind="SelectedItem.PhoneNumber" type="text" />
+                            <ValidationMessage For="() => SelectedItem.PhoneNumber" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">CVR*</label>
+                            <input class="form-control" @bind="SelectedItem.CVR" type="text" /> 
+                            <ValidationMessage For="() => SelectedItem.CVR" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">EAN*</label>
+                            <input class="form-control" @bind="SelectedItem.EAN" type="text" />
+                            <ValidationMessage For="() => SelectedItem.EAN" />
+                        </div>
+                        <button class="btn btn-primary" style="float:right" @onclick="UpdateCustomer">Opdater Kunde</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+
+
+
+
+        @*----------------------------------------------------------Bottom Section------------------------------------------------------------------*@
+        <div class="container">
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
@@ -153,6 +205,53 @@ else
 
 @*-------------------------------------------------------------------Logik---------------------------------------------------- *@
 @code {
+
+
+
+    private bool editingContact = false;
+    private Contact editingContactData;
+    private Contact initialman = new();
+    private void EditContact(Contact contact)
+    {
+        initialman.Name = contact.Name;
+        initialman.Email = contact.Email;
+        initialman.PhoneNumber = contact.PhoneNumber;
+        editingContactData = contact;
+        editingContact = true;
+    }
+    private async void SaveEditedContact(Contact currentContact)
+    {
+        try
+        {
+            var response = await http.PutAsJsonAsync<Contact>($"api/Contacts/{currentContact.Id}", editingContactData);
+            if (response.IsSuccessStatusCode == true)
+            {
+                editingContact = false;
+                StateHasChanged();
+            }
+            else
+            {
+                Console.WriteLine("somfing went wong");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+    private void CancelEdit(Contact tmp)
+    {
+
+        editingContactData.Name = initialman.Name;
+        editingContactData.Email = initialman.Email;
+        editingContactData.PhoneNumber = initialman.PhoneNumber;
+        editingContact = false;
+
+
+        StateHasChanged();
+    }
+    private Contact newContact = new();
+    //CustomerRepo CusRepo = CustomerRepo.Instance;
     ContactsRepo ConRepo = ContactsRepo.Instance;
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
@@ -272,5 +371,18 @@ else
         editingContact = false;
 
         StateHasChanged();
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+    }
+
+    private async void UpdateCustomer()
+    {
+
+        await http.PutAsJsonAsync($"api/Customers/{SelectedItem.Id}", SelectedItem);
+        StateHasChanged();
+        await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
     }
 }
