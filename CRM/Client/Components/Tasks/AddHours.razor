@@ -78,6 +78,7 @@
                     SelectedItem.ServiceHours = 0; 
                 }
                 SelectedItem.ServiceHours = SelectedItem.ServiceHours + serviceHours.Hours;
+                SelectedItem.LastRefill = DateTime.Now;
                 await http.PutAsJsonAsync<Customer>($"api/Customers/{SelectedItem.Id}", SelectedItem);
                 await UpdateCustomerTask();
                 StateHasChanged();
