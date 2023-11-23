@@ -17,6 +17,58 @@ else
     @if (isEditing)
     {
         <div class="container">
+            <EditForm Model="SelectedItem">
+                <DataAnnotationsValidator />
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="mb-3">
+                            <label class="form-label">Navn*</label>
+                            <input class="form-control" @bind="SelectedItem.Name" type="text" />
+                            <ValidationMessage For="() => SelectedItem.Name" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Adresse</label>
+                            <input class="form-control" @bind="SelectedItem.StreetName" type="text" />
+                            <ValidationMessage For="() => SelectedItem.StreetName" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">By</label>
+                            <input class="form-control" @bind="SelectedItem.CityName" type="text" />
+                            <ValidationMessage For="() => SelectedItem.CityName" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Postnummer</label>
+                            <input class="form-control" @bind="SelectedItem.ZipCode" type="text" />
+                            <ValidationMessage For="() => SelectedItem.ZipCode" />
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="mb-3">
+                            <label class="form-label">Telefonnummer</label>
+                            <input class="form-control" @bind="SelectedItem.PhoneNumber" type="text" />
+                            <ValidationMessage For="() => SelectedItem.PhoneNumber" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">CVR*</label>
+                            <input class="form-control" @bind="SelectedItem.CVR" type="text" /> 
+                            <ValidationMessage For="() => SelectedItem.CVR" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">EAN*</label>
+                            <input class="form-control" @bind="SelectedItem.EAN" type="text" />
+                            <ValidationMessage For="() => SelectedItem.EAN" />
+                        </div>
+                        <button class="btn btn-primary" style="float:right" @onclick="UpdateCustomer">Opdater Kunde</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+
+
+
+
+        @*----------------------------------------------------------Bottom Section------------------------------------------------------------------*@
+        <div class="container">
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
@@ -40,61 +92,61 @@ else
                 <tbody>
                     @foreach (var contact in ConRepo.contacts)
                     {
-                        if (contact.CustomerId == SelectedItem.Id && contact.IsHidden == false) 
+                        if (contact.CustomerId == SelectedItem.Id && contact.IsHidden == false)
                         {
                             var currentContact = contact;
                             var tmp = contact;
 
-                                if (editingContact && editingContactData == currentContact)
-                                {
-                                    // ----------------------------------  INPUT FIELDS FOR EDITING EXISTING CONTACT-------------------------------
-                                    <tr class="tab-content">
-                                        <td><input @bind="editingContactData.Name" /></td>
-                                        <td><input @bind="editingContactData.Email" /></td>
-                                        <td><input @bind="editingContactData.PhoneNumber" /></td>
-                                        <td>
-                                            <a @onclick="() => SaveEditedContact(currentContact)">
-                                                <img src="/css/Logos/SaveColor.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px; color: green;" alt="gem" />
-                                            </a>
-                                            <a @onclick="() => CancelEdit(tmp)">
-                                                <img src="/css/Logos/Cancel.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px;" alt="du furet" />
-                                            </a>
-                                        </td>
-                                    </tr>
-                                }
-                                else
-                                {
-                                    // --------------------------------------- Show regular Table ----------------------------------------
-                                    <tr class="tab-content">
-                                        <td>@currentContact.Name</td>
-                                        <td>@currentContact.Email</td>
-                                        <td>@currentContact.PhoneNumber</td>
-                                        <td>
-                                            <a @onclick="()=> EditContact(currentContact)"><img src="/css/Logos/EditColor.svg" style="cursor: pointer; border: none !important; border-style: none !important; border-color: transparent !important; outline: none !important; height: 30px; width: 33px;" alt="blyant" /></a>
-                                            <a @onclick="() => ArchiveContact(currentContact)"><img src="/css/Logos/DeleteColor.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px;" alt="du furet" /></a>
-                                        </td>
-                                    </tr>
-                                }
+                            if (editingContact && editingContactData == currentContact)
+                            {
+                                // ----------------------------------  INPUT FIELDS FOR EDITING EXISTING CONTACT-------------------------------
+                                <tr class="tab-content">
+                                    <td><input @bind="editingContactData.Name" /></td>
+                                    <td><input @bind="editingContactData.Email" /></td>
+                                    <td><input @bind="editingContactData.PhoneNumber" /></td>
+                                    <td>
+                                        <a @onclick="() => SaveEditedContact(currentContact)">
+                                            <img src="/css/Logos/SaveColor.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px; color: green;" alt="gem" />
+                                        </a>
+                                        <a @onclick="() => CancelEdit(tmp)">
+                                            <img src="/css/Logos/Cancel.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px;" alt="du furet" />
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                // --------------------------------------- Show regular Table ----------------------------------------
+                                <tr class="tab-content">
+                                    <td>@currentContact.Name</td>
+                                    <td>@currentContact.Email</td>
+                                    <td>@currentContact.PhoneNumber</td>
+                                    <td>
+                                        <a @onclick="()=> EditContact(currentContact)"><img src="/css/Logos/EditColor.svg" style="cursor: pointer; border: none !important; border-style: none !important; border-color: transparent !important; outline: none !important; height: 30px; width: 33px;" alt="blyant" /></a>
+                                        <a @onclick="() => ArchiveContact(currentContact)"><img src="/css/Logos/DeleteColor.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px;" alt="du furet" /></a>
+                                    </td>
+                                </tr>
+                            }
                         }
                     }
-                @*----------------------------------------New Contact Editable Field Code ----------------------------------*@
-                @if (showNewContactRow)
-                {
-                
+                    @*----------------------------------------New Contact Editable Field Code ----------------------------------*@
+                    @if (showNewContactRow)
+                    {
 
-                    <tr class="tab-content">
-                        <td><input @bind="newContact.Name" /></td>
-                        <td><input @bind="newContact.Email" /></td>
-                        <td><input @bind="newContact.PhoneNumber" /></td>
-                        <td>
-                            <a @onclick="SaveNewContact">
+
+                        <tr class="tab-content">
+                            <td><input @bind="newContact.Name" /></td>
+                            <td><input @bind="newContact.Email" /></td>
+                            <td><input @bind="newContact.PhoneNumber" /></td>
+                            <td>
+                                <a @onclick="SaveNewContact">
                                     <img src="/css/Logos/SaveColor.svg" style="cursor: pointer;border: 0 !important; height: 30px; width: 33px; color: green;" alt="gem" />
-                            </a>
-                            <a @onclick="ResetNewContact">
+                                </a>
+                                <a @onclick="ResetNewContact">
                                     <img src="/css/Logos/DeleteColor.svg" style="cursor: pointer; border: 0 !important; height: 30px; width: 33px;" alt="du furet" />
-                            </a>
-                        </td>
-                    </tr>
+                                </a>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -102,7 +154,7 @@ else
         <div style="float: right; margin: 10px; font-size: 22px">
             @*<button> Gem</button>*@
             <a>  <img src="/css/Logos/ReturnColor.svg" @onclick="closeEdit" style="cursor: pointer; border: 0 !important; height: 40px; width: 43px;" alt="Gå tilbage" /></a>
-           
+
         </div>
     }
     @*------------------------------------------------------view data (not editing window)--------------------------------------------------*@
@@ -157,7 +209,7 @@ else
 @*-------------------------------------------------------------------Logik---------------------------------------------------- *@
 @code {
 
-    
+
 
     private bool editingContact = false;
     private Contact editingContactData;
@@ -230,7 +282,7 @@ else
             {
                 ConRepo.AddToContacts(newContact);
                 ResetNewContact();
-                
+
                 StateHasChanged();
             }
             else
@@ -247,9 +299,9 @@ else
     }
     private void ResetNewContact()
     {
-    //newContactName = "";
-    //newContactEmail = "";
-    //newContactPhoneNumber = "";
+        //newContactName = "";
+        //newContactEmail = "";
+        //newContactPhoneNumber = "";
         newContact = new Contact();
         showNewContactRow = false;
     }
@@ -303,5 +355,13 @@ else
                 Console.WriteLine(e);
             }
         }
+    }
+
+    private async void UpdateCustomer()
+    {
+
+        await http.PutAsJsonAsync($"api/Customers/{SelectedItem.Id}", SelectedItem);
+        StateHasChanged();
+        await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
     }
 }

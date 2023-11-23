@@ -129,9 +129,14 @@ else
             {
                 Size = ModalSize.ExtraLarge,
         DisableBackgroundCancel = true
-
             };
         var customerResult = Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
+
+        var result = await customerResult.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
     }
 
     private async void CreateCustomerModal()
