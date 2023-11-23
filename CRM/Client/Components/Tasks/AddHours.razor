@@ -27,7 +27,10 @@
                 
             }
         </div>
-        <input type="range" class="form-range" min="0" max="100" step="1" id="slider" @bind="serviceHours.Hours">
+        <div class="row">
+            <input type="range" class="form-range" min="0" max="50" step="5" id="slider" @bind="serviceHours.Hours">
+        </div>
+    
         @if (serviceHours.Hours < 0)
         {
             <label style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
