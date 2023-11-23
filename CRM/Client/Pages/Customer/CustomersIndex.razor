@@ -14,23 +14,26 @@
     <p><em>Loading..</em></p>
 }
 else
-{  
+{
     <div style="max-width: 1000px;max-height:800px; margin:auto; overflow: auto;">
-        <div style="max-width:300px">
-        <input class="form-control" type="text" placeholder="Search up a customer.."
-        @bind="Filter"
-        @bind:event="oninput">
+        <div style="display:flex;">
+            <div style="max-width:300px">
+                <input class="form-control" type="text" placeholder="Search up a customer.."
+                @bind="Filter"
+                @bind:event="oninput">
+            </div>
+            <div>
+                <button style="margin-left:5px;" class="btn btn-primary" @onclick="@(() => CreateCustomerModal())">Opret Kunde</button>
+            </div>
         </div>
-        <div>
-            <button @onclick="@(() => CreateCustomerModal())">Opret Kunde</button>
-        </div>
+
         <table class="table">
             <thead>
                 <tr>
                     <th>
                         <a style="color: black; cursor: pointer">
                             <href @onclick="SortByName">
-                                Navn  
+                                Navn
                                 @if (sortAscendingName == false)
                                 {
                                     <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -39,12 +42,13 @@ else
                                 {
                                     <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
                                 }
-                              </href>
+                            </href>
                         </a>
 
                     </th>
                     <th>Telefonnr</th>
-                    <th style="cursor: pointer" @onclick="SortByServiceHours">Service timer
+                    <th style="cursor: pointer" @onclick="SortByServiceHours">
+                        Service timer
                         @if (sortAscendingHours == false)
                         {
                             <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
@@ -54,7 +58,7 @@ else
                             <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
 
                         }
-                        
+
                     </th>
                     <th style="cursor: pointer" @onclick="SortByDateModified">Sidst Optanket
                         @if(sortAscending == false)
@@ -88,11 +92,11 @@ else
                         <td style="text-align: center;">
                             <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
                                 <a position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100"><img src="/Gasicon.svg" alt="Star SVG" width="25" height="25" /></a>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="border-bottom: 1px solid #ccc;"></tr>
-            }
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ccc;"></tr>
+                }
             </tbody>
         </table>
     </div>
@@ -134,7 +138,7 @@ else
         var options = new ModalOptions()
             {
                 Size = ModalSize.ExtraLarge,
-        DisableBackgroundCancel = true
+                DisableBackgroundCancel = true
 
             };
         var customerResult = Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
@@ -171,7 +175,7 @@ else
 
     private void SortByName()
     {
-        sortAscendingName = !sortAscendingName; //Sætter til false onClick // intially true. 
+        sortAscendingName = !sortAscendingName; //Sætter til false onClick // intially true.
         sortAscendingHours = true;
         sortAscending = true;
         if (sortAscendingName == true)
@@ -186,7 +190,7 @@ else
     private void SortByDateModified()
     {
         sortAscending = !sortAscending;
-        sortAscendingHours = true; // hvis vi ikke resetter, bliver der ikke ønsket adfærd 
+        sortAscendingHours = true; // hvis vi ikke resetter, bliver der ikke ønsket adfærd
         sortAscendingName = true;
         if (sortAscending == true)
         {
@@ -204,11 +208,11 @@ else
         sortAscending = true;
         sortAscendingName = true;
         sortAscendingHours = !sortAscendingHours;
-        if(sortAscendingHours == true)
+        if (sortAscendingHours == true)
         {
             CusRepo.customers = CusRepo.customers.OrderByDescending(c => c.ServiceHours).ToList();
         }
-        else 
+        else
         {
             CusRepo.customers = CusRepo.customers.OrderBy(c => c.ServiceHours).ToList();
         }
@@ -234,7 +238,7 @@ else
         {
             StateHasChanged();
         }
-        
+
     }
 }
 

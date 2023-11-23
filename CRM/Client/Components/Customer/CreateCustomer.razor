@@ -3,60 +3,60 @@
 @inject HttpClient http;
 @using CRM.Client.Pages.Customer;
 <div class="container">
-    <EditForm Model="customer"> 
-        <DataAnnotationsValidator/>
-    <div class="row">
-        <div class="col-sm">
-            <div class="mb-3">
-                <label class="form-label">Navn*</label>
-                <input class="form-control" @bind="customer.Name" type="text" />
-                <ValidationMessage For="() => customer.Name"/>
+    <EditForm Model="customer">
+        <DataAnnotationsValidator />
+        <div class="row">
+            <div class="col-sm">
+                <div class="mb-3">
+                    <label class="form-label">Navn*</label>
+                    <input class="form-control" @bind="customer.Name" type="text" />
+                    <ValidationMessage For="() => customer.Name" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Adresse</label>
+                    <input class="form-control" @bind="customer.StreetName" type="text" />
+                    <ValidationMessage For="() => customer.StreetName" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">By</label>
+                    <input class="form-control" @bind="customer.CityName" type="text" />
+                    <ValidationMessage For="() => customer.CityName" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Postnummer</label>
+                    <input class="form-control" @bind="customer.ZipCode" type="text" />
+                    <ValidationMessage For="() => customer.ZipCode" />
+                </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Adresse</label>
-                <input class="form-control" @bind="customer.StreetName" type="text" />
-                <ValidationMessage For="() => customer.StreetName"/>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">By</label>
-                <input class="form-control" @bind="customer.CityName" type="text" />
-                <ValidationMessage For="() => customer.CityName"/>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Postnummer</label>
-                <input class="form-control" @bind="customer.ZipCode" type="text" />
-                <ValidationMessage For="() => customer.ZipCode"/>
+            <div class="col-sm">
+                <div class="mb-3">
+                    <label class="form-label">Telefonnummer</label>
+                    <input class="form-control" @bind="customer.PhoneNumber" type="text" />
+                    <ValidationMessage For="() => customer.PhoneNumber" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Servicetimer</label>
+                    <input class="form-control" @bind="customer.ServiceHours" type="text" />
+                    <ValidationMessage For="() => customer.ServiceHours" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">CVR*</label>
+                    <input maxlength="8"  class="form-control" @bind="customer.CVR" type="text" />
+                    <ValidationMessage For="() => customer.CVR" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">EAN*</label>
+                    <input maxlength="13" class="form-control" @bind="customer.EAN" type="text" />
+                    <ValidationMessage For="() => customer.EAN" />
+                </div>
             </div>
         </div>
-        <div class="col-sm">
-            <div class="mb-3">
-                <label class="form-label">Telefonnummer</label>
-                <input class="form-control" @bind="customer.PhoneNumber" type="text" />
-                <ValidationMessage For="() => customer.PhoneNumber"/>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Servicetimer</label>
-                <input class="form-control" @bind="customer.ServiceHours" type="text" />
-                <ValidationMessage For="() => customer.ServiceHours"/>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">CVR*</label>
-                <input class="form-control" @bind="customer.CVR" type="text" />
-                <ValidationMessage For="() => customer.CVR"/>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">EAN*</label>
-                <input class="form-control" @bind="customer.EAN" type="text"/>
-                <ValidationMessage For="() => customer.EAN"/>
+        <div class="row">
+            <div class="col-sm">
+                <button class="btn btn-danger" style="float:right" @onclick="Cancel">Annuller</button>
+                <button class="btn btn-primary" style="float:right" @onclick="SaveCustomer">Opret kunde</button>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-sm">
-            <button class="btn btn-danger" style="float:right" @onclick="Cancel">Annuller</button>
-            <button class="btn btn-primary" style="float:right" @onclick="SaveCustomer" >Opret kunde</button>
-        </div>
-    </div>
     </EditForm>
 </div>
 @code {
