@@ -81,7 +81,6 @@ else
                     </div>
                 </div>
             </div>
-
             <table class="table">
                 <tr style="font-weight: bold; border: black; border-bottom-style: solid;">
                     <th>Navn</th>
@@ -197,6 +196,10 @@ else
             </div>
         </div>
         <div class="modal-footer">
+            <div>
+                <button style="align-content:" class="btn btn-danger" type="button" @onclick="() => ArchiveCustomer(SelectedItem)">Arkiver Kunde</button>
+            </div>
+            
             <button class="btn btn-dark" type="button" @onclick="editCustomer">Rediger</button>
             <button class="btn btn-primary" type="button" @onclick="Cancel">Okay</button>
         </div>
@@ -239,6 +242,7 @@ else
     private Contact newContact = new();
     //CustomerRepo CusRepo = CustomerRepo.Instance;
     ContactsRepo ConRepo = ContactsRepo.Instance;
+    CustomerRepo CusRepo = CustomerRepo.Instance;
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
     [Parameter]
@@ -248,6 +252,7 @@ else
     private bool showNewContactRow = false;
     private bool editingContact = false;
     private bool isEditing = false;
+    private async Task UpdateCustomerTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
     private async Task Cancel() => await BlazoredModal.CloseAsync();
 
     private void editCustomer()
@@ -276,6 +281,27 @@ else
                 newContact.Name = "Navn Mangler";
                 StateHasChanged();
             }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+    public async void ArchiveCustomer(Customer SelectedItem)
+    {
+        try
+        {
+            SelectedItem.Id = SelectedItem.Id;
+
+            var response = await http.PutAsJsonAsync($"api/Customers/{SelectedItem.Id}", SelectedItem);
+            if (response.IsSuccessStatusCode == true)
+            {
+                var content = JsonContent.Create(SelectedItem);
+                CusRepo.RemoveFromCustomers(SelectedItem);
+                await UpdateCustomerTask();
+                StateHasChanged();
+            }
+     
         }
         catch (Exception e)
         {
