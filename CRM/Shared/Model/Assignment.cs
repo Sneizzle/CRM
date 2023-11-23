@@ -13,7 +13,7 @@ namespace CRM.Shared.Model
         public int Id { get; set; }
 
         [Required]
-        public float Hours { get; set; }
+        public float Hours { get; set; } // ServiceHours spent on this task
 
         [Required]
         public string Description { get; set; }

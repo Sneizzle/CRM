@@ -1,0 +1,13 @@
+<!-- sample rectangle -->
+<svg width="69" height="70" xmlns="http://www.w3.org/2000/svg">
+	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" version="1.1" id="Capa_1" width="64px" height="64px" viewBox="0 0 466.679 466.679" xml:space="preserve">
+
+<g id="SVGRepo_bgCarrier" stroke-width="0"/>
+
+<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+
+<g id="SVGRepo_iconCarrier"> <g> <path d="M466.679,233.337c0,2.819-1.307,5.479-3.541,7.199L240.58,411.641c-1.632,1.254-3.582,1.886-5.532,1.886 c-1.928,0-3.846-0.614-5.468-1.832c-3.257-2.453-4.478-6.786-2.976-10.586l44.748-113.292H9.079c-5.019,0-9.079-4.066-9.079-9.079 v-90.789c0-5.019,4.061-9.079,9.079-9.079h262.272L226.604,65.572c-1.501-3.798-0.281-8.13,2.982-10.586 c3.257-2.459,7.761-2.447,10.994,0.054l222.558,171.107C465.372,227.857,466.679,230.518,466.679,233.337z"/> </g> </g>
+
+	
+</svg>
+</svg>
