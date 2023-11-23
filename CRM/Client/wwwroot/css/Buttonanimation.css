@@ -1,0 +1,50 @@
+﻿button {
+    background: #2e3537;
+    padding: 0.75em 1.5em;
+    border: 3px solid white;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 600;
+    border-radius: 15px;
+    cursor: pointer;
+    margin: auto;
+    position: relative;
+    display: grid;
+    place-items: center;
+    transition: 0.5s;
+}
+
+button:before, button:after {
+    content: '';
+    position: absolute;
+    background-color: #FF0000;
+    height: 100%;
+    width: 60%;
+    z-index: -1;
+    opacity: 0.5;
+    border-radius: 15px;
+}
+
+button:hover {
+    color: #FF0000;
+    border-color: #FF0000;
+    text-shadow: 0 0 5px #FF0000;
+    box-shadow: 0 0 10px #FF0000, 0 0 20px #FF0000;
+    letter-spacing: 5px;
+}
+
+button:hover:before {
+    animation: pulse 2s ease-out infinite;
+}
+
+button:hover:after {
+    animation: pulse 2s 1s ease-out infinite;
+}
+
+@keyframes pulse {
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
