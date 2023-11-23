@@ -205,20 +205,6 @@ else
 
 @*-------------------------------------------------------------------Logik---------------------------------------------------- *@
 @code {
-
-
-
-    private bool editingContact = false;
-    private Contact editingContactData;
-    private Contact initialman = new();
-    private void EditContact(Contact contact)
-    {
-        initialman.Name = contact.Name;
-        initialman.Email = contact.Email;
-        initialman.PhoneNumber = contact.PhoneNumber;
-        editingContactData = contact;
-        editingContact = true;
-    }
     private async void SaveEditedContact(Contact currentContact)
     {
         try
@@ -257,7 +243,6 @@ else
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
     [Parameter]
     public Customer? SelectedItem { get; set; }
-    private Contact newContact = new();
     private Contact editingContactData;
     private Contact initialman = new();
     private bool showNewContactRow = false;
@@ -341,41 +326,6 @@ else
         initialman.PhoneNumber = contact.PhoneNumber;
         editingContactData = contact;
         editingContact = true;
-    }
-    private async void SaveEditedContact(Contact currentContact)
-    {
-        try
-        {
-            var response = await http.PutAsJsonAsync<Contact>($"api/Contacts/{currentContact.Id}", editingContactData);
-            if (response.IsSuccessStatusCode == true)
-            {
-                editingContact = false;
-                StateHasChanged();
-            }
-            else
-            {
-                Console.WriteLine("somfing went wong");
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-    }
-    private void CancelEdit(Contact tmp)
-    {
-
-        editingContactData.Name = initialman.Name;
-        editingContactData.Email = initialman.Email;
-        editingContactData.PhoneNumber = initialman.PhoneNumber;
-        editingContact = false;
-
-        StateHasChanged();
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
     }
 
     private async void UpdateCustomer()
