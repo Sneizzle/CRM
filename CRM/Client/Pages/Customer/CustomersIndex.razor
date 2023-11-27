@@ -115,12 +115,12 @@
                                     <td style="color: @secondaryTextColor; font-size: @tableDataFontSize">@customer.DateModified</td>
                                     <td style="text-align: center;">
                                         <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
-                                            <a style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/CreateTaskColored.svg" alt="Star SVG" width="35" height="35"/></a>
+                                            <a style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/CreateTaskColored.svg" alt="Star SVG" width="50" height="50"/></a>
                                         </div>
                                     </td>
                                     <td style="text-align: center;">
                                         <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
-                                            <a position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100;"><img src="/GasIconColored.svg" alt="Star SVG" width="35" height="35"/></a>
+                                            <a position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100;"><img src="/GasIconColored.svg" alt="Star SVG" width="50" height="50"/></a>
                                         </div>
                                     </td>
                                 </tr>
