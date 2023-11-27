@@ -66,8 +66,6 @@ else
         </div>
 
 
-
-
         @*----------------------------------------------------------Bottom Section------------------------------------------------------------------*@
         <div class="container">
             <div class="table-title">
@@ -190,7 +188,7 @@ else
                     </div>
                     <div class="col-sm">
                         <button @onclick="OpenTaskLogModal" class="btn" style="border-width: thick ; background: #08948c; color: black ; font-weight: bolder; font-size: 20px ;float:right; border-color:black; height: 105px; width: 200px;">Task logbog <img src="/CreateTaskColored.svg" alt="Star SVG" width="50" height="50" /></button>
-                       @* <textarea style="float:right; margin-top: 10px; " placeholder="Kommentarboks"></textarea>*@
+                        @* <textarea style="float:right; margin-top: 10px; " placeholder="Kommentarboks"></textarea>*@
                     </div>
                 </div>
             </div>
@@ -356,9 +354,9 @@ else
 
     private async void UpdateCustomer()
     {
-
         await http.PutAsJsonAsync($"api/Customers/{SelectedItem.Id}", SelectedItem);
         StateHasChanged();
         await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
+
     }
 }
