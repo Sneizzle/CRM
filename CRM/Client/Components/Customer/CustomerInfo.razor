@@ -208,37 +208,6 @@ else
 
 @*-------------------------------------------------------------------Logik---------------------------------------------------- *@
 @code {
-    private async void SaveEditedContact(Contact currentContact)
-    {
-        try
-        {
-            var response = await http.PutAsJsonAsync<Contact>($"api/Contacts/{currentContact.Id}", editingContactData);
-            if (response.IsSuccessStatusCode == true)
-            {
-                editingContact = false;
-                StateHasChanged();
-            }
-            else
-            {
-                Console.WriteLine("somfing went wong");
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-    }
-    private void CancelEdit(Contact tmp)
-    {
-
-        editingContactData.Name = initialman.Name;
-        editingContactData.Email = initialman.Email;
-        editingContactData.PhoneNumber = initialman.PhoneNumber;
-        editingContact = false;
-
-
-        StateHasChanged();
-    }
     private Contact newContact = new();
     //CustomerRepo CusRepo = CustomerRepo.Instance;
     ContactsRepo ConRepo = ContactsRepo.Instance;
@@ -292,12 +261,12 @@ else
         try
         {
             SelectedItem.Id = SelectedItem.Id;
+            CusRepo.RemoveFromCustomers(SelectedItem);
 
             var response = await http.PutAsJsonAsync($"api/Customers/{SelectedItem.Id}", SelectedItem);
             if (response.IsSuccessStatusCode == true)
             {
                 var content = JsonContent.Create(SelectedItem);
-                CusRepo.RemoveFromCustomers(SelectedItem);
                 await UpdateCustomerTask();
                 StateHasChanged();
             }
@@ -307,6 +276,37 @@ else
         {
             Console.WriteLine(e);
         }
+    }
+    private async void SaveEditedContact(Contact currentContact)
+    {
+        try
+        {
+            var response = await http.PutAsJsonAsync<Contact>($"api/Contacts/{currentContact.Id}", editingContactData);
+            if (response.IsSuccessStatusCode == true)
+            {
+                editingContact = false;
+                StateHasChanged();
+            }
+            else
+            {
+                Console.WriteLine("somfing went wong");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+    private void CancelEdit(Contact tmp)
+    {
+
+        editingContactData.Name = initialman.Name;
+        editingContactData.Email = initialman.Email;
+        editingContactData.PhoneNumber = initialman.PhoneNumber;
+        editingContact = false;
+
+
+        StateHasChanged();
     }
     private void ResetNewContact()
     {
