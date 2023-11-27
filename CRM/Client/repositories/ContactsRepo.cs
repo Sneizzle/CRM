@@ -25,7 +25,7 @@ namespace CRM.Client.Repositories
             }
             set { instance = value; }
         }
-
+        
         public List<Contact> contacts;
 
         public ContactsRepo()

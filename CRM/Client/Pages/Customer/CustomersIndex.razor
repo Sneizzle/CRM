@@ -147,15 +147,21 @@
     CustomerRepo CusRepo = CustomerRepo.Instance;
     ContactsRepo ConRepo = ContactsRepo.Instance;
 
-    private void OpenRefuel(Customer customer)
+    private async void OpenRefuel(Customer customer)
     {
         var parameters = new ModalParameters().
         Add(nameof(AddHours.SelectedItem), customer);
         var options = new ModalOptions()
             {
-                Size = ModalSize.ExtraLarge
+                Size = ModalSize.Medium
             };
-        Modal.Show<AddHours>();
+        var refuelResult = Modal.Show<AddHours>($"Tank op for: {customer.Name}", parameters, options);
+
+        var result = await refuelResult.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
     }
 
 
@@ -166,10 +172,15 @@
         var options = new ModalOptions()
             {
                 Size = ModalSize.ExtraLarge,
-        DisableBackgroundCancel = true
+                DisableBackgroundCancel = true
 
             };
         var customerResult = Modal.Show<CustomerInfo>($"Information for: {customer.Name}", parameters, options);
+        var result = await customerResult.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
     }
 
     private async void CreateCustomerModal()
@@ -203,7 +214,7 @@
 
     private void SortByName()
     {
-        sortAscendingName = !sortAscendingName; //Sætter til false onClick // intially true. 
+        sortAscendingName = !sortAscendingName; //Sætter til false onClick // intially true.
         sortAscendingHours = true;
         sortAscending = true;
         if (sortAscendingName == true)
@@ -218,7 +229,7 @@
     private void SortByDateModified()
     {
         sortAscending = !sortAscending;
-        sortAscendingHours = true; // hvis vi ikke resetter, bliver der ikke ønsket adfærd 
+        sortAscendingHours = true; // hvis vi ikke resetter, bliver der ikke ønsket adfærd
         sortAscendingName = true;
         if (sortAscending == true)
         {
@@ -236,11 +247,11 @@
         sortAscending = true;
         sortAscendingName = true;
         sortAscendingHours = !sortAscendingHours;
-        if(sortAscendingHours == true)
+        if (sortAscendingHours == true)
         {
             CusRepo.customers = CusRepo.customers.OrderByDescending(c => c.ServiceHours).ToList();
         }
-        else 
+        else
         {
             CusRepo.customers = CusRepo.customers.OrderBy(c => c.ServiceHours).ToList();
         }
@@ -266,7 +277,7 @@
         {
             StateHasChanged();
         }
-        
+
     }
 }
 

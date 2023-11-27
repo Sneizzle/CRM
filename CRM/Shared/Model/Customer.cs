@@ -35,6 +35,7 @@ namespace CRM.Shared.Model
 
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; }
+        public DateTime? LastRefill { get; set; }
         public bool IsHidden { get; set; }
 
     }

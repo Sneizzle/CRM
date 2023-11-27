@@ -1,0 +1,110 @@
+﻿@using CRM.Shared.Model;
+@inject HttpClient http;
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <label class="form-label" style="width:150px;">Ret antal timer:</label>
+            <div class="input-group">
+                <input class="form-control" style="width:100px;" @bind="serviceHours.Hours" type="number">
+                <button class="btn btn-outline-secondary plus-button" type="button" @onclick="plusOneHour"><img src="/plusIcon.svg" alt="Plus Icon" width="25" height="25"></button>
+                <button class="btn btn-outline-secondary minus-button" type="button" @onclick="minusOneHour"><img src="/minusIcon.svg" alt="Minus Icon" width="25" height="25"></button>
+            </div>
+
+        </div>
+        <div class="col-md-2">
+            <img style="margin-top:40px; margin-left:10px" src="/arrowPointRight.svg" alt="Arrow Pointer" width="25" height="25">
+        </div>
+        <div class="col-md-4">
+            @if (SelectedItem.ServiceHours != null)
+            {
+                <label class="form-label" style="width:150px;">Nye antal timer</label>
+                <input class="form-control" style="width:100px;" disabled="true" placeholder="@(SelectedItem.ServiceHours + serviceHours.Hours)" />
+            }
+            else
+            {   <label class="form-label" style="width:150px;"> Nye antal timer</label>
+                <input class="form-control" style="width:100px;" disabled="true" placeholder="@(serviceHours.Hours)" />
+                
+            }
+        </div>
+        <div class="row">
+            <input type="range" class="form-range" min="0" max="50" step="5" id="slider" @bind="serviceHours.Hours">
+        </div>
+    
+        @if (serviceHours.Hours < 0)
+        {
+            <label style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+                *OPS* Negativ time antal, er du sikker? 
+            </label>
+        }
+    </div>
+    <br />
+    <button class="btn btn-primary" @onclick="Confirm">Godkend</button>
+    <label></label>
+    <button class="btn btn-danger" @onclick="Close"> Fortryd </button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    [Parameter]
+    public Customer? SelectedItem { get; set; }
+
+
+    public ServiceHours serviceHours = new();
+
+    private async Task UpdateCustomerTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
+    private async Task Close() => await BlazoredModal.CloseAsync();
+
+    private void plusOneHour()
+    {
+        serviceHours.Hours = serviceHours.Hours + 1;
+    }
+    private void minusOneHour()
+    {
+        serviceHours.Hours = serviceHours.Hours -1; 
+    }
+
+    private async Task Confirm()
+    {
+
+        serviceHours.customerId = SelectedItem.Id;
+        try
+        {
+            var response = await http.PostAsJsonAsync<ServiceHours>("api/ServiceHours", serviceHours );
+
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                if(SelectedItem.ServiceHours == null)
+                {
+                    SelectedItem.ServiceHours = 0; 
+                }
+                SelectedItem.ServiceHours = SelectedItem.ServiceHours + serviceHours.Hours;
+                SelectedItem.LastRefill = DateTime.Now;
+                await http.PutAsJsonAsync<Customer>($"api/Customers/{SelectedItem.Id}", SelectedItem);
+                await UpdateCustomerTask();
+                StateHasChanged();
+            }
+            else
+            {
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+}
+<style>
+    .plus-button:hover {
+        background-color: green;
+        color: white;
+    }
+
+    .minus-button:hover {
+        background-color: red;
+        color: white;
+    }
+</style>

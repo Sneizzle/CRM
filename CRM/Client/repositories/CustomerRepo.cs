@@ -49,5 +49,10 @@ namespace CRM.Client.Repositories
             customers.Add(customer);
         }
 
+        public void RemoveFromCustomers(Customer customer)
+        {
+            customer.IsHidden = true;
+        }
     }
+   
 }
