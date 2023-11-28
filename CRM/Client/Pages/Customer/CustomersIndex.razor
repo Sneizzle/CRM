@@ -1,91 +1,90 @@
-﻿
+﻿<body style="background-color: #20283a; overflow-y: hidden;">
+    <div class="main-container">
+        <div style="overflow-y: hidden; max-width: 80vw; height: 100%; margin: auto; position: relative; zoom: ">
 
-<body style="background-color: #20283a; overflow-y: hidden;">
-<div class="main-container">
-    <div style="overflow-y: hidden; max-width: 80vw; height: 100%; margin: auto; position: relative; zoom: ">
-        
-        @*injections*@
-        @page "/"
-        @using CRM.Client.Components.Tasks;
-        @using CRM.Client.Repositories;
-        @using CRM.Shared;
-        @using CRM.Shared.Model;
-        @using CRM.Client.Components.Customer;
-        @*@using CRM.Client.Components.AddHours;*@
-        @using System.Reflection
-        @inject HttpClient http;
+            @*injections*@
+            @page "/"
+            @using CRM.Client.Components.Tasks;
+            @using CRM.Client.Repositories;
+            @using CRM.Shared;
+            @using CRM.Shared.Model;
+            @using CRM.Client.Components.Customer;
+            @*@using CRM.Client.Components.AddHours;*@
+            @using System.Reflection
+            @inject HttpClient http;
 
-        /*variables for color*/
-        @{
-            var backgroundColor = "#20283a";
-            var textColor = "#3260a8";
-            var secondaryTextColor = "#cfcccc";
-            var accentColor = "#bd3535";
-            var hoverColor = "#454a53";
-            var grayColor = "@#453f3f";
-            var fontSizeHeader = "larger";
-            var fontSieName = "large";
-            var tableDataFontSize = "medium";
-        }
+            /*variables for color*/
+            @{
+                var backgroundColor = "#20283a";
+                var textColor = "#3260a8";
+                var secondaryTextColor = "#cfcccc";
+                var accentColor = "#bd3535";
+                var hoverColor = "#454a53";
+                var grayColor = "@#453f3f";
+                var fontSizeHeader = "larger";
+                var fontSieName = "large";
+                var tableDataFontSize = "medium";
+            }
 
-        <PageTitle>CustomersIndex</PageTitle>
+            <PageTitle>CustomersIndex</PageTitle>
 
-        @if (CusRepo.customers == null)
-        {
-            <p><em>Loading..</em></p>
-        }
-        else
-        {
+            @if (CusRepo.customers == null)
+            {
+                <p><em>Loading..</em></p>
+            }
+            else
+            {
 
-            /*adjust the vh for table*/
+                /*adjust the vh for table*/
 
-            <div style="max-width: 80vw; max-height: 75vh; margin: auto; overflow: hidden; position: relative; zoom: ">
-                <div style="max-width: 500px; ">
-                    <input class="form-control" type="text" style="height: 60px" placeholder="Search up a customer.."
-                           @bind="Filter"
-                           @bind:event="oninput">
-                </div>
-                <div style="display: flex; justify-content: right; cursor: pointer">
-                    <a @onclick="@(() => OpenCreateCustomerModal())" style="font-weight: bolder; color:darkorange;">
-                        <img src="/css/Logos/CreateCustomer.svg" alt="Opret Kunde" width="60" height="65"; />Opret Kunde</a>
+                <div style="max-width: 80vw; max-height: 75vh; margin: auto; overflow: hidden; position: relative; zoom: ">
+                    <div style="max-width: 500px; ">
+                        <input class="form-control" type="text" style="height: 60px" placeholder="Search up a customer.."
+                        @bind="Filter"
+                        @bind:event="oninput">
+                    </div>
+                    <div style="display: flex; justify-content: right; cursor: pointer">
+                        <a @onclick="@(() => CreateCustomerModal())" style="font-weight: bolder; color:darkorange;">
+                            <img src="/css/Logos/CreateCustomer.svg" alt="Opret Kunde" width="60" height="65" ; />Opret Kunde
+                        </a>
 
-                    
-                    
 
-                </div>
-                <div style="overflow-y: auto; max-height: calc(100vh - 100px); position: relative;">
-                    <div class="table-container">
-                        <table class="table" style="border-collapse: collapse; width: 100%; max-width: 100%; max-height: 70vh">
-                            <thead>
-                            <tr>
-                                        <th style ="color: @textColor; cursor: pointer; font-size: @fontSizeHeader">
-                                   
-                                        <href style="font-weight: bolder;" @onclick="SortByName">
-                                            Navn
-                                            @if (sortAscendingName == false)
+
+
+                    </div>
+                    <div style="overflow-y: auto; max-height: calc(100vh - 100px); position: relative;">
+                        <div class="table-container">
+                            <table class="table" style="border-collapse: collapse; width: 100%; max-width: 100%; max-height: 70vh">
+                                <thead>
+                                    <tr>
+                                        <th style="color: @textColor; cursor: pointer; font-size: @fontSizeHeader">
+
+                                            <href style="font-weight: bolder;" @onclick="SortByName">
+                                                Navn
+                                                @if (sortAscendingName == false)
+                                                {
+                                                    <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
+                                                }
+                                            </href>
+
+
+                                        </th>
+                                        <th style="font-weight: bolder; color: @textColor; font-size: @fontSizeHeader">Telefonnr</th>
+                                        <th style="font-weight: bolder; color: @textColor; font-size: @fontSizeHeader; cursor: pointer" @onclick="SortByServiceHours">
+                                            Service timer
+                                            @if (sortAscendingHours == false)
                                             {
-                                                <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15"/>
+                                                <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
                                             }
                                             else
                                             {
-                                                <img src="Arrowup.svg" alt="Star SVG" width="15" height="15"/>
+                                                <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
+
                                             }
-                                        </href>
-                                    
-
-                                </th>
-                                <th style="font-weight: bolder; color: @textColor; font-size: @fontSizeHeader">Telefonnr</th>
-                                <th style="font-weight: bolder; color: @textColor; font-size: @fontSizeHeader; cursor: pointer" @onclick="SortByServiceHours">
-                                    Service timer
-                                    @if (sortAscendingHours == false)
-                                    {
-                                        <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15"/>
-                                    }
-                                    else
-                                    {
-                                        <img src="Arrowup.svg" alt="Star SVG" width="15" height="15"/>
-
-                                    }
 
                                 </th>
                                 <th style="font-weight: bolder; cursor: pointer; color: @textColor; font-size: @fontSizeHeader" @onclick="SortByDateModified">
@@ -132,8 +131,8 @@
                 </div>
             </div>
 
-        }
-    </div>
+            }
+        </div>
     </div>
 </body>
 
@@ -289,13 +288,13 @@
         border-collapse: collapse;
     }
 
-    .hoverTable tr {
-        background: #323c50;
-    }
+        .hoverTable tr {
+            background: #323c50;
+        }
 
-    .hoverTable tr:hover {
-        background-color: @hoverColor;
-    }
+            .hoverTable tr:hover {
+                background-color: @hoverColor;
+            }
 </style>
 <style>
     #myInput {
@@ -311,7 +310,7 @@
 </style>
 
 <style>
-        
+
     .table thead th {
         position: sticky;
         top: 0;
@@ -323,9 +322,9 @@
         background: #323c50;
     }
 
-    .hoverTable tr:hover {
-        background-color: @hoverColor;
-    }
+        .hoverTable tr:hover {
+            background-color: @hoverColor;
+        }
 </style>
 <style>
     body, html {
@@ -348,16 +347,14 @@
 
     .table-container {
         overflow-y: auto;
-       
         position: relative;
-        
-        </style>
-        
+</style>
+
 <style>
     .table-container {
         position: relative;
         overflow-y: auto;
-        max-height: calc(100vh - 160px); /* Adjust the max-height if needed */
+        max-height: calc(80vh - 160px); /* Adjust the max-height if needed */
     }
 
     .table thead th {
@@ -371,7 +368,7 @@
         background: #323c50;
     }
 
-    .hoverTable tr:hover {
-        background-color: @hoverColor;
-    }
+        .hoverTable tr:hover {
+            background-color: @hoverColor;
+        }
 </style>
