@@ -46,7 +46,7 @@
                            @bind:event="oninput">
                 </div>
                 <div style="display: flex; justify-content: right; cursor: pointer">
-                    <a @onclick="@(() => CreateCustomerModal())" style="font-weight: bolder; color:darkorange;">
+                    <a @onclick="@(() => OpenCreateCustomerModal())" style="font-weight: bolder; color:darkorange;">
                         <img src="/css/Logos/CreateCustomer.svg" alt="Opret Kunde" width="60" height="65"; />Opret Kunde</a>
 
                     
@@ -115,7 +115,7 @@
                                     <td style="color: @secondaryTextColor; font-size: @tableDataFontSize">@customer.DateModified</td>
                                     <td style="text-align: center;">
                                         <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
-                                            <a style="border: thin; z-index: 50" @onclick="(() => AddTasks(customer))"><img src="/CreateTaskColored.svg" alt="Star SVG" width="50" height="50"/></a>
+                                            <a style="border: thin; z-index: 50" @onclick="(() => OpenAddTasks(customer))"><img src="/CreateTaskColored.svg" alt="Star SVG" width="50" height="50"/></a>
                                         </div>
                                     </td>
                                     <td style="text-align: center;">
@@ -147,21 +147,11 @@
     CustomerRepo CusRepo = CustomerRepo.Instance;
     ContactsRepo ConRepo = ContactsRepo.Instance;
 
-    private async void OpenAddHours(Customer customer)
+    protected override async Task OnInitializedAsync()
     {
-        var parameters = new ModalParameters().
-        Add(nameof(Components.Tasks.AddHours.SelectedItem), customer);
-        var options = new ModalOptions()
-            {
-                Size = ModalSize.Medium
-            };
-        var refuelResult = Modal.Show<AddHours>($"Tank op for: {customer.Name}", parameters, options);
-
-        var result = await refuelResult.Result;
-        if (!result.Cancelled)
-        {
-            StateHasChanged();
-        }
+        await CusRepo.InitializeCustomers();
+        await ConRepo.InitializeContacts();
+        StateHasChanged();
     }
 
 
@@ -183,7 +173,7 @@
         }
     }
 
-    private async void CreateCustomerModal()
+    private async void OpenCreateCustomerModal()
     {
         var options = new ModalOptions()
             {
@@ -205,11 +195,39 @@
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    private async void OpenAddHours(Customer customer)
     {
-        await CusRepo.InitializeCustomers();
-        await ConRepo.InitializeContacts();
-        StateHasChanged();
+        var parameters = new ModalParameters().
+        Add(nameof(Components.Tasks.AddHours.SelectedItem), customer);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Medium
+            };
+        var refuelResult = Modal.Show<AddHours>($"Tank op for: {customer.Name}", parameters, options);
+
+        var result = await refuelResult.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async void OpenAddTasks(Customer customer)
+    {
+        var parameters = new ModalParameters().
+        Add(nameof(AddTask.SelectedItem), customer);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Medium
+            };
+        var customerResult = Modal.Show<AddTask>($"Opret Task for: {customer.Name}", parameters, options);
+
+        var result = await customerResult.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
+
     }
 
     private void SortByName()
@@ -262,23 +280,6 @@
         return string.IsNullOrEmpty(Filter) || customer.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
     }
 
-    private async void AddTasks(Customer customer)
-    {
-        var parameters = new ModalParameters().
-        Add(nameof(AddTask.SelectedItem), customer);
-        var options = new ModalOptions()
-            {
-                Size = ModalSize.Medium
-            };
-        var customerResult = Modal.Show<AddTask>($"Opret Task for: {customer.Name}", parameters, options);
-
-        var result = await customerResult.Result;
-        if (!result.Cancelled)
-        {
-            StateHasChanged();
-        }
-
-    }
 }
 
 

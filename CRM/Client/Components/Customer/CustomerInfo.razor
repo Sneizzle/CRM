@@ -150,7 +150,7 @@ else
         </div>
         <div style="float: right; margin: 10px; font-size: 22px">
             @*<button> Gem</button>*@
-            <a>  <img src="/css/Logos/ReturnColor.svg" @onclick="closeEdit" style="cursor: pointer; border: 0 !important; height: 40px; width: 43px;" alt="Gå tilbage" /></a>
+            <a>  <img src="/css/Logos/ReturnColor.svg" @onclick="CloseEdit" style="cursor: pointer; border: 0 !important; height: 40px; width: 43px;" alt="Gå tilbage" /></a>
         </div>
     }
     @*------------------------------------------------------view data (not editing window)--------------------------------------------------*@
@@ -200,7 +200,7 @@ else
                 <button style="align-content:" class="btn btn-danger" type="button" @onclick="() => ArchiveCustomer(SelectedItem)">Arkiver Kunde</button>
             </div>
             
-            <button class="btn btn-dark" type="button" @onclick="editCustomer">Rediger</button>
+            <button class="btn btn-dark" type="button" @onclick="EditCustomer">Rediger</button>
             <button class="btn btn-primary" type="button" @onclick="Cancel">Okay</button>
         </div>
     }
@@ -224,11 +224,15 @@ else
     private async Task UpdateCustomerTask() => await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
     private async Task Cancel() => await BlazoredModal.CloseAsync();
 
-    private void editCustomer()
+    private async void CreateContactModal()
+    {
+        showNewContactRow = true;
+    }
+    private void EditCustomer()
     {
         isEditing = true;
     }
-    private void closeEdit()
+    private void CloseEdit()
     {
         isEditing = false;
     }
@@ -250,27 +254,6 @@ else
                 newContact.Name = "Navn Mangler";
                 StateHasChanged();
             }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-    }
-    public async void ArchiveCustomer(Customer SelectedItem)
-    {
-        try
-        {
-            SelectedItem.Id = SelectedItem.Id;
-            CusRepo.RemoveFromCustomers(SelectedItem);
-
-            var response = await http.PutAsJsonAsync($"api/Customers/{SelectedItem.Id}", SelectedItem);
-            if (response.IsSuccessStatusCode == true)
-            {
-                var content = JsonContent.Create(SelectedItem);
-                await UpdateCustomerTask();
-                StateHasChanged();
-            }
-     
         }
         catch (Exception e)
         {
@@ -313,10 +296,6 @@ else
         newContact = new Contact();
         showNewContactRow = false;
     }
-    private async void CreateContactModal()
-    {
-        showNewContactRow = true;
-    }
     private void OpenTaskLogModal()
     {
         var parameters = new ModalParameters()
@@ -327,7 +306,23 @@ else
             };
         Modal.Show<TaskLog>($"Task logbog for: {SelectedItem.Name}", parameters, options);
     }
-    public async void ArchiveContact(Contact contact)
+    private void EditContact(Contact contact)
+    {
+        initialman.Name = contact.Name;
+        initialman.Email = contact.Email;
+        initialman.PhoneNumber = contact.PhoneNumber;
+        editingContactData = contact;
+        editingContact = true;
+    }
+
+    private async void UpdateCustomer()
+    {
+
+        await http.PutAsJsonAsync($"api/Customers/{SelectedItem.Id}", SelectedItem);
+        StateHasChanged();
+        await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
+    }
+    private async void ArchiveContact(Contact contact)
     {
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
         if (confirmed)
@@ -345,20 +340,25 @@ else
             }
         }
     }
-    private void EditContact(Contact contact)
+    private async void ArchiveCustomer(Customer SelectedItem)
     {
-        initialman.Name = contact.Name;
-        initialman.Email = contact.Email;
-        initialman.PhoneNumber = contact.PhoneNumber;
-        editingContactData = contact;
-        editingContact = true;
-    }
+        try
+        {
+            SelectedItem.Id = SelectedItem.Id;
+            CusRepo.RemoveFromCustomers(SelectedItem);
 
-    private async void UpdateCustomer()
-    {
-
-        await http.PutAsJsonAsync($"api/Customers/{SelectedItem.Id}", SelectedItem);
-        StateHasChanged();
-        await BlazoredModal.CloseAsync(ModalResult.Ok(SelectedItem));
+            var response = await http.PutAsJsonAsync($"api/Customers/{SelectedItem.Id}", SelectedItem);
+            if (response.IsSuccessStatusCode == true)
+            {
+                var content = JsonContent.Create(SelectedItem);
+                await UpdateCustomerTask();
+                StateHasChanged();
+            }
+     
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 }
