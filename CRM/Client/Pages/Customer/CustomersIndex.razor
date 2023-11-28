@@ -120,7 +120,7 @@
                                     </td>
                                     <td style="text-align: center;">
                                         <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
-                                            <a position: absolute @onclick="@(() => OpenRefuel(customer))" style="border: thin; z-index: 100;"><img src="/GasIconColored.svg" alt="Star SVG" width="50" height="50"/></a>
+                                            <a position: absolute @onclick="@(() => OpenAddHours(customer))" style="border: thin; z-index: 100;"><img src="/GasIconColored.svg" alt="Star SVG" width="50" height="50"/></a>
                                         </div>
                                     </td>
                                 </tr>
@@ -147,10 +147,10 @@
     CustomerRepo CusRepo = CustomerRepo.Instance;
     ContactsRepo ConRepo = ContactsRepo.Instance;
 
-    private async void OpenRefuel(Customer customer)
+    private async void OpenAddHours(Customer customer)
     {
         var parameters = new ModalParameters().
-        Add(nameof(AddHours.SelectedItem), customer);
+        Add(nameof(Components.Tasks.AddHours.SelectedItem), customer);
         var options = new ModalOptions()
             {
                 Size = ModalSize.Medium
