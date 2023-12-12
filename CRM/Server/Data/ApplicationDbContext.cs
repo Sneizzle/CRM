@@ -22,9 +22,4 @@ namespace CRM.Server.Data
 
         public DbSet<ServiceHours> ServiceHours { get; set; }
     }
-
-
-  
-
-
 }

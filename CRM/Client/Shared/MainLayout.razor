@@ -8,24 +8,15 @@
 @attribute [Authorize]
 
 <div class="page">
-  @*  <div class="sidebar">
-        <NavMenu />
-    </div>*@
-
-    <main>    
+    <main>
         <div class="top-row px-4 auth" style="background: #323c50; border-color: black;">
             <AuthorizeView>
                 <Authorized>
-@*                     <a style="color: #0071C1; cursor: pointer">
-                        <href @onclick="@(() => CreateCustomerModal())">Opret Kunde</href>
-                    </a> *@
                     <a href="/admin">Admin stuffs</a>
                 </Authorized>
             </AuthorizeView>
-
-            <LoginDisplay/>
-                    <button style="border:thin; float:left;" @onclick="@(() => Nav.NavigateTo("/"))"><img src="/VicathEQIcon.png" alt="VicathTree" width="50" height="50" /></button>
-               
+            <LoginDisplay />
+            <button style="border:thin; float:left;" @onclick="@(() => Nav.NavigateTo("/"))"><img src="/VicathEQIcon.png" alt="VicathTree" width="50" height="50" /></button>
         </div>
         <article class="content px-4" style="background: #20283a; ">
             @Body
@@ -33,33 +24,5 @@
     </main>
 </div>
 
-@code{
-    [CascadingParameter] public IModalService Modal { get; set; } = default!;
-    //CustomerRepo CR = CustomerRepo.Instance;
-
-    // private async void CreateCustomerModal()
-    // {
-    //     var options = new ModalOptions()
-    //     {
-    //         Size = ModalSize.Automatic
-    //     };
-    //     var customerResult = Modal.Show<CreateCustomer>("Opret Kunde");
-
-    //     var result = await customerResult.Result;
-    //     if (!result.Cancelled)
-    //     {
-    //         Customer tmpCustomer = (Customer)result.Data;
-    //         CR.customers.Add(tmpCustomer);
-    //         Console.WriteLine("result.confirmed :)");
-    //         await CR.InitializeCustomers();
-    //         //StateHasChanged();
-    //     }
-    //     else
-    //     {
-    //         Console.WriteLine("result.Ikkeconfirmed :(");
-    //         StateHasChanged();
-    //     }
-    // }
-
-
+@code {
 }

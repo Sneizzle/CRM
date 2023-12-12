@@ -1,18 +1,16 @@
-﻿<body style="background-color: #20283a; overflow-y: hidden;">
+﻿@page "/"
+@using CRM.Client.Components.Tasks;
+@using CRM.Client.Repositories;
+@using CRM.Shared;
+@using CRM.Shared.Model;
+@using CRM.Client.Components.Customer;
+@*@using CRM.Client.Components.AddHours;*@
+@using System.Reflection
+@inject HttpClient http;
+
+<body style="background-color: #20283a; overflow-y: hidden;">
     <div class="main-container">
-        <div style="overflow-y: hidden; max-width: 80vw; height: 100%; margin: auto; position: relative; zoom: ">
-
-            @*injections*@
-            @page "/"
-            @using CRM.Client.Components.Tasks;
-            @using CRM.Client.Repositories;
-            @using CRM.Shared;
-            @using CRM.Shared.Model;
-            @using CRM.Client.Components.Customer;
-            @*@using CRM.Client.Components.AddHours;*@
-            @using System.Reflection
-            @inject HttpClient http;
-
+        <div style="overflow-y: hidden; max-width: 80vw; height: 100%; margin: auto; position: relative;">
             /*variables for color*/
             @{
                 var backgroundColor = "#20283a";
@@ -34,23 +32,17 @@
             }
             else
             {
-
                 /*adjust the vh for table*/
-
-                <div style="max-width: 80vw; max-height: 75vh; margin: auto; overflow: hidden; position: relative; zoom: ">
+                <div style="max-width: 80vw; max-height: 75vh; margin: auto; overflow: hidden; position: relative;">
                     <div style="max-width: 500px; ">
                         <input class="form-control" type="text" style="height: 60px" placeholder="Search up a customer.."
                         @bind="Filter"
                         @bind:event="oninput">
                     </div>
                     <div style="display: flex; justify-content: right; cursor: pointer">
-                        <a @onclick="@(() => CreateCustomerModal())" style="font-weight: bolder; color:darkorange;">
+                        <a @onclick="@(() => OpenCreateCustomerModal())" style="font-weight: bolder; color:darkorange;">
                             <img src="/css/Logos/CreateCustomer.svg" alt="Opret Kunde" width="60" height="65" ; />Opret Kunde
                         </a>
-
-
-
-
                     </div>
                     <div style="overflow-y: auto; max-height: calc(100vh - 100px); position: relative;">
                         <div class="table-container">
@@ -70,8 +62,6 @@
                                                     <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
                                                 }
                                             </href>
-
-
                                         </th>
                                         <th style="font-weight: bolder; color: @textColor; font-size: @fontSizeHeader">Telefonnr</th>
                                         <th style="font-weight: bolder; color: @textColor; font-size: @fontSizeHeader; cursor: pointer" @onclick="SortByServiceHours">
@@ -86,51 +76,50 @@
 
                                             }
 
-                                </th>
-                                <th style="font-weight: bolder; cursor: pointer; color: @textColor; font-size: @fontSizeHeader" @onclick="SortByDateModified">
-                                    Dato for optankning
-                                    @if (sortAscending == false)
+                                        </th>
+                                        <th style="font-weight: bolder; cursor: pointer; color: @textColor; font-size: @fontSizeHeader" @onclick="SortByDateModified">
+                                            Dato for optankning
+                                            @if (sortAscending == false)
+                                            {
+                                                <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15" />
+                                            }
+                                            else
+                                            {
+                                                <img src="Arrowup.svg" alt="Star SVG" width="15" height="15" />
+                                            }
+                                        </th>
+                                        <th style="color: @textColor; font-size: @fontSizeHeader">Opret task</th>
+                                        <th style="color: @textColor; font-size: @fontSizeHeader">Tank op</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="hoverTable" style="max-height: calc(100vh - 160px); overflow-y: auto;">
+                                    @foreach (var customer in CusRepo.customers)
                                     {
-                                        <img src="Arrowdown.svg" alt="Star SVG" width="15" height="15"/>
+                                        if (!IsVisible(customer))
+                                            continue;
+                                        <tr @onclick="@(() => OpenCustomerInfoModal(customer))">
+                                            <td style="font-weight: bolder; font-size: @fontSieName; color: @accentColor">@customer.Name</td>
+                                            <td style="color: @secondaryTextColor; font-size: @tableDataFontSize">@customer.PhoneNumber</td>
+                                            <td style="color: @secondaryTextColor; font-size: @tableDataFontSize">@customer.ServiceHours</td>
+                                            <td style="color: @secondaryTextColor; font-size: @tableDataFontSize">@customer.DateModified</td>
+                                            <td style="text-align: center;">
+                                                <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
+                                                    <a style="border: thin; z-index: 50" @onclick="(() => OpenAddTasks(customer))"><img src="/CreateTaskColored.svg" alt="Star SVG" width="50" height="50" /></a>
+                                                </div>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
+                                                    <a position: absolute @onclick="@(() => OpenAddHours(customer))" style="border: thin; z-index: 100;"><img src="/GasIconColored.svg" alt="Star SVG" width="50" height="50" /></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid #232d3c;"></tr>
                                     }
-                                    else
-                                    {
-                                        <img src="Arrowup.svg" alt="Star SVG" width="15" height="15"/>
-                                    }
-                                </th>
-                                <th style="color: @textColor; font-size: @fontSizeHeader">Opret task</th>
-                                <th style="color: @textColor; font-size: @fontSizeHeader">Tank op</th>
-                            </tr>
-                            </thead>
-                            <tbody class="hoverTable" style="max-height: calc(100vh - 160px); overflow-y: auto;">
-                            @foreach (var customer in CusRepo.customers)
-                            {
-                                if (!IsVisible(customer))
-                                    continue;
-                                <tr @onclick="@(() => OpenCustomerInfoModal(customer))">
-                                    <td style="font-weight: bolder; font-size: @fontSieName; color: @accentColor">@customer.Name</td>
-                                    <td style="color: @secondaryTextColor; font-size: @tableDataFontSize">@customer.PhoneNumber</td>
-                                    <td style="color: @secondaryTextColor; font-size: @tableDataFontSize">@customer.ServiceHours</td>
-                                    <td style="color: @secondaryTextColor; font-size: @tableDataFontSize">@customer.DateModified</td>
-                                    <td style="text-align: center;">
-                                        <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
-                                            <a style="border: thin; z-index: 50" @onclick="(() => OpenAddTasks(customer))"><img src="/CreateTaskColored.svg" alt="Star SVG" width="50" height="50"/></a>
-                                        </div>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <div @onclick:stopPropagation="true" @onclick:preventDefault="true" style="margin: auto; cursor: pointer">
-                                            <a position: absolute @onclick="@(() => OpenAddHours(customer))" style="border: thin; z-index: 100;"><img src="/GasIconColored.svg" alt="Star SVG" width="50" height="50"/></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #232d3c;"></tr>
-                            }
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-
             }
         </div>
     </div>
@@ -310,13 +299,11 @@
 </style>
 
 <style>
-
     .table thead th {
         position: sticky;
         top: 0;
         background-color: #323c50;
     }
-
 
     .hoverTable tr {
         background: #323c50;
@@ -335,7 +322,6 @@
         background: #20283a;
     }
 
-
     .main-container {
         max-width: 80vw;
         margin: auto;
@@ -348,6 +334,7 @@
     .table-container {
         overflow-y: auto;
         position: relative;
+    }
 </style>
 
 <style>
