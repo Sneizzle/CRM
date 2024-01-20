@@ -154,21 +154,11 @@
     CustomerRepo CusRepo = CustomerRepo.Instance;
     ContactsRepo ConRepo = ContactsRepo.Instance;
 
-    private async void OpenRefuel(Customer customer)
+    protected override async Task OnInitializedAsync()
     {
-        var parameters = new ModalParameters().
-        Add(nameof(AddHours.SelectedItem), customer);
-        var options = new ModalOptions()
-            {
-                Size = ModalSize.Medium
-            };
-        var refuelResult = Modal.Show<AddHours>($"Tank op for: {customer.Name}", parameters, options);
-
-        var result = await refuelResult.Result;
-        if (!result.Cancelled)
-        {
-            StateHasChanged();
-        }
+        await CusRepo.InitializeCustomers();
+        await ConRepo.InitializeContacts();
+        StateHasChanged();
     }
 
 
@@ -190,7 +180,7 @@
         }
     }
 
-    private async void CreateCustomerModal()
+    private async void OpenCreateCustomerModal()
     {
         var options = new ModalOptions()
             {
@@ -212,11 +202,39 @@
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    private async void OpenAddHours(Customer customer)
     {
-        await CusRepo.InitializeCustomers();
-        await ConRepo.InitializeContacts();
-        StateHasChanged();
+        var parameters = new ModalParameters().
+        Add(nameof(Components.Tasks.AddHours.SelectedItem), customer);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Medium
+            };
+        var refuelResult = Modal.Show<AddHours>($"Tank op for: {customer.Name}", parameters, options);
+
+        var result = await refuelResult.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async void OpenAddTasks(Customer customer)
+    {
+        var parameters = new ModalParameters().
+        Add(nameof(AddTask.SelectedItem), customer);
+        var options = new ModalOptions()
+            {
+                Size = ModalSize.Medium
+            };
+        var customerResult = Modal.Show<AddTask>($"Opret Task for: {customer.Name}", parameters, options);
+
+        var result = await customerResult.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
+
     }
 
     private void SortByName()
@@ -269,23 +287,6 @@
         return string.IsNullOrEmpty(Filter) || customer.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase);
     }
 
-    private async void AddTasks(Customer customer)
-    {
-        var parameters = new ModalParameters().
-        Add(nameof(AddTask.SelectedItem), customer);
-        var options = new ModalOptions()
-            {
-                Size = ModalSize.Medium
-            };
-        var customerResult = Modal.Show<AddTask>($"Opret Task for: {customer.Name}", parameters, options);
-
-        var result = await customerResult.Result;
-        if (!result.Cancelled)
-        {
-            StateHasChanged();
-        }
-
-    }
 }
 
 
@@ -317,13 +318,11 @@
 </style>
 
 <style>
-
     .table thead th {
         position: sticky;
         top: 0;
         background-color: #323c50;
     }
-
 
     .hoverTable tr {
         background: #323c50;
@@ -342,7 +341,6 @@
         background: #20283a;
     }
 
-
     .main-container {
         max-width: 80vw;
         margin: auto;
@@ -355,13 +353,14 @@
     .table-container {
         overflow-y: auto;
         position: relative;
+    }
 </style>
 
 <style>
     .table-container {
         position: relative;
         overflow-y: auto;
-        max-height: calc(100vh - 160px); /* Adjust the max-height if needed */
+        max-height: calc(80vh - 160px); /* Adjust the max-height if needed */
     }
 
     .table thead th {

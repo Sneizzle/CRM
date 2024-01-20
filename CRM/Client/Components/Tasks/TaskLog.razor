@@ -81,6 +81,12 @@
     [Parameter]
     public Customer? SelectedItem { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        assignments = await http.GetFromJsonAsync<List<Assignment>>("/api/Assignments");
+        serviceHours = await http.GetFromJsonAsync<List<ServiceHours>>("/api/ServiceHours");
+        Sort();
+    }
     private void Sort()
     {
         assignments.Sort((x, y) => DateTime.Compare(y.DateCreated, x.DateCreated));
@@ -96,19 +102,13 @@
         contentSwitch = false;
     }
 
-    public bool SearchAssignment(Assignment assignment)
+    private bool SearchAssignment(Assignment assignment)
     {
         return string.IsNullOrEmpty(Filter) || assignment.Description.Contains(Filter, StringComparison.OrdinalIgnoreCase) || assignment.DateCreated.ToShortDateString().Contains(Filter, StringComparison.OrdinalIgnoreCase);
     }
-    public bool SearchServiceHours(ServiceHours serviceHours)
+    private bool SearchServiceHours(ServiceHours serviceHours)
     {
         return string.IsNullOrEmpty(Filter) || serviceHours.DateCreated.ToShortDateString().Contains(Filter, StringComparison.OrdinalIgnoreCase);
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        assignments = await http.GetFromJsonAsync<List<Assignment>>("/api/Assignments");
-        serviceHours = await http.GetFromJsonAsync<List<ServiceHours>>("/api/ServiceHours");
-        Sort();
-    }
 }
